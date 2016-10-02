@@ -4,11 +4,58 @@
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="./bower_components/angular-material/angular-material.min.css">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 
-<body ng-controller="MyController">
+<body ng-controller="MyController" ng-cloak>
 
-    {{fuckthis}}
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
+                <md-icon aria-label="Menu" class="material-icons">menu</md-icon>
+                <!--<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>-->
+            </md-button>
+            <h2>
+                <span> Dining Menu </span>
+            </h2>
+            <span flex></span>
+            <!--<md-button class="md-icon-button" aria-label="Favorite">-->
+                <!--<md-icon aria-label="Favorite" class="material-icons">favorite</md-icon>-->
+            <!--</md-button>-->
+            <md-button class="md-icon-button" aria-label="More">
+                <md-icon aria-label="Search" class="material-icons">search</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <section layout="row" flex>
+
+        <md-sidenav
+                class="md-sidenav-left"
+                md-component-id="left"
+                md-whiteframe="4">
+
+            <md-toolbar class="md-theme-indigo">
+                <h1 class="md-toolbar-tools">Apoorva Parmar</h1>
+            </md-toolbar>
+            <md-content layout-padding ng-controller="LeftCtrl">
+                <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                    Close Sidenav Left
+                </md-button>
+                <p hide show-gt-md>
+                    User's Settings and Stuff
+                </p>
+            </md-content>
+
+        </md-sidenav>
+
+        <md-content flex layout-padding>
+            <div layout="column" layout-align="top center">
+            </div>
+        </md-content>
+    </section>
+
 
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="./bower_components/angular/angular.min.js"></script>
