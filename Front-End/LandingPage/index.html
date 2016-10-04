@@ -27,7 +27,7 @@
         </md-content>
     </md-sidenav>
 
-    <md-toolbar style="position: fixed;" class="md-hue-2">
+    <md-toolbar class="md-hue-2">
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
                 <md-icon aria-label="Menu" class="material-icons">menu</md-icon>
@@ -43,45 +43,46 @@
             <md-button class="md-icon-button" aria-label="More">
                 <md-icon aria-label="Search" class="material-icons">search</md-icon>
             </md-button>
-            <md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>
+            <md-datepicker ng-model="selectedDate" md-placeholder="Enter date"></md-datepicker>
         </div>
     </md-toolbar>
 
-    <md-content layout-padding></md-content>
-    <md-content layout-padding></md-content>
-    <md-content layout-padding></md-content>
-    <md-content layout-padding></md-content>
     <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
         <md-tab ng-repeat="tab in tabs"
                 ng-disabled="tab.disabled"
                 label="{{tab.title}}">
-            <div class="demo-tab tab{{$index%4}}" style="padding: 25px;">
 
-                <md-content class="md-padding" layout-xs="column" layout="row">
-                    <div flex-xs flex-gt-xs="33" layout="column">
-                        <md-card>
-                            <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+            <md-progress-linear md-mode="indeterminate" ng-hide="!showSpinner"></md-progress-linear>
+
+            <md-content class="menu-container" layout="row" ng-hide="showSpinner">
+                <!--<div flex-xs flex-gt-xs="33" layout="column" ng-repeat="(key, value) in mealData">-->
+                    <div class="md-padding" flex="33" flex-xs="100" flex-sm="50" ng-repeat="(key, value) in mealData">
+                        <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+                        <div class="my-card md-padding">
                             <md-card-title>
                                 <md-card-title-text>
-                                    <span class="md-headline">Breakfast</span>
+                                    <span class="md-headline">{{key}}</span>
                                 </md-card-title-text>
                             </md-card-title>
                             <md-card-content>
                                 <!--ng-controller="ListCtrl"-->
+                                <br>
                                 <md-list ng-cloak>
-                                    <md-subheader class="md-no-sticky">Potato Potato</md-subheader>
-                                    <md-list-item ng-repeat="topping in toppings">
-                                        <p> {{ topping.name }} </p>
+                                    <span ng-repeat="$index in value">
+                                        <md-subheader class="md-no-sticky theme-purdue">{{value[$index].Name}}</md-subheader>
+                                        <md-list-item ng-repeat="item in value[$index].Items">
+                                        <p> {{ item.Name }} </p>
                                         <md-button class="md-icon-button">
                                             <md-icon aria-label="Favorites" class="material-icons">favorites</md-icon>
                                         </md-button>
                                     </md-list-item>
+                                    </span>
                                 </md-list>
                             </md-card-content>
-                        </md-card>
+                        </div>
                     </div>
-                </md-content>
-            </div>
+                <!--</div>-->
+            </md-content>
         </md-tab>
     </md-tabs>
 
