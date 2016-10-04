@@ -5,12 +5,29 @@
     <link rel="stylesheet" href="./bower_components/angular-material/angular-material.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
 
 </head>
 
 <body ng-controller="MyController" ng-cloak>
+    <md-sidenav
+            class="md-sidenav-left"
+            md-component-id="left"
+        md-whiteframe="4">
+        <md-toolbar class="md-theme-indigo">
+            <h1 class="md-toolbar-tools">Apoorva Parmar</h1>
+        </md-toolbar>
+        <md-content layout-padding ng-controller="LeftCtrl">
+            <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                Close Sidenav Left
+            </md-button>
+            <p hide show-gt-md>
+                User's Settings and Stuff
+            </p>
+        </md-content>
+    </md-sidenav>
 
-    <md-toolbar class="md-hue-2">
+    <md-toolbar style="position: fixed;" class="md-hue-2">
         <div class="md-toolbar-tools">
             <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
                 <md-icon aria-label="Menu" class="material-icons">menu</md-icon>
@@ -26,35 +43,47 @@
             <md-button class="md-icon-button" aria-label="More">
                 <md-icon aria-label="Search" class="material-icons">search</md-icon>
             </md-button>
+            <md-datepicker ng-model="myDate" md-placeholder="Enter date"></md-datepicker>
         </div>
     </md-toolbar>
 
-    <section layout="row" flex>
+    <md-content layout-padding></md-content>
+    <md-content layout-padding></md-content>
+    <md-content layout-padding></md-content>
+    <md-content layout-padding></md-content>
+    <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
+        <md-tab ng-repeat="tab in tabs"
+                ng-disabled="tab.disabled"
+                label="{{tab.title}}">
+            <div class="demo-tab tab{{$index%4}}" style="padding: 25px;">
 
-        <md-sidenav
-                class="md-sidenav-left"
-                md-component-id="left"
-                md-whiteframe="4">
-
-            <md-toolbar class="md-theme-indigo">
-                <h1 class="md-toolbar-tools">Apoorva Parmar</h1>
-            </md-toolbar>
-            <md-content layout-padding ng-controller="LeftCtrl">
-                <md-button ng-click="close()" class="md-primary" hide-gt-md>
-                    Close Sidenav Left
-                </md-button>
-                <p hide show-gt-md>
-                    User's Settings and Stuff
-                </p>
-            </md-content>
-
-        </md-sidenav>
-
-        <md-content flex layout-padding>
-            <div layout="column" layout-align="top center">
+                <md-content class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="33" layout="column">
+                        <md-card>
+                            <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline">Breakfast</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <!--ng-controller="ListCtrl"-->
+                                <md-list ng-cloak>
+                                    <md-subheader class="md-no-sticky">Potato Potato</md-subheader>
+                                    <md-list-item ng-repeat="topping in toppings">
+                                        <p> {{ topping.name }} </p>
+                                        <md-button class="md-icon-button">
+                                            <md-icon aria-label="Favorites" class="material-icons">favorites</md-icon>
+                                        </md-button>
+                                    </md-list-item>
+                                </md-list>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                </md-content>
             </div>
-        </md-content>
-    </section>
+        </md-tab>
+    </md-tabs>
 
 
     <!-- Angular Material requires Angular.js Libraries -->
