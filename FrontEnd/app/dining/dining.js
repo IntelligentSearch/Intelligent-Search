@@ -6,7 +6,7 @@ var app = angular.module('myApp.dining', ['ngRoute'])
   $routeProvider.when('/dining', {
     templateUrl: 'dining/dining.html',
     controller: 'DiningCtrl',
-    css: 'dining/dining.css'
+    css: 'app.css'
   });
 }])
 
