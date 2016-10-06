@@ -1,0 +1,47 @@
+.subheaderdemoBasicUsage .face {
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    width: 48px;
+    margin: 16px; }
+
+.listdemoListControls md-divider {
+    margin-top: 0;
+    margin-bottom: 0; }
+
+.listdemoListControls md-list {
+    padding-top: 0; }
+
+.listdemoListControls md-list-item > p,
+.listdemoListControls md-list-item > .md-list-item-inner > p,
+.listdemoListControls md-list-item .md-list-item-inner > p,
+.listdemoListControls md-list-item .md-list-item-inner > .md-list-item-inner > p {
+    -webkit-user-select: none;
+    /* Chrome all / Safari all */
+    -moz-user-select: none;
+    /* Firefox all */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+    /* Likely future */ }
+
+
+.my-card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 16px;
+    padding-left: 30px;
+    padding-right: 20px;
+}
+
+body {
+    height: 100%;
+
+    /*overflow: hidden;*/
+}
+
+.theme-purdue {
+    background-color: #cea645;
+}
+
+/*.menu-container {*/
+/*padding: 50px;*/
+/*}*/
