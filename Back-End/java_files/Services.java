@@ -3,9 +3,11 @@ import java.util.ArrayList;
 import org.json.*;
 
 public class Services {
+		static int count = -1;
+		static JSONArray ja = null;
 				
 		public static JSONArray getFoodDin(String diningCourt){
-			JSONArray ja = new JSONArray();
+			ja = new JSONArray();
 			try {
 				diningCourt = "Wiley";
 				Class.forName("com.mysql.jdbc.Driver");
