@@ -67,4 +67,19 @@ public class Helper {
 			}
 			return pref;
 		}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+/*
+		public static void main(String[] args){
+			//getFoodDin("");
+			getItem("Oatmeal");
+			getNutrition("6ea795d3-67d5-4a39-9e81-d2ee5e9e64aa");
+			getAllergens("6ea795d3-67d5-4a39-9e81-d2ee5e9e64aa");
+			
+		}
+*/
+>>>>>>> origin/master
+>>>>>>> origin/master
 }
