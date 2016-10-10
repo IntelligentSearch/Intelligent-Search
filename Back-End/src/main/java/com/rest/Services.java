@@ -37,10 +37,19 @@ public class Services {
 	@Path("search/{param}")
 	@Produces("application/json")
 	public Response startSearch(@PathParam("param") String search) throws JSONException {
+		String result = "";
 		JSONObject j = new JSONObject();
 		j.put("Input", search);
+		
+		result += "Outside if conditional\n";
+		if (search.equals("Wiley")) { //get wiley menu
+			result += "Test Wiley query\n";
+			JSONArray ja = Call.getFoodDining(search);
+			result += "array: " + ja.toString();
+			j.put("Menu", ja);
+		}
 			
-		String result = "@Produces(\"application/json\") \n" + j;
+		result += j.toString();	
 		return Response.status(200).entity(result).build();
 	}
 
