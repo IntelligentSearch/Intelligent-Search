@@ -24,36 +24,20 @@ public class Call {
         		while (res.next()) {
         			String name = res.getString("I.NAME");
 					String station = res.getString("D.STATION");
-<<<<<<< HEAD
 					String  id = res.getString("D.Item_ID");
-=======
-<<<<<<< HEAD
-					String  id = res.getString("D.Item_ID");
-=======
-					String  id = res.getString("I.Item_ID");
->>>>>>> origin/master
->>>>>>> origin/master
 					boolean breakfast = res.getBoolean("D.BREAKFAST");
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
-        			boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
-        				res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
-        				res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
-        				res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
-        				res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
+        				boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
+        					res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
+        					res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
+        					res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
+        					res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
         			Item i = new Item(name,id,station,diningCourt);
         			i.setBreakfast(breakfast);
         			i.setLunch(lunch);
         			i.setDinner(dinner);
-<<<<<<< HEAD
         			i.setAllergens(pref);
-=======
-<<<<<<< HEAD
-        			i.setAllergens(pref);
-=======
-        			i.setAllergens(Helper.getAllergens(id));
->>>>>>> origin/master
->>>>>>> origin/master
         			Helper.getNutrition(id,i);
         			ja.put(i.processItem());
         		}
@@ -65,10 +49,6 @@ public class Call {
 			}
 			return ja;			
 		}
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 		public static JSONArray getItemDin(String diningCourt, String item) {
 			JSONArray ja = new JSONArray();
 			Connection con;
@@ -96,12 +76,12 @@ public class Call {
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
 					Item i = new Item(name,id,station,diningCourt);
-        			i.setBreakfast(breakfast);
-        			i.setLunch(lunch);
-        			i.setDinner(dinner);
-        			i.setAllergens(Helper.getAllergens(id));
-        			Helper.getNutrition(id,i);
-        			ja.put(i.processItem());
+        				i.setBreakfast(breakfast);
+        				i.setLunch(lunch);
+        				i.setDinner(dinner);
+        				i.setAllergens(Helper.getAllergens(id));
+        				Helper.getNutrition(id,i);
+        				ja.put(i.processItem());
 				}
 				else {
 					
@@ -141,12 +121,12 @@ public class Call {
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
 					Item i = new Item(name,id,station,diningCourt);
-        			i.setBreakfast(breakfast);
-        			i.setLunch(lunch);
-        			i.setDinner(dinner);
-        			i.setAllergens(Helper.getAllergens(id));
-        			Helper.getNutrition(id,i);
-        			ja.put(i.processItem());
+        				i.setBreakfast(breakfast);
+        				i.setLunch(lunch);
+        				i.setDinner(dinner);
+        				i.setAllergens(Helper.getAllergens(id));
+        				Helper.getNutrition(id,i);
+        				ja.put(i.processItem());
 				}
 				res.close();
      			prep_stmt.close();
@@ -157,9 +137,4 @@ public class Call {
 			}
 			return ja;
 		}
-<<<<<<< HEAD
-=======
-=======
->>>>>>> origin/master
->>>>>>> origin/master
 }
