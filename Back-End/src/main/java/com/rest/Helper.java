@@ -67,13 +67,45 @@ public class Helper {
 			}
 			return pref;
 		}
-/*
-		public static void main(String[] args){
-			//getFoodDin("");
-			getItem("Oatmeal");
-			getNutrition("6ea795d3-67d5-4a39-9e81-d2ee5e9e64aa");
-			getAllergens("6ea795d3-67d5-4a39-9e81-d2ee5e9e64aa");
-			
+		public static boolean[] getUsersPref(int userID){
+			Connection con;
+			PreparedStatement prep_stmt;
+			ResultSet res;
+			boolean[] pref = null;
+			try{
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+				String query = "SELECT EGGS,FISH,GLUTEN,MILK,PEANUTS,SHELLFISH,SOY,TREE_NUTS,WHEAT,VEG "
+						+	"FROM Preferences "
+						+	"WHERE USER_ID = ?";
+				prep_stmt = con.prepareStatement(query);
+				prep_stmt.setInt(1, userID);
+				res = prep_stmt.executeQuery();
+				if (res.next()) {
+					boolean[] temp = { res.getBoolean("EGGS") , res.getBoolean("FISH"),
+							res.getBoolean("GLUTEN"),res.getBoolean("MILK"),
+							res.getBoolean("PEANUTS"),res.getBoolean("SHELLFISH"),
+							res.getBoolean("SOY"),res.getBoolean("TREE_NUTS"),
+							res.getBoolean("WHEAT"),res.getBoolean("VEG") };
+					pref = temp;
+				}
+				else {
+					//return "ERROR";
+				}
+				res.close();
+     			prep_stmt.close();
+     			con.close();
+			}
+			catch (Exception e) {
+				System.out.println("\n"+e.toString());
+			}
+			return pref;
 		}
-*/
+		public static boolean matchPrefs(boolean[] user,boolean[] food){
+			for(int i = 0; i<user.length;i++){
+				if(user[i] && !food[i]){
+					return false;
+				}
+			}
+			return true;
+		}
 }
