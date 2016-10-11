@@ -27,11 +27,11 @@ public class Call {
 					boolean breakfast = res.getBoolean("D.BREAKFAST");
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
-        			boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
-        				res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
-        				res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
-        				res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
-        				res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
+        				boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
+        					res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
+        					res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
+        					res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
+        					res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
         			Item i = new Item(name,id,station,diningCourt);
         			i.setBreakfast(breakfast);
         			i.setLunch(lunch);
@@ -73,12 +73,12 @@ public class Call {
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
 					Item i = new Item(name,id,station,diningCourt);
-        			i.setBreakfast(breakfast);
-        			i.setLunch(lunch);
-        			i.setDinner(dinner);
-        			i.setAllergens(Helper.getAllergens(id));
-        			Helper.getNutrition(id,i);
-        			ja.put(i.processItem());
+        				i.setBreakfast(breakfast);
+        				i.setLunch(lunch);
+        				i.setDinner(dinner);
+        				i.setAllergens(Helper.getAllergens(id));
+        				Helper.getNutrition(id,i);
+        				ja.put(i.processItem());
 				}
 				else {
 					
@@ -117,12 +117,12 @@ public class Call {
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
 					Item i = new Item(name,id,station,diningCourt);
-        			i.setBreakfast(breakfast);
-        			i.setLunch(lunch);
-        			i.setDinner(dinner);
-        			i.setAllergens(Helper.getAllergens(id));
-        			Helper.getNutrition(id,i);
-        			ja.put(i.processItem());
+        				i.setBreakfast(breakfast);
+        				i.setLunch(lunch);
+        				i.setDinner(dinner);
+        				i.setAllergens(Helper.getAllergens(id));
+        				Helper.getNutrition(id,i);
+        				ja.put(i.processItem());
 				}
 				res.close();
      			prep_stmt.close();
