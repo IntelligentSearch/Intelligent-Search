@@ -2,10 +2,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Angular Material style sheet -->
-    <link rel="stylesheet" href="./bower_components/angular-material/angular-material.min.css">
+    <!--<link rel="stylesheet" href="./bower_components/angular-material/angular-material.min.css">-->
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
+    <!--<link href="./css/style.css" rel="stylesheet">-->
 
 </head>
 
@@ -27,7 +27,7 @@
     </md-content>
 </md-sidenav>
 
-<md-toolbar class="md-hue-2">
+<md-toolbar class="md-hue-2" ng-show="!showSearch">
     <div class="md-toolbar-tools">
         <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
             <md-icon aria-label="Menu" class="material-icons">menu</md-icon>
@@ -40,11 +40,30 @@
         <!--<md-button class="md-icon-button" aria-label="Favorite">-->
         <!--<md-icon aria-label="Favorite" class="material-icons">favorite</md-icon>-->
         <!--</md-button>-->
-        <md-button class="md-icon-button" aria-label="More">
+        <md-button ng-click="showSearch = !showSearch" class="md-icon-button" aria-label="More">
             <md-icon aria-label="Search" class="material-icons">search</md-icon>
         </md-button>
         <md-datepicker ng-model="selectedDate" md-placeholder="Enter date"></md-datepicker>
     </div>
+</md-toolbar>
+
+<md-toolbar class="md-hue-2" ng-show="showSearch">
+    <div class="md-toolbar-tools">
+        <md-button ng-click="showSearch = !showSearch" aria-label="Back">
+            <md-icon size="64" class="material-icons">keyboard_backspace</md-icon>
+        </md-button>
+        <md-input-container md-theme="input" flex layout-align=" end">
+            <label>&nbsp;</label>
+            <input ng-model="search.who" placeholder="enter search">
+        </md-input-container>
+        <md-button aria-label="Search" ng-click="showSearch = !showSearch">
+            <ng-md-icon icon="search"></ng-md-icon>
+        </md-button>
+        <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+            <ng-md-icon icon="more_vert"></ng-md-icon>
+        </md-button>
+    </div>
+
 </md-toolbar>
 
 <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
@@ -88,14 +107,14 @@
 
 
 <!-- Angular Material requires Angular.js Libraries -->
-<script src="./bower_components/angular/angular.min.js"></script>
-<script src="./bower_components/angular-animate/angular-animate.min.js"></script>
-<script src="./bower_components/angular-aria/angular-aria.min.js"></script>
-<script src="./bower_components/angular-messages/angular-messages.min.js"></script>
+<!--<script src="./bower_components/angular/angular.min.js"></script>-->
+<!--<script src="./bower_components/angular-animate/angular-animate.min.js"></script>-->
+<!--<script src="./bower_components/angular-aria/angular-aria.min.js"></script>-->
+<!--<script src="./bower_components/angular-messages/angular-messages.min.js"></script>-->
 
 <!-- Angular Material Library -->
-<script src="./bower_components/angular-material/angular-material.min.js"></script>
+<!--<script src="./bower_components/angular-material/angular-material.min.js"></script>-->
 
-<script src="./js/Controller.js"></script>
+<!--<script src="./js/Controller.js"></script>-->
 </body>
 </html>
