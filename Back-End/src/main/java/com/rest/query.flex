@@ -4,13 +4,13 @@ import java.util.Calendar;
 %%
 
 %public
-%class Query
+%class Query //change this to change generated name
 %unicode
 %type String
 %standalone
-%ignorecase
+%ignorecase //ignores case from user search
 %{
-  boolean today = true;
+  boolean today = true; //default if user doesn't specify day
   StringBuilder sb = new StringBuilder();
   StringBuilder itemBuild = new StringBuilder();
   String fin = "";
@@ -80,7 +80,7 @@ sb.append(yytext() + " " );
 	itemBuild.append(yytext() + " ");
 }	
 
-<<EOF>>   {
+<<EOF>>   {           //executed after search is lexed;
 if(today) {
 	String date = String.format("%02d-%02d-%d",cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR));
 	sb.append("MEAL_DAY=" + date + " ");
@@ -96,6 +96,6 @@ return fin;
 }
 
 
-[^]       {
+[^]       {     //excess input ignored (for now)
 	
 }
