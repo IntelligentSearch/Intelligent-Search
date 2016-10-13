@@ -798,7 +798,7 @@ if(today) {
 }
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item.substring(0,item.length()-1)+";");
-String fin = sb.toString().substring(0,sb.length()-1);
+String fin = sb.toString();
 PrintWriter writer = new PrintWriter("tokens.txt", "UTF-8");
 writer.println(fin);
 System.out.println(fin);

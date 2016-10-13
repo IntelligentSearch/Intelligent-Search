@@ -24,24 +24,24 @@ import java.util.Calendar;
 DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor
 DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
 MealTime = lunch|dinner|breakfast|late\ lunch
-Erase = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
+Trash = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
 TrashWords = (have|for|at|there|{MealTime}|{DayWeek}|{DiningCourt})
 SigWord = !({TrashWords}|\ )
 %%
 
-{Erase}  {
+{Trash}  {
 }
 /* {TrashWords}\ {SigWord}\ {TrashWords} {
 	String match = yytext();
 	sb.append("ITEM_NAME=");
 	String item = match.substring(match.indexOf(" ")+1,match.lastIndexOf(" "));
-	sb.append(item + " ");
+	sb.append(item + ";");
 	yypushback(match.substring(match.lastIndexOf(" ")).length());
 } */
 
 {DiningCourt} { 
 sb.append("DINING_COURT=");
-sb.append(yytext() + " ");
+sb.append(yytext() + ";");
 }
 
 
@@ -68,27 +68,27 @@ String month = String.format("%02d", cal.get(Calendar.MONTH)+1);
 String day = String.format("%02d", cal.get(Calendar.DATE));
 String year = Integer.toString(cal.get(Calendar.YEAR));
 String date = String.format("%s-%s-%s", month, day, year);
-sb.append(date + " ");
+sb.append(date + ";");
 }
 
 {MealTime} {
 sb.append("MEAL_TIME=");
-sb.append(yytext() + " " );
+sb.append(yytext() + ";" );
 }
 
-[a-zA-Z]+ {
+[a-z'A-Z]+ {
 	itemBuild.append(yytext() + " ");
 }	
 
 <<EOF>>   {           //executed after search is lexed;
 if(today) {
 	String date = String.format("%02d-%02d-%d",cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR));
-	sb.append("MEAL_DAY=" + date + " ");
+	sb.append("MEAL_DAY=" + date + ";");
 }
 String item = itemBuild.toString();
-if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
-String fin = sb.toString();
-PrintWriter writer = new PrintWriter("out.txt", "UTF-8");
+if(!item.equals("")) sb.append("ITEM_NAME="+item.substring(0,item.length()-1)+";");
+String fin = sb.toString().substring(0,sb.length()-1);
+PrintWriter writer = new PrintWriter("tokens.txt", "UTF-8");
 writer.println(fin);
 System.out.println(fin);
 writer.close();
