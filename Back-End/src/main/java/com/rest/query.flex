@@ -1,4 +1,5 @@
 import java.lang.StringBuilder;
+import java.io.PrintWriter;
 import java.util.Calendar;
 %%
 
@@ -22,7 +23,7 @@ import java.util.Calendar;
 
 DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor
 DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
-MealTime = lunch|dinner|breakfast|late\ lunch  
+MealTime = lunch|dinner|breakfast|late\ lunch
 Erase = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
 TrashWords = (have|for|at|there|{MealTime}|{DayWeek}|{DiningCourt})
 SigWord = !({TrashWords}|\ )
@@ -87,7 +88,10 @@ if(today) {
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
 String fin = sb.toString();
+PrintWriter writer = new PrintWriter("out.txt", "UTF-8");
+writer.println(fin);
 System.out.println(fin);
+writer.close();
 return fin;
 }
 
