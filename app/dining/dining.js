@@ -23,9 +23,9 @@ var app = angular.module('myApp.dining', ['ngRoute'])
       });
 
   $routeProvider.when('/dining', {
-    templateUrl: 'dining/dining.html',
+    templateUrl: 'app/dining/dining.html',
     controller: 'DiningCtrl',
-    css: 'dining/dining.css'
+    css: 'app/dining/dining.css'
   });
 }])
 
