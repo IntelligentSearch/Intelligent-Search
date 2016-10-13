@@ -7,9 +7,10 @@ import java.util.Calendar;
 %unicode
 %type String
 %standalone
-%line
+%ignorecase
 %{
   StringBuilder sb = new StringBuilder();
+  StringBuilder itemBuild = new StringBuilder();
   String fin = "";
   String getString() {
 	return fin;
@@ -17,15 +18,32 @@ import java.util.Calendar;
   Calendar cal = Calendar.getInstance();
   String[] days_of_week = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 %}
+
+DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor
+DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
+MealTime = lunch|dinner|breakfast|late\ lunch  
+Erase = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
+TrashWords = (have|for|at|there|{MealTime}|{DayWeek}|{DiningCourt})
+SigWord = !({TrashWords}|\ )
 %%
 
-wiley|earhart|meredith|ford|hillenbrand|windsor { 
+{Erase}  {
+}
+/* {TrashWords}\ {SigWord}\ {TrashWords} {
+	String match = yytext();
+	sb.append("ITEM_NAME=");
+	String item = match.substring(match.indexOf(" ")+1,match.lastIndexOf(" "));
+	sb.append(item + " ");
+	yypushback(match.substring(match.lastIndexOf(" ")).length());
+} */
+
+{DiningCourt} { 
 sb.append("DINING_COURT=");
 sb.append(yytext() + " ");
 }
 
 
-monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today {
+{DayWeek} {
 String in = yytext();
 sb.append("MEAL_DAY=");
 int current = cal.get(cal.DAY_OF_WEEK);
@@ -50,16 +68,23 @@ String date = String.format("%s-%s-%s", month, day, year);
 sb.append(date + " ");
 }
 
-lunch|dinner|breakfast|late\ lunch {
+{MealTime} {
 sb.append("MEAL_TIME=");
 sb.append(yytext() + " " );
 }
 
+[a-zA-Z]+ {
+	itemBuild.append(yytext() + " ");
+}	
+
 <<EOF>>   {
+String item = itemBuild.toString();
+if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
 String fin = sb.toString();
 System.out.println(fin);
 return fin;
 }
+
 
 [^]       {
 	
