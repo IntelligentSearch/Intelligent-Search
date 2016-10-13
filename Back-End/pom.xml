@@ -65,6 +65,13 @@
     		<version>5.1.39</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/de.jflex/jflex -->
+		<dependency>
+    		<groupId>de.jflex</groupId>
+    		<artifactId>jflex</artifactId>
+    		<version>1.6.1</version>
+		</dependency>
+
     </dependencies>
     <properties>
         <jersey.version>2.23.2</jersey.version>

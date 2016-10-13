@@ -8,7 +8,7 @@ public class Call {
 		public static JSONArray getFoodDining(String diningCourt){
 			JSONArray ja = new JSONArray();
 			try {
-				diningCourt = "Wiley";
+				//diningCourt = "Wiley";
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "SELECT D.ITEM_ID, D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER,I.NAME,A.EGGS,A.FISH,A.GLUTEN,A.MILK,A.PEANUTS,A.Shellfish,A.SOY,A.Tree_Nuts,A.WHEAT,A.VEG "

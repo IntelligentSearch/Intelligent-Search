@@ -39,11 +39,11 @@ public class Services {
 	public Response startSearch(@PathParam("param") String search) throws JSONException {
 		String result = "";
 		JSONObject j = new JSONObject();
-		j.put("Input", search);
+		//j.put("Input", search);
 		
-		result += "Outside if conditional\n";
+		//result += "Outside if conditional\n";
 		if (search.equals("Wiley")) { //get wiley menu
-			result += "Test Wiley query\n";
+			//result += "Test Wiley query\n";
 			JSONArray ja = Call.getFoodDining(search);
 			result += "array: " + ja.toString();
 			j.put("Menu", ja);
