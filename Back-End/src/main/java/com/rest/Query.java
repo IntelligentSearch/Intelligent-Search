@@ -492,6 +492,7 @@ public class Query {
   private int zzFinalHighSurrogate = 0;
 
   /* user code: */
+  boolean today = true;
   StringBuilder sb = new StringBuilder();
   StringBuilder itemBuild = new StringBuilder();
   String fin = "";
@@ -813,7 +814,11 @@ public class Query {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
               {
-                String item = itemBuild.toString();
+                if(today) {
+	String date = String.format("%02d-%02d-%d",cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR));
+	sb.append("MEAL_DAY=" + date + " ");
+}
+String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
 String fin = sb.toString();
 System.out.println(fin);
@@ -841,7 +846,8 @@ sb.append(yytext() + " " );
             }
           case 9: break;
           case 5: 
-            { String in = yytext();
+            { today = false;
+String in = yytext();
 sb.append("MEAL_DAY=");
 int current = cal.get(cal.DAY_OF_WEEK);
 int desired = 0;

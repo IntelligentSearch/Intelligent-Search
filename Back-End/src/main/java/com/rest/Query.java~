@@ -814,7 +814,7 @@ public class Query {
         zzAtEOF = true;
               {
                 String item = itemBuild.toString();
-if(item!=null) sb.append("ITEM_NAME="+item+" ");
+if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
 String fin = sb.toString();
 System.out.println(fin);
 return fin;

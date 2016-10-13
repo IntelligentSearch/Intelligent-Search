@@ -9,6 +9,7 @@ import java.util.Calendar;
 %standalone
 %ignorecase
 %{
+  boolean today = true;
   StringBuilder sb = new StringBuilder();
   StringBuilder itemBuild = new StringBuilder();
   String fin = "";
@@ -44,6 +45,7 @@ sb.append(yytext() + " ");
 
 
 {DayWeek} {
+today = false;
 String in = yytext();
 sb.append("MEAL_DAY=");
 int current = cal.get(cal.DAY_OF_WEEK);
@@ -78,6 +80,10 @@ sb.append(yytext() + " " );
 }	
 
 <<EOF>>   {
+if(today) {
+	String date = String.format("%02d-%02d-%d",cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), cal.get(Calendar.YEAR));
+	sb.append("MEAL_DAY=" + date + " ");
+}
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item+" ");
 String fin = sb.toString();
