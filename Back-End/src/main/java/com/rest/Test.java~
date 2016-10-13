@@ -1,0 +1,17 @@
+public class Test {
+  private String toQuery;
+  private boolean done = false;
+  public static void main(String[] args) {
+
+  }
+  public String getString() {
+    return toQuery;
+  }
+  public void setString(String to) {
+    this.toQuery = to;
+  }
+  public void setDone() {
+    this.done = true;
+  }
+}
+

@@ -1,17 +1,19 @@
-package com.rest;
 import java.lang.StringBuilder;
 import java.util.Calendar;
 %%
 
 %public
 %class Query
-
 %unicode
+%type String
 %standalone
 %line
-
 %{
   StringBuilder sb = new StringBuilder();
+  String fin = "";
+  String getString() {
+	return fin;
+  }
   Calendar cal = Calendar.getInstance();
   String[] days_of_week = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 %}
@@ -54,8 +56,9 @@ sb.append(yytext() + " " );
 }
 
 <<EOF>>   {
-System.out.println(sb.toString());
-return 0;
+String fin = sb.toString();
+System.out.println(fin);
+return fin;
 }
 
 [^]       {
