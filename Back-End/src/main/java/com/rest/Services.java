@@ -45,7 +45,6 @@ public class Services {
 		if (search.equals("Wiley")) { //get wiley menu
 			//result += "Test Wiley query\n";
 			JSONArray ja = Call.getFoodDining(search);
-			result += "array: " + ja.toString();
 			j.put("Menu", ja);
 		}
 			
@@ -58,9 +57,14 @@ public class Services {
 	//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response createUser(
 		@FormParam("name") String name,
+		@FormParam("first") String first,
+		@FormParam("last") String last,
 		@FormParam("password") String password) {
 
-        String output = "POST:\nCreate User: " + name + " with password " + password;
+		JSONObject j = Call.createUser(name, password, first, last, false);
+
+        //String output = "POST:\nCreate User: " + name + " with password " + password;
+		String output = j.toString();
         return Response.status(200).entity(output).build();
 	}
 
