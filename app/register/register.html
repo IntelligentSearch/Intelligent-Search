@@ -1,0 +1,62 @@
+<body>
+<md-content ng-controller="RegisterCtrl" layout="row" layout-align="space-around" layout-padding="layout-padding"
+            ng-cloak="ng-cloak" class="page-register">
+    <md-card flex="flex" flex-gt-sm="50" flex-gt-md="33">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2><span>Register Form</span></h2>
+            </div>
+        </md-toolbar>
+        <md-card-content>
+            <form name="Form" ng-submit="createAccount()">
+                <md-input-container class="md-block">
+                    <label>First Name</label>
+                    <input type="text" name="firstName" ng-model="new_user.firstName" placeholder="First Name" required=""
+                           md-maxlength="30"/>
+                    <div ng-messages="Form.firstName.$error" role="alert" multiple="">
+                        <div ng-message="required" class="my-message">You must supply a first name.</div>
+                        <div ng-message="md-maxlength" class="my-message">First name too long.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Last Name</label>
+                    <input type="text" name="lastName" ng-model="new_user.lastName" placeholder="Last Name" required=""
+                           md-maxlength="30"/>
+                    <div ng-messages="Form.lastName.$error" role="alert" multiple="">
+                        <div ng-message="required" class="my-message">You must supply a last name.</div>
+                        <div ng-message="md-maxlength" class="my-message">Last name too long.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Login</label>
+                    <input type="text" name="email" ng-model="new_user.userName" placeholder="Login" required=""/>
+                    <div ng-messages="Form.email.$error" role="alert" multiple="">
+                        <div ng-message="required" class="my-message">You must supply a email.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input type="password" name="password" ng-model="new_user.password" placeholder="Password" required=""
+                           md-maxlength="16"/>
+                    <div ng-messages="Form.password.$error" role="alert" multiple="">
+                        <div ng-message="required" class="my-message">You must supply a password.</div>
+                        <div ng-message="md-maxlength" class="my-message">Too long.</div>
+                    </div>
+                </md-input-container>
+                <div layout-gt-sm="row">
+                    <md-button ng-disabled="!Form.$valid" ng-click="createAccount()" class="btnRegister md-raised md-primary">&nbsp Register
+                    &nbsp
+                   </md-button>
+                    <span flex/>
+                    <md-button  href="#!/login" class="md-raised md-primary">&nbsp Cancel
+                        &nbsp
+                    </md-button>
+
+
+                </div>
+            </form>
+        </md-card-content>
+    </md-card>
+</md-content>
+<!-- Angular Material Dependencies-->
+</body>

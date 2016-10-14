@@ -4,9 +4,9 @@
 var app = angular.module('myApp', [
     'ngRoute',
     'ngMaterial',
-    'myApp.dining',
     'myApp.login',
     'myApp.dining',
+    'myApp.register',
     'myApp.version'
 ]).directive('head', ['$rootScope', '$compile',
     function ($rootScope, $compile) {
