@@ -27,7 +27,7 @@ var app = angular.module('myApp.login', ['ngRoute'])
                 method: 'POST',
                 url: $scope.base_url + '/login',
                 withCredentials: true,
-                // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function (obj) {
                     var str = [];
                     for (var p in obj)

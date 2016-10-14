@@ -30,7 +30,7 @@ var app = angular.module('myApp.register', ['ngRoute'])
         method: 'POST',
         url: $scope.base_url + '/create-user',
         withCredentials: true,
-        // headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         data: {name: $scope.account.email, password: $scope.account.password, first: $scope.account.first, last: $scope.account.last}
       }).then(function successCallback(response) {
         // this callback will be called asynchronously
