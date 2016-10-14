@@ -21,7 +21,7 @@ import java.util.Calendar;
   String[] days_of_week = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 %}
 
-DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor
+DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor|"the gathering place"
 DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
 MealTime = lunch|dinner|breakfast|late\ lunch
 Trash = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
@@ -40,8 +40,11 @@ SigWord = !({TrashWords}|\ )
 } */
 
 {DiningCourt} { 
+String match = yytext();
+if(match.equals("meredith"))
+	match = "the gathering place";
 sb.append("DINING_COURT=");
-sb.append(yytext() + ";");
+sb.append(match + ";");
 }
 
 
