@@ -1,3 +1,5 @@
+package com.rest;
+
 import java.lang.StringBuilder;
 import java.io.PrintWriter;
 import java.util.Calendar;
@@ -25,7 +27,7 @@ import java.io.File;
 DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor|"the gathering place"
 DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
 MealTime = lunch|dinner|breakfast|late\ lunch
-Trash = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|
+Trash = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|yash|does|we|you|us
 TrashWords = (have|for|at|there|{MealTime}|{DayWeek}|{DiningCourt})
 SigWord = !({TrashWords}|\ )
 %%

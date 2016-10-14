@@ -7,10 +7,11 @@ import org.json.*;
 public class Helper {
 				
 		public static void getNutrition(String id, Item item) {
-			Connection con;
-			PreparedStatement prep_stmt;
-			ResultSet res;
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
 			try{
+				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "SELECT NAME, VALUE "
 					+ 	"FROM Nutrition "
@@ -24,22 +25,34 @@ public class Helper {
 					name.add(res.getString("NAME"));
 					value.add(res.getString("VALUE"));
 				}
-				res.close();
-     			prep_stmt.close();
-     			con.close();
      			item.setNutrients(name,value);
 			}
 			catch (Exception e) {
 				System.out.println("\n"+e.toString());
 			}
-			
+			finally{
+				try{
+					if(con != null){
+						con.close();
+					}
+					if(res != null){
+						res.close();
+					}
+					if(prep_stmt != null){
+						prep_stmt.close();
+					}
+				}	
+				catch(Exception e){
+				}
+			}
 		}
 		public static boolean[] getAllergens(String id) {
-			Connection con;
-			PreparedStatement prep_stmt;
-			ResultSet res;
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
 			boolean[] pref = null;
 			try{
+				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "SELECT EGGS,FISH,GLUTEN,MILK,PEANUTS,SHELLFISH,SOY,TREE_NUTS,WHEAT,VEG "
 						+	"FROM Allergen "
@@ -58,21 +71,75 @@ public class Helper {
 				else {
 					//return "ERROR";
 				}
-				res.close();
-     			prep_stmt.close();
-     			con.close();
 			}
 			catch (Exception e) {
 				System.out.println("\n"+e.toString());
 			}
+			finally{
+				try{
+					if(con != null){
+						con.close();
+					}
+					if(res != null){
+						res.close();
+					}
+					if(prep_stmt != null){
+						prep_stmt.close();
+					}
+				}	
+				catch(Exception e){
+				}
+			}
 			return pref;
 		}
+		public static String getIngred(String id){
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			String ingred = null;
+			try{
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+				String query =  "SELECT Ingredients "
+					+	"FROM Item "
+					+	"WHERE ITEM_ID = ?";
+				prep_stmt = con.prepareStatement(query);
+				prep_stmt.setString(1, id);
+				res = prep_stmt.executeQuery();
+				if (res.next()) {
+					ingred = res.getString("Ingredients");
+				}
+				else{
+					//ERROR
+				}
+			}
+			catch (Exception e) {
+				System.out.println("\n"+e.toString());
+			}
+			finally{
+				try{
+					if(con != null){
+						con.close();
+					}
+					if(res != null){
+						res.close();
+					}
+					if(prep_stmt != null){
+						prep_stmt.close();
+					}
+				}	
+				catch(Exception e){
+				}
+			}
+			return ingred;
+		}
 		public static boolean[] getUsersPref(int userID){
-			Connection con;
-			PreparedStatement prep_stmt;
-			ResultSet res;
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
 			boolean[] pref = null;
 			try{
+				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "SELECT EGGS,FISH,GLUTEN,MILK,PEANUTS,SHELLFISH,SOY,TREE_NUTS,WHEAT,VEG "
 						+	"FROM Preferences "
@@ -91,12 +158,24 @@ public class Helper {
 				else {
 					//return "ERROR";
 				}
-				res.close();
-     			prep_stmt.close();
-     			con.close();
 			}
 			catch (Exception e) {
 				System.out.println("\n"+e.toString());
+			}
+			finally{
+				try{
+					if(con != null){
+						con.close();
+					}
+					if(res != null){
+						res.close();
+					}
+					if(prep_stmt != null){
+						prep_stmt.close();
+					}
+				}	
+				catch(Exception e){
+				}
 			}
 			return pref;
 		}

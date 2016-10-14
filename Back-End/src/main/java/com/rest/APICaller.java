@@ -51,7 +51,7 @@ public class APICaller {
 		JSONArray locations = json.getJSONArray("Location");
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
-			if(o.get("Name").toString().toLowerCase().equals(location)){
+			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
 				parseLocationData(o.get("Name").toString(), date,ja);
 			}
 		}		
@@ -70,9 +70,8 @@ public class APICaller {
 			String meal = m.get("Name").toString().replaceAll(" ", "");
 			
 			//go through stations
-			if (!m.has("Stations") || m.isNull("Stations"))	continue;
-			
-			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc); //get items to put into daily table
+			if (!m.has("Stations") || m.isNull("Stations"))	continue;	
+			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc,date); //get items to put into daily table
 		}
 		for (String s : item_list.keySet()) {
 			Item i = item_list.get(s);
@@ -89,7 +88,7 @@ public class APICaller {
 		}
 		return true;
 	}
-	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court) throws JSONException {
+	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court,String date) throws JSONException {
 		for (int j = 0; j < stations.length(); j++) {
 			JSONObject s = stations.getJSONObject(j);
 			String station = s.getString("Name");
@@ -107,7 +106,7 @@ public class APICaller {
 					if (item_list.containsKey(item_name)) { //item exists
 						food = item_list.remove(item_name);
 					} else {
-						food = new Item(item_name, item.getString("ID"), station,court);
+						food = new Item(item_name, item.getString("ID"), station,court,Helper.getIngred(item.getString("ID")),date);
 					}
 					if (meal.equals("Breakfast"))		food.setBreakfast(true);
 					else if (meal.equals("Lunch"))		food.setLunch(true);

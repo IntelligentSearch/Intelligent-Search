@@ -74,10 +74,13 @@ public class Parsed{
 	public String toString(){
 		return court+","+time+","+day+","+name+"\n";
 	}
-	public static Parsed stringParser(String x){
+	public static JSONArray stringParser(String x) throws  ClassNotFoundException{
+		String save = new String(x);
+		x=x+";";
 		int index;
 		Parsed p = new Parsed();
 		while((index = x.indexOf(';')) != -1){
+			
 			String temp = x.substring(0,index);
 			String value = temp.substring(temp.indexOf('=')+1);
 			temp = temp.substring(0,temp.indexOf('=')+1);
@@ -98,7 +101,7 @@ public class Parsed{
 			}
 			x = x.substring(index+1);
 		}
-		return p;
+		return decider(p,x);
 	}
 	public static boolean isToday(String date){
 		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
@@ -109,13 +112,19 @@ public class Parsed{
 		return false; 
 	}
 	
-	public static JSONArray decider(Parsed p) throws JSONException{
+	public static JSONArray decider(Parsed p,String x) throws JSONException,ClassNotFoundException{
 		JSONArray empty = new JSONArray();
 		JSONObject e = new JSONObject();
 		e.put("Error", "Feature not Supported");
+		e.put("TOKEN",x);
+		 e.put("Day", p.getDay());
+		e.put("Court", p.getCourt());
+		e.put("name", p.getName());
+		e.put("time", p.getTime());
 		empty.put(e);
+
 		if(p.hasDay()){
-			//not today else fall to dealing with today
+			//NOT CURRENT DAY
 			if(!isToday(p.getDay())){
 				if(p.hasCourt() && !p.hasName()){
 					return APICaller.apiCallLocation(p.getDay(),p.getCourt());
@@ -123,18 +132,24 @@ public class Parsed{
 				return empty;
 			}
 		}
-		//assume it is today
+		//TODAY
+
 		//searching dining court options
+		//TOKEN DINING COURT, TOKEN TODAY
 		if(p.hasCourt() && !p.hasName()){
 			System.out.println("Dining");
 			return Call.getFoodDining(p.getCourt());
 		}
+
 		//searching item
+		//TOKEN ITEM, TOKEN TODAY
 		else if(!p.hasCourt() && p.hasName()){
 			System.out.println("Item");
 			return Call.getItem(p.getName());
 		}
+
 		//has item and dining Court
+		//TOKEN ITEM, TOKEN DINING COURT
 		else if(p.hasCourt() && p.hasName()){
 			System.out.println("Item at court");
 			return Call.getItemDin(p.getCourt(), p.getName());

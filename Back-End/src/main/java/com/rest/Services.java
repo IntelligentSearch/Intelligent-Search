@@ -1,5 +1,8 @@
 package com.rest;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,12 +14,18 @@ import javax.ws.rs.core.Response;
 import org.json.*;
 import java.sql.*;
 import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Path("/rest")
 public class Services {
@@ -49,9 +58,6 @@ public class Services {
 					+ "\t- /unfavorite-item/\n"
                     + "\t  POST\n"
                     + "\n"
-					+ "\t- /favorites/\n"
-                    + "\t  POST\n"
-                    + "\n"
 					+ "\t- /get-pref/\n"
                     + "\t  POST\n"
                     + "\n"
@@ -64,7 +70,7 @@ public class Services {
 	@GET
 	@Path("search/{param}")
 	@Produces("application/json")
-	public Response startSearch(@PathParam("param") String search) throws JSONException {
+	public Response startSearch(@PathParam("param") String search) throws JSONException, ClassNotFoundException {
 		File infile = new File("/home/cs307/Intelligent-Search/files/search.txt");
 		String outfile = "/home/cs307/Intelligent-Search/files/tokens.txt";
 		String tokens = "";
@@ -90,12 +96,67 @@ public class Services {
 		}
 
 		String result = "";
-		JSONObject j = new JSONObject();
+		//JSONObject j = new JSONObject();
 
 		//USE TOKENS TO DO CALLS
-		j.put("tokens", tokens);
-			
+		//j.put("tokens", tokens);
+		JSONArray j = Parsed.stringParser(tokens);
 		result += j.toString();	
+		return Response.status(200).entity(result).build();
+	}
+
+	@GET
+	@Path("menu/{location}/{date}")
+	@Produces("application/json")
+	public Response getMenu(@PathParam("location") String location, @PathParam("date") String date) throws JSONException, ClassNotFoundException {	
+		String u = "https://api.hfs.purdue.edu/menus/v1/locations/" + location + "/" + date;
+		String result = "";
+
+		JSONObject json = new JSONObject();
+		try {
+         URL url = new URL(u);
+         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+         conn.setRequestProperty("Accept", "application/json");
+         try {
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+               sb.append(line);
+            }
+            json = new JSONObject(sb.toString());
+         } finally {
+            conn.disconnect();
+         }
+      }
+      catch (IOException e) {
+         System.err.println("Exception getting url " + u);
+         e.printStackTrace();
+      }
+
+		result += json.toString();
+/*
+		String result = "";
+		boolean isToday = false;
+		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+		Date dateobj = new Date();
+		if(df.format(dateobj).equals(date)){
+			 isToday = true;;
+		}
+
+		JSONArray j = new JSONArray();
+	
+		if (isToday) {
+			j = Call.getFoodDining(location);
+		}
+		else {
+			j = APICaller.apiCallLocation(date,location);
+		}	
+		
+		result += j.toString();	
+*/
 		return Response.status(200).entity(result).build();
 	}
 
@@ -106,10 +167,9 @@ public class Services {
 		@FormParam("name") String name,
 		@FormParam("first") String first,
 		@FormParam("last") String last,
-		@FormParam("password") String password) {
+		@FormParam("password") String password) throws ClassNotFoundException {
 
 		JSONObject j = Call.createUser(name, password, first, last, false);
-
         //String output = "POST:\nCreate User: " + name + " with password " + password;
 		String output = j.toString();
         return Response.status(200).entity(output).build();
@@ -121,31 +181,32 @@ public class Services {
 	public Response login(
 		@FormParam("name") String name,
 		@FormParam("password") String password) {
-
-		JSONObject j = Call.login(name, password);
-
-        //String output = "POST:\nCreate User: " + name + " with password " + password;
-		String output = j.toString();
-        return Response.status(200).entity(output).build();
+		JSONObject jo = new JSONObject();
+		JSONObject j1 = Call.login(name, password);
+		int userID = -1;
+		jo.put("user",j1);
+		if((userID = j1.getInt("UserID")) >  0){
+			j1 = Call.getUsersPref(userID);
+			jo.put("prefs",j1);
+			JSONArray j2 = Call.getFavs(userID);
+        	jo.put("favs",j2);
+		}
+		//String output = "POST:\nCreate User: " + name + " with password " + password;
+		String output = jo.toString();
+        return Response.status(200).entity(output)
+				.header("Access-Control-Allow-Orgin","*")
+				.header("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,OPTIONS")
+				.header("Access-Control-Allow-Headers","Origin, Content-Type, Content-Length, Authorization, Content-Length, X-Requested-With, Accept")
+			//	.header("Access-Control-Allow-Credentials","true")
+				.allow("Options").build();
 	}
-	@POST
-    @Path("get-pref/")
-    //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response getPref(
-        @FormParam("userID") String userID) {
-
-        JSONObject j = Call.getUsersPref(Integer.parseInt(userID));
-
-        String output = j.toString();
-        return Response.status(200).entity(output).build();
- 	}
 
 	@POST
     @Path("update-name/")
 	public Response updatename(
 		@FormParam("userID") String userID,
 		@FormParam("newFirst") String newFirst,
-		@FormParam("newLast") String newLast){
+		@FormParam("newLast") String newLast)throws ClassNotFoundException{
 		
 		JSONObject j = Call.updateName(Integer.parseInt(userID),newFirst,newLast);
 		String output = j.toString();
@@ -156,9 +217,10 @@ public class Services {
     @Path("update-password/")
 	public Response updatepass(
         @FormParam("userID") String userID,
-        @FormParam("newPassword") String newPass){
-
-        JSONObject j = Call.updatePassword(Integer.parseInt(userID),newPass);
+        @FormParam("newPassword") String newPass,
+	@FormParam("oldPassword") String oldPass)throws ClassNotFoundException{
+		
+        JSONObject j = Call.updatePassword(Integer.parseInt(userID),newPass,oldPass);
         String output = j.toString();
         return Response.status(200).entity(output).build();
     }
@@ -168,7 +230,7 @@ public class Services {
 	public Response favoriteItem(
 		@FormParam("userID") String userID,
 		@FormParam("itemID") String itemID,
-		@FormParam("location") String loc) {
+		@FormParam("location") String loc)throws ClassNotFoundException {
         JSONObject j = Call.favItem(Integer.parseInt(userID),itemID,loc);
         String output = j.toString();
         return Response.status(200).entity(output).build();
@@ -178,18 +240,19 @@ public class Services {
     public Response unfavoriteItem(
         @FormParam("userID") String userID,
         @FormParam("itemID") String itemID,
-        @FormParam("location") String loc) {
+        @FormParam("location") String loc) throws ClassNotFoundException{
         JSONObject j = Call.unfavItem(Integer.parseInt(userID),itemID,loc);
         String output = j.toString();
         return Response.status(200).entity(output).build();
     }
-	
 	@POST
-    @Path("favorites/")
-	public Response getFavoriteItem(
-        @FormParam("userID") String userID){
-		JSONArray j = Call.getFavs(Integer.parseInt(userID));
-        String output = j.toString();
-        return Response.status(200).entity(output).build();
+	@Path("set-pref/")
+	public Response setPrefs(
+		@FormParam("userID") String userID,
+		@FormParam("prefs") String newPrefs)throws ClassNotFoundException{
+		JSONObject j = Call.updateUsersPref(Integer.parseInt(userID),newPrefs);		
+		String output = j.toString();
+		return Response.status(200).entity(output).build();
 	}
+	
 }
