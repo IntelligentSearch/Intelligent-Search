@@ -129,7 +129,7 @@ var app = angular.module('myApp.dining', ['ngRoute'])
     stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0,4);
 
     $http({
-      url: "https://api.hfs.purdue.edu/menus/v1/locations/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
+        url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
       method: "GET"
     }).success(function(data, status, headers, config) {
       if(data != null) {
