@@ -9,14 +9,36 @@ var app = angular.module('myApp.login', ['ngRoute'])
             css: 'app/login/login.css'
         });
     }])
-    .controller('LoginCtrl', function ($scope, $location) {
+    .controller('LoginCtrl', function ($scope, $location, $http) {
         $scope.user = {
             userName: '',
             password: ''
         }
 
-        $scope.auth = function() {
+        $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
 
-            $location.path("/dining");
+        $scope.auth = function() {
+                // GET request for logging into an account:
+                $http({
+                    method: 'POST',
+                    url: $scope.base_url + '/login',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    transformRequest: function(obj) {
+                        var str = [];
+                        for(var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        return str.join("&");
+                    },
+                    data: {name: $scope.user, password: $scope.password}
+                }).then(function successCallback(response) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    $location.path("/dining");
+
+                }, function errorCallback(response) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    alert('Login failed' + angular.toJson(response));
+                });
         }
     });
