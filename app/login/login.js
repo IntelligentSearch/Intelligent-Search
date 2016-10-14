@@ -38,8 +38,14 @@ var app = angular.module('myApp.login', ['ngRoute'])
                 // this callback will be called asynchronously
                 // when the response is available
                 var strData = JSON.stringify(response);
-                // console.log(strData.user.UserID);
-                $location.path("/dining");
+                var userID = response.data.user.UserID;
+                // var userID = strData.user.UserID;
+                if (userID != -1) {
+                    $location.path("/dining");
+                 } else {
+                    alert('Login failed');
+                    // $location.path("/login")
+                 }
 
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs
