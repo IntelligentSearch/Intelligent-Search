@@ -3,7 +3,7 @@ Take a look at the JSON.java and SQL.java to see examples of how the code would 
 
 The @Path defines what url path is accepted for what functions.
 
-I made the services class where we can place all the "general" calls that would be made. The /search/ API call works fine but I still have not been able to figure out why POST is not working. If you can figure that out, that would be great. The search function would pass the search text to the tokenizer and then call the appropriate function. I'd recommend installing the Postman extension for Chrome to speed things up to test POST.
+I made the services class where we can place all the "general" calls that would be made. The search function would pass the search text to the tokenizer and then call the appropriate function. I'd recommend installing the Postman extension for Chrome to speed things up to test POST.
 
 *IMPORTANT*
 1. Make sure every function has it's own path and GET/POST requirements.

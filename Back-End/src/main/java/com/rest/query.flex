@@ -1,6 +1,7 @@
 import java.lang.StringBuilder;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.io.File;
 %%
 
 %public
@@ -88,7 +89,8 @@ if(today) {
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item.substring(0,item.length()-1)+";");
 String fin = sb.toString().substring(0,sb.length()-1);
-PrintWriter writer = new PrintWriter("tokens.txt", "UTF-8");
+File f = new File("/home/cs307/Intelligent-Search/files/tokens.txt");
+PrintWriter writer = new PrintWriter(f);
 writer.println(fin);
 System.out.println(fin);
 writer.close();

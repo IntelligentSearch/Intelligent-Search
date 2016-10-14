@@ -27,11 +27,11 @@ public class Call {
 					boolean breakfast = res.getBoolean("D.BREAKFAST");
 					boolean lunch = res.getBoolean("D.LUNCH");;
 					boolean dinner = res.getBoolean("D.DINNER");
-        				boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
-        					res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
-        					res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
-        					res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
-        					res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
+        			boolean pref[] = { res.getBoolean("A.EGGS") , res.getBoolean("A.FISH"),
+        				res.getBoolean("A.GLUTEN"),res.getBoolean("A.MILK"),
+        				res.getBoolean("A.PEANUTS"),res.getBoolean("A.SHELLFISH"),
+        				res.getBoolean("A.SOY"),res.getBoolean("A.TREE_NUTS"),
+        				res.getBoolean("A.WHEAT"),res.getBoolean("A.VEG") };
         			Item i = new Item(name,id,station,diningCourt);
         			i.setBreakfast(breakfast);
         			i.setLunch(lunch);
@@ -138,12 +138,11 @@ public class Call {
 			PreparedStatement prep_stmt;
 			ResultSet res;
 			JSONObject jo = new JSONObject();
-			//sets up connection
 			try{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "SELECT User_ID "
 					+	"FROM User "
-					+	"WHERE USER_NAME = ? AND PASSWORD = ?";
+					+	"WHERE User_Name = ? AND Password = ?";
 				prep_stmt = con.prepareStatement(query);
 				prep_stmt.setString(1, user);
 				prep_stmt.setString(2, pass);
@@ -162,6 +161,7 @@ public class Call {
 			catch (Exception e) {
 				System.out.println("\n"+e.toString());
 				jo.put("UserID", -2);
+				jo.put("Exception", e.toString());
 			}
 			return jo;
 		}
@@ -202,7 +202,8 @@ public class Call {
 			}
 			return jo;
 		}
-		public static boolean updateUsersPref(int userID,JSONObject jo) throws JSONException{
+		public static JSONObject updateUsersPref(int userID,JSONObject jo) throws JSONException{
+			JSONObject jo1 = new JSONObject();
 			Connection con;
 			PreparedStatement prep_stmt;
 			try {
@@ -226,15 +227,17 @@ public class Call {
 				prep_stmt.executeUpdate();
 				con.close();
 				prep_stmt.close();
-				return true;
+				jo1.put("success",1);
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return false;
+				jo1.put("success",-1);
 			}
+			return jo1;
 		}
-		public static boolean updateName(int userID,String newFirst,String newLast){
+		public static JSONObject updateName(int userID,String newFirst,String newLast){
 			Connection con;
 			PreparedStatement prep_stmt;
+			JSONObject jo = new JSONObject();
 			try{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "Update User "
@@ -247,16 +250,18 @@ public class Call {
 				prep_stmt.executeUpdate();
 				con.close();
 				prep_stmt.close();
-				return true;
+				jo.put("success",1);
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
-				return false;
+				jo.put("success",-1);
 			}
+			return jo;
 		}
-		public static boolean updatePassword(int userID,String newPassword){
+		public static JSONObject updatePassword(int userID,String newPassword){
 			Connection con;
 			PreparedStatement prep_stmt;
+			JSONObject jo = new JSONObject();
 			try{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "Update User "
@@ -268,16 +273,18 @@ public class Call {
 				prep_stmt.executeUpdate();
 				con.close();
 				prep_stmt.close();
-				return true;
+				jo.put("success",1);
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
-				return false;
+				jo.put("success",-1);
 			}
+			return jo;
 		}
-		public static boolean favItem(int userId,String itemId,String location){
+		public static JSONObject favItem(int userId,String itemId,String location){
 			Connection con;
 			PreparedStatement prep_stmt;
+			JSONObject jo = new JSONObject();
 			try{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
 				String query = "Insert Into Favorites "
@@ -289,15 +296,17 @@ public class Call {
 				prep_stmt.executeUpdate();
 				con.close();
 				prep_stmt.close();
-				return true;
+				jo.put("success",1);
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
-				return false;
+				jo.put("success",-1);
 			}
+			return jo;
 		}
-		public static boolean unfavItem(int userId,String itemId,String location){
+		public static JSONObject unfavItem(int userId,String itemId,String location){
 			Connection con;
+			JSONObject jo = new JSONObject();
 			PreparedStatement prep_stmt;
 			try{
 				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
@@ -310,12 +319,13 @@ public class Call {
 				prep_stmt.executeUpdate();
 				con.close();
 				prep_stmt.close();
-				return true;
+				jo.put("success",1);
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
-				return false;
+				jo.put("success",-1);
 			}
+			return jo;
 		}
 		public static JSONArray getFavs(int userID){
 			JSONArray ja = new JSONArray();
@@ -333,7 +343,7 @@ public class Call {
 				res = prep_stmt.executeQuery();
 				while(res.next()){
 					JSONObject jo = new JSONObject();
-					jo.put("Item_ID", res.getString("F.Item_ID"));
+					jo.put("Food_ID", res.getString("F.Item_ID"));
 					jo.put("Location", res.getString("F.Location"));
 					jo.put("Name", res.getString("I.Name"));
 					ja.put(jo);

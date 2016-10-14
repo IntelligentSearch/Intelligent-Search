@@ -10,6 +10,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import org.json.*;
 import java.sql.*;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 
 @Path("/rest")
 public class Services {
@@ -27,9 +34,30 @@ public class Services {
 					+ "\t- /create-user/\n"
 					+ "\t  POST\n"
 					+ "\n"
+					+ "\t- /login/\n"
+					+ "\t  POST\n"
+					+ "\n"
+					+ "\t- /update-name/\n"
+                    + "\t  POST\n"
+                    + "\n"
+					+ "\t- /update-password/\n"
+                    + "\t  POST\n"
+                    + "\n"
 					+ "\t- /favorite-item/\n"
 					+ "\t  POST\n"
-					+ "\n";
+					+ "\n"
+					+ "\t- /unfavorite-item/\n"
+                    + "\t  POST\n"
+                    + "\n"
+					+ "\t- /favorites/\n"
+                    + "\t  POST\n"
+                    + "\n"
+					+ "\t- /get-pref/\n"
+                    + "\t  POST\n"
+                    + "\n"
+					+ "\t- /set-pref/\n"
+                    + "\t  POST\n"
+                    + "\n";
 			return Response.status(200).entity(result).build();
 		}
 
@@ -37,16 +65,35 @@ public class Services {
 	@Path("search/{param}")
 	@Produces("application/json")
 	public Response startSearch(@PathParam("param") String search) throws JSONException {
+		File infile = new File("/home/cs307/Intelligent-Search/files/search.txt");
+		String outfile = "/home/cs307/Intelligent-Search/files/tokens.txt";
+		String tokens = "";
+		//write to search string to infile
+		try {
+			PrintWriter writer = new PrintWriter(infile);
+			writer.println(search);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			tokens = e.toString();	
+		}
+
+		//call Query main function
+		String[] args = {infile.getPath()};
+		Query.main(args);
+	
+		try {	
+			//read tokens.txt file
+			BufferedReader br = new BufferedReader(new FileReader(outfile));
+			tokens = br.readLine();
+		} catch (IOException e) {
+			tokens += e.toString();
+		}
+
 		String result = "";
 		JSONObject j = new JSONObject();
-		//j.put("Input", search);
-		
-		//result += "Outside if conditional\n";
-		if (search.equals("Wiley")) { //get wiley menu
-			//result += "Test Wiley query\n";
-			JSONArray ja = Call.getFoodDining(search);
-			j.put("Menu", ja);
-		}
+
+		//USE TOKENS TO DO CALLS
+
 			
 		result += j.toString();	
 		return Response.status(200).entity(result).build();
@@ -67,11 +114,82 @@ public class Services {
 		String output = j.toString();
         return Response.status(200).entity(output).build();
 	}
+	
+	@POST
+	@Path("login/")
+	//@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response login(
+		@FormParam("name") String name,
+		@FormParam("password") String password) {
+
+		JSONObject j = Call.login(name, password);
+
+        //String output = "POST:\nCreate User: " + name + " with password " + password;
+		String output = j.toString();
+        return Response.status(200).entity(output).build();
+	}
+	@POST
+    @Path("get-pref/")
+    //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response getPref(
+        @FormParam("userID") String userID) {
+
+        JSONObject j = Call.getUsersPref(Integer.parseInt(userID));
+
+        String output = j.toString();
+        return Response.status(200).entity(output).build();
+ 	}
+
+	@POST
+    @Path("update-name/")
+	public Response updatename(
+		@FormParam("userID") String userID,
+		@FormParam("newFirst") String newFirst,
+		@FormParam("newLast") String newLast){
+		
+		JSONObject j = Call.updateName(Integer.parseInt(userID),newFirst,newLast);
+		String output = j.toString();
+        return Response.status(200).entity(output).build();
+	}
+	
+	@POST
+    @Path("update-password/")
+	public Response updatepass(
+        @FormParam("userID") String userID,
+        @FormParam("newPassword") String newPass){
+
+        JSONObject j = Call.updatePassword(Integer.parseInt(userID),newPass);
+        String output = j.toString();
+        return Response.status(200).entity(output).build();
+    }
 
 	@POST
 	@Path("favorite-item/")
-	public Response favoriteItem(String msg) {
-        String output = "POST:\nFavorite Item: " + msg;
+	public Response favoriteItem(
+		@FormParam("userID") String userID,
+		@FormParam("itemID") String itemID,
+		@FormParam("location") String loc) {
+        JSONObject j = Call.favItem(Integer.parseInt(userID),itemID,loc);
+        String output = j.toString();
+        return Response.status(200).entity(output).build();
+	}
+	@POST
+    @Path("unfavorite-item/")
+    public Response unfavoriteItem(
+        @FormParam("userID") String userID,
+        @FormParam("itemID") String itemID,
+        @FormParam("location") String loc) {
+        JSONObject j = Call.unfavItem(Integer.parseInt(userID),itemID,loc);
+        String output = j.toString();
+        return Response.status(200).entity(output).build();
+    }
+	
+	@POST
+    @Path("favorites/")
+	public Response getFavoriteItem(
+        @FormParam("userID") String userID){
+		JSONArray j = Call.getFavs(Integer.parseInt(userID));
+        String output = j.toString();
         return Response.status(200).entity(output).build();
 	}
 }
