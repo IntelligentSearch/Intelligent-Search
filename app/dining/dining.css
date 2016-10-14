@@ -31,6 +31,10 @@
     padding-left: 30px;
     padding-right: 20px;
 }
+.search-item {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 16px;
+}
 
 body {
     height: 100%;
@@ -40,6 +44,10 @@ body {
 
 .theme-purdue {
     background-color: #cea645;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 /*.menu-container {*/
