@@ -13,14 +13,14 @@ var app = angular.module('myApp.register', ['ngRoute'])
     css: 'app/register/register.css'
   });
 }])
-.controller('RegisterCtrl', function($scope, $http) {
+.controller('RegisterCtrl', function($scope, $http, $location) {
 
     $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
 
     $scope.account = {
       first: '',
       last: '',
-      email: '',
+      name: '',
       password: ''
     };
 
@@ -31,8 +31,11 @@ var app = angular.module('myApp.register', ['ngRoute'])
         url: $scope.base_url + '/create-user',
         withCredentials: true,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: {name: $scope.account.email, password: $scope.account.password, first: $scope.account.first, last: $scope.account.last}
+        data: $.param({name: $scope.account.name, password: $scope.account.password, first: $scope.account.first, last: $scope.account.last})
       }).then(function successCallback(response) {
+        var data = response.data;
+        console.log(data);
+        $location.path("/dining");
         // this callback will be called asynchronously
         // when the response is available
         }, function errorCallback(response) {

@@ -33,7 +33,7 @@ var app = angular.module('myApp.dining', ['ngRoute'])
   $scope.showSpinner = true;
     $scope.lastSearchString = "";
   var offset = -5.0;
-
+    var userId = 17;
   var clientDate = new Date();
   var utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
 
