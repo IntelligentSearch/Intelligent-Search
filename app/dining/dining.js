@@ -31,6 +31,7 @@ var app = angular.module('myApp.dining', ['ngRoute'])
 
 .controller('DiningCtrl', ['$scope', '$http', '$timeout', '$mdSidenav', '$log', function($scope, $http, $timeout, $mdSidenav, $log) {
   $scope.showSpinner = true;
+    $scope.lastSearchString = "";
   var offset = -5.0;
 
   var clientDate = new Date();
@@ -159,8 +160,16 @@ var app = angular.module('myApp.dining', ['ngRoute'])
                 url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/search/" + pathParam,
                 method: "GET"
             }).success(function(data, status, headers, config) {
+                $scope.lastSearchString = $scope.searchString;
                 if(data != null) {
-
+                    if(data[0].Error == "Feature not Supported")
+                    {
+                        $scope.featureNotSupported = true;
+                    }
+                    else
+                    {
+                        $scope.featureNotSupported = false;
+                    }
                     $scope.searchResult = data;
                 }
             }).error(function (data, status, headers, config) {

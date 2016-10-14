@@ -55,7 +55,7 @@
             </md-button>
             <md-input-container md-theme="input" flex layout-align=" end">
                 <label>&nbsp;</label>
-                <input ng-model="searchString" ng-model-options="{ debounce: 600 }" placeholder="enter search">
+                <input ng-model="searchString" ng-model-options="{ debounce: 1000 }" placeholder="enter search">
             </md-input-container>
             <md-button aria-label="Search" ng-click="showSearch = !showSearch">
                 <ng-md-icon icon="search"></ng-md-icon>
@@ -111,7 +111,10 @@
     <div ng-show="showSearch">
         <br>
         <br>
-        <div flex="50" ng-repeat="item in searchResult" class="search-item">
+       <span ng-show="lastSearchString != '' "> Showing results for <strong> {{lastSearchString}}</strong> </span>
+        <br>
+        <div ng-show="featureNotSupported && searchResult != undefined">Feature not Supported</div>
+        <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult" class="search-item">
             <md-toolbar class="theme-purdue">
                 <div class="md-toolbar-tools">
                     <h3 >{{item.FoodName}}</h3>
