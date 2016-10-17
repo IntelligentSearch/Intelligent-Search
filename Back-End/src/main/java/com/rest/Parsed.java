@@ -1,4 +1,4 @@
-package com.rest;
+//package com.rest;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,8 +74,7 @@ public class Parsed{
 	public String toString(){
 		return court+","+time+","+day+","+name+"\n";
 	}
-	public static JSONArray stringParser(String x) throws  ClassNotFoundException{
-		String save = new String(x);
+	public static JSONArray stringParser(String x, int userID) throws  ClassNotFoundException, JSONException{
 		x=x+";";
 		int index;
 		Parsed p = new Parsed();
@@ -101,7 +100,7 @@ public class Parsed{
 			}
 			x = x.substring(index+1);
 		}
-		return decider(p,x);
+		return decider(p,x,userID);
 	}
 	public static boolean isToday(String date){
 		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
@@ -112,12 +111,12 @@ public class Parsed{
 		return false; 
 	}
 	
-	public static JSONArray decider(Parsed p,String x) throws JSONException,ClassNotFoundException{
+	public static JSONArray decider(Parsed p,String x,int userID) throws JSONException,ClassNotFoundException{
 		JSONArray empty = new JSONArray();
 		JSONObject e = new JSONObject();
 		e.put("Error", "Feature not Supported");
 		e.put("TOKEN",x);
-		 e.put("Day", p.getDay());
+		e.put("Day", p.getDay());
 		e.put("Court", p.getCourt());
 		e.put("name", p.getName());
 		e.put("time", p.getTime());
@@ -126,8 +125,29 @@ public class Parsed{
 		if(p.hasDay()){
 			//NOT CURRENT DAY
 			if(!isToday(p.getDay())){
-				if(p.hasCourt() && !p.hasName()){
-					return APICaller.apiCallLocation(p.getDay(),p.getCourt());
+				if(!p.hasCourt() && !p.hasName() && !p.hasTime()){
+					return APICaller.apiCallAll(p.getDay(),userID);
+				}
+				else if(p.hasCourt() && !p.hasName() && !p.hasTime()){
+					return APICaller.apiCallLocation(p.getDay(),p.getCourt(),userID);
+				}
+				else if(p.hasCourt() && p.hasName() && !p.hasTime()){
+					return APICaller.apiCallLocItem(p.getDay(),p.getCourt(),p.getName(),userID);
+				}
+				else if(!p.hasCourt() && p.hasName() && !p.hasTime()){
+					return APICaller.apiCallItem(p.getDay(),p.getName(),userID);
+				}
+				else if (!p.hasCourt() && !p.hasName() && p.hasTime()){
+					return APICaller.apiCallAtTime(p.getDay(), userID, p.getTime());
+				}
+				else if (!p.hasCourt() && p.hasName() && p.hasTime()){
+					return APICaller.apiCallItemAtTime(p.getDay(),p.getName(),p.getTime(),userID);
+				}
+				else if (p.hasCourt() && p.hasName() && p.hasTime()){
+					return APICaller.apiCallLocItemAtTime(p.getDay(),p.getCourt(),p.getName(),p.getTime(),userID);
+				}
+				else if (p.hasCourt() && !p.hasName() && !p.hasTime()){
+					return APICaller.apiCallLocAtTime(p.getDay(),p.getCourt(),p.getTime(),userID);
 				}
 				return empty;
 			}
@@ -136,23 +156,43 @@ public class Parsed{
 
 		//searching dining court options
 		//TOKEN DINING COURT, TOKEN TODAY
-		if(p.hasCourt() && !p.hasName()){
+		if(p.hasCourt() && !p.hasName() && !p.hasTime()){
 			System.out.println("Dining");
-			return Call.getFoodDining(p.getCourt());
+			return Call.getFoodDining(p.getCourt(),userID);
 		}
 
 		//searching item
 		//TOKEN ITEM, TOKEN TODAY
-		else if(!p.hasCourt() && p.hasName()){
+		else if(!p.hasCourt() && p.hasName() && !p.hasTime()){
 			System.out.println("Item");
-			return Call.getItem(p.getName());
+			return Call.getItem(p.getName(),userID);
 		}
 
 		//has item and dining Court
 		//TOKEN ITEM, TOKEN DINING COURT
-		else if(p.hasCourt() && p.hasName()){
+		else if(p.hasCourt() && p.hasName() && !p.hasTime()){
 			System.out.println("Item at court");
-			return Call.getItemDin(p.getCourt(), p.getName());
+			return Call.getItemDin(p.getCourt(), p.getName(),userID);
+		}
+		else if(!p.hasCourt() && !p.hasName() && !p.hasTime()){
+			System.out.println("just date");
+			return Call.getAll(userID);
+		}
+		else if(!p.hasCourt() && !p.hasName() && p.hasTime()){
+			System.out.println("time");
+			return Call.getAtTime(p.getTime(),userID);
+		}
+		else if(!p.hasCourt() && p.hasName() && p.hasTime()){
+			System.out.println("time name");
+			return Call.getItemAtTime(p.getTime(),p.getName(),userID);
+		}
+		else if(p.hasCourt() && p.hasName() && p.hasTime()){
+			System.out.println("time name item");
+			return Call.getItemDinAtTime(p.getTime(),p.getCourt(),p.getName(),userID);
+		}
+		else if(p.hasCourt() && !p.hasName() && p.hasTime()){
+			System.out.println("time court");
+			return Call.getDinAtTime(p.getTime(),p.getCourt(),userID);
 		}
 		return empty;
 	}
