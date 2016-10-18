@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('myApp.login', ['ngRoute'])
+var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
 
     .config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
@@ -13,7 +13,7 @@ var app = angular.module('myApp.login', ['ngRoute'])
             css: 'app/login/login.css'
         });
     }])
-    .controller('LoginCtrl', function ($scope, $location, $http) {
+    .controller('LoginCtrl', function ($scope, $location, $http, $cookies) {
         $scope.user = {
             userName: '',
             password: ''
@@ -37,14 +37,12 @@ var app = angular.module('myApp.login', ['ngRoute'])
             }).then(function successCallback(response) {
                 // this callback will be called asynchronously
                 // when the response is available
-                var strData = JSON.stringify(response);
                 var userID = response.data.user.UserID;
-                // var userID = strData.user.UserID;
                 if (userID != -1) {
+                    $cookies.put('user', userID);
                     $location.path("/dining");
                  } else {
                     alert('Login failed');
-                    // $location.path("/login")
                  }
 
             }, function errorCallback(response) {
