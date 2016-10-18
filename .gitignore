@@ -1,1 +1,2 @@
-./files/*
+/files/*
+/Scripts/log.txt
