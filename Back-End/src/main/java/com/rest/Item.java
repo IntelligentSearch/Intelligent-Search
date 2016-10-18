@@ -1,4 +1,4 @@
-package com.rest;
+//package com.rest;
 
 import java.util.ArrayList;
 import org.json.JSONException;
@@ -19,13 +19,14 @@ public class Item {
 	boolean[] userPrefs;
 	ArrayList<String> nameNut;
 	ArrayList<String> valueNut;
-	Item(String n, String i, String s,String d,String in,String date) {
+	Item(String n, String i, String s,String d,String in,String date,boolean[] uP) {
 		this.station = s;
 		this.name = n;
 		this.id = i;
 		this.diningCourt = d;
 		this.ingred = in;
 		this.date = date;
+		this.userPrefs = uP;
 		
 	}
 	
@@ -51,6 +52,34 @@ public class Item {
 		this.nameNut = name;
 		this.valueNut = value;
 	}
+	public boolean atTime(String time){
+		if(time == null){
+			return true;
+		}
+		switch(time.toLowerCase()){
+			case "breakfast":
+				if(breakfast == 1){
+					return true;
+				}
+				return false;
+			case "lunch":
+				if(lunch == 1){
+					return true;
+				}
+				return false;
+			case "latelunch":
+				if(lateLunch == 1){
+					return true;
+				}
+				return false;
+			case "dinner":
+				if(dinner == 1){
+					return true;
+				}
+				return false;
+		}
+		return false;
+	}
 	public JSONObject processItem() throws JSONException{
 		JSONObject jo = new JSONObject();
 		//TODO add on to this
@@ -59,6 +88,9 @@ public class Item {
 			for(int i = 0; i < 10;i++){
 				allergens[i] = false;
 			}
+		}
+		if(this.userPrefs != null && !Helper.matchPrefs(this.userPrefs,this.allergens)){
+			return null;
 		}
 		jo.put("DiningCourt",this.diningCourt);
 		jo.put("FoodName",this.name);

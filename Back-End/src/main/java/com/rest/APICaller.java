@@ -1,4 +1,4 @@
-package com.rest;
+//package com.rest;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,52 @@ public class APICaller {
 		}
 		return json;
 	}
-	public static JSONArray apiCallLocation(String date,String location) throws JSONException{
+	public static JSONArray apiCallItem(String date,String itemName,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,null);
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallItemAtTime(String date,String itemName,String time,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,time);
+		}		
+		return ja;
+	}
+	
+	public static JSONArray apiCallAll(String date,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			parseLocationData(o.get("Name").toString(), date,ja,userID,null,null);
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallAtTime(String date,int userID,String time) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			parseLocationData(o.get("Name").toString(), date,ja,userID,null,time);
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocation(String date,String location,int userID) throws JSONException{
 		JSONArray ja = new JSONArray();
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
 		JSONObject json = getJSON(url);
@@ -52,12 +98,52 @@ public class APICaller {
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
 			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
-				parseLocationData(o.get("Name").toString(), date,ja);
+				parseLocationData(o.get("Name").toString(), date,ja,userID,null,null);
 			}
 		}		
 		return ja;
 	}
-	public static boolean parseLocationData(String loc, String date,JSONArray ja) throws JSONException {
+	public static JSONArray apiCallLocAtTime(String date,String location,String time,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
+				parseLocationData(o.get("Name").toString(), date,ja,userID,null,time);
+			}
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocItem(String date,String location,String itemName,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
+				parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,null);
+			}
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocItemAtTime(String date,String location,String itemName,String time,int userID) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
+				parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,time);
+			}
+		}		
+		return ja;
+	}
+
+	public static boolean parseLocationData(String loc, String date,JSONArray ja,int userID,String item,String time) throws JSONException {
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/" + loc.replaceAll(" ", "%20") + "/" + date;
 		JSONObject json = getJSON(url);
 		JSONArray meals = json.getJSONArray("Meals");
@@ -68,10 +154,9 @@ public class APICaller {
 
 			//Breakfast, Lunch, Late Lunch, Dinner
 			String meal = m.get("Name").toString().replaceAll(" ", "");
-			
 			//go through stations
 			if (!m.has("Stations") || m.isNull("Stations"))	continue;	
-			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc,date); //get items to put into daily table
+			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc,date,userID,item); //get items to put into daily table
 		}
 		for (String s : item_list.keySet()) {
 			Item i = item_list.get(s);
@@ -84,11 +169,22 @@ public class APICaller {
 			//TODO change this to creating a json object 
 			i.setAllergens(Helper.getAllergens(i.id));
 			Helper.getNutrition(i.id,i);
-			ja.put(i.processItem());
+			
+			JSONObject jo = i.processItem();
+			if(jo != null && i.atTime(time)){
+				ja.put(jo);
+			}
 		}
 		return true;
 	}
-	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court,String date) throws JSONException {
+	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court,String date,int userID,String getItem) throws JSONException {
+		boolean[] userPrefs = null;
+		if(getItem != null){
+			getItem = getItem.toLowerCase();
+		}
+		if(userID > 0){
+			userPrefs = Helper.getUsersPref(userID);
+		}
 		for (int j = 0; j < stations.length(); j++) {
 			JSONObject s = stations.getJSONObject(j);
 			String station = s.getString("Name");
@@ -97,22 +193,34 @@ public class APICaller {
 
 			//get array of items at the station
 			if (s.has("Items") && !s.isNull("Items")) {
+				System.out.println(getItem);
 				JSONArray items = s.getJSONArray("Items");
 				for (int k = 0; k < items.length(); k++) {
 					JSONObject item = items.getJSONObject(k);
 
 					String item_name = item.getString("Name");
+					if(getItem != null && !item_name.toLowerCase().matches(".*"+getItem+".*")){
+						System.out.println("DOESNT MATCH "+item_name);
+						continue;
+					}
 					Item food;
 					if (item_list.containsKey(item_name)) { //item exists
 						food = item_list.remove(item_name);
 					} else {
-						food = new Item(item_name, item.getString("ID"), station,court,Helper.getIngred(item.getString("ID")),date);
+						food = new Item(item_name, item.getString("ID"), station,court,Helper.getIngred(item.getString("ID")),date,userPrefs);
 					}
-					if (meal.equals("Breakfast"))		food.setBreakfast(true);
-					else if (meal.equals("Lunch"))		food.setLunch(true);
-					else if (meal.equals("LateLunch"))	food.setLLunch(true);
-					else if (meal.equals("Dinner"))		food.setDinner(true);
-
+					if (meal.equals("Breakfast")){
+						food.setBreakfast(true);
+					}
+					else if (meal.equals("Lunch")){
+						food.setLunch(true);
+					}
+					else if (meal.equals("LateLunch")){
+						food.setLLunch(true);
+					}
+					else if (meal.equals("Dinner")){
+						food.setDinner(true);
+					}
 					item_list.put(item_name, food);
 				}
 			}

@@ -1,7 +1,11 @@
-package com.rest;
+//package com.rest;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import org.json.*;
 
 public class Helper {
@@ -186,5 +190,36 @@ public class Helper {
 				}
 			}
 			return true;
+		}
+		public static void readItems(ResultSet res,JSONArray ja, int userID) throws SQLException, JSONException{
+			boolean[] userPrefs = null; 
+			if(userID > 0){
+				userPrefs = Helper.getUsersPref(userID);
+			}
+			while (res.next()){
+				String name = res.getString("I.NAME");
+				//System.out.println(name);
+				String diningCourt = res.getString("D.LOCATION");
+				String station = res.getString("D.STATION");
+				String  id = res.getString("I.Item_ID");
+				boolean breakfast = res.getBoolean("D.BREAKFAST");
+				boolean lunch = res.getBoolean("D.LUNCH");;
+				boolean dinner = res.getBoolean("D.DINNER");
+				boolean llunch = res.getBoolean("D.LateLunch");
+				String ingred = res.getString("I.Ingredients");
+				DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+				Date dateobj = new Date();
+				Item i = new Item(name,id,station,diningCourt,ingred,df.format(dateobj),userPrefs);
+				i.setBreakfast(breakfast);
+				i.setLunch(lunch);
+				i.setDinner(dinner);
+				i.setLLunch(llunch);
+				i.setAllergens(Helper.getAllergens(id));
+				Helper.getNutrition(id,i);
+				JSONObject jo = i.processItem();
+				if(jo != null){
+					ja.put(jo);
+				}
+		}
 		}
 }
