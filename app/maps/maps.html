@@ -1,14 +1,29 @@
 <body>
-  <div id="map"></div>
-  <div>{{user}}</div>
+  <div>
+    <span>{{user}}</span>
+    <span>
+      <button ng-click="useCurr()">route from current</button>
+  <br>
   <ng-map style="width: 68%; float:left; height: 100%;" center="[40.4237, -86.9212]">
     <directions
 	  draggable="true"
    panel="directions-panel"
    travel-mode="DRIVING"
-   origin="40.431103, -86.914727"
-   destination="40.423703, -86.910800">
+   origin={{location.start}}
+   destination={{location.end}}>
     </directions>
+    <!-- <custom-marker id="start" position={{location.start}}>
+      <div>
+	<img src="app/maps/bus-start.png">
+      </div>
+    </custom-marker>
+    <custom-marker id="end" position={{location.end}}>
+      <div>
+	<img src="app/maps/flag-end.png">
+      </div>
+    </custom-marker>
+    -->
+    <transit-layer></transit-layer>
   </ng-map>
   <div id="directions-panel" style="width: 28%; float:left; height: 100%; overflow: auto; padding: 0px 5px">
   </div>

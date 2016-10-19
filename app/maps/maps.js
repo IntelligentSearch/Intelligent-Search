@@ -15,16 +15,15 @@ var app = angular.module('myApp.maps', ['ngRoute'])
 }])
 .controller('MapsCtrl', function($scope, $location, $http) {
   var map; 
-  var vm = this;
-  vm.user = "hello"; 
-  console.log($scope);
-  $scope.initMap = function () {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.4237, lng: -86.9212},
-      zoom: 18
-    });
+  $scope.user = 'hello'; 
+  $scope.location = {
+    start : "40.431103, -86.914727",
+    end   : "40.423703, -86.910800"
+  };
+  $scope.useCurr = function() {
+    $scope.location.start = "40.428103, -86.913727";
+    console.log($scope);
   }
-  //$scope.initMap();
 });
 
 

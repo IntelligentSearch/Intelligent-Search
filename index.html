@@ -1,61 +1,69 @@
 <!DOCTYPE html>
 <!--[if lt IE 7]>
 <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>
-<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>
-<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>My AngularJS App</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/normalize.css">
-    <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/main.css">
-    <link rel="stylesheet" href="app/app.css">
-    <script src="app/bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-    <!-- Angular Material requires Angular.js Libraries -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  <!--[if IE 7]>
+  <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>
+    <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+      <!--[if gt IE 8]><!-->
+	<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+	  <head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <title>My AngularJS App</title>
+	    <meta name="description" content="">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/normalize.css">
+	    <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/main.css">
+	    <link rel="stylesheet" href="app/app.css">
+	    <script src="app/bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+	    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	    <!-- Angular Material requires Angular.js Libraries -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 
-    <!-- Angular Material Library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-</head>
-<body>
-<!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
-<script src="app/bower_components/angular/angular.js"></script>
-<script src="app/bower_components/angular-route/angular-route.js"></script>
-<script src="app/app.js"></script>
-<script src="app/dining/dining.js"></script>
-<script src="app/login/login.js"></script>
-<script src="app/register/register.js"></script>
-<script src="app/components/version/version.js"></script>
-<script src="app/components/version/version-directive.js"></script>
-<script src="app/components/version/interpolate-filter.js"></script>
+	    <!-- Angular Material Library -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+	    <!-- Google maps API -->
 
-<ul class="menu">
-    <li><a href="#!/dining">Dining</a></li>
-    <li><a href="#!/login">Login</a></li>
-</ul>
+	  </head>
+	  <body>
+	    <!-- In production use:
+       <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+       -->
+       <script src="/app/bower_components/ngmap/build/scripts/ng-map.min.js"></script>
+       <script src="app/bower_components/angular/angular.js"></script>
+       <script src="app/bower_components/angular-route/angular-route.js"></script>
+       <script src="app/app.js"></script>
+       <script src="app/dining/dining.js"></script>
+       <script src="app/maps/maps.js"></script>
+       <script src="app/login/login.js"></script>
+       <script src="app/register/register.js"></script>
+       <script src="app/components/version/version.js"></script>
+       <script src="app/components/version/version-directive.js"></script>
+       <script src="app/components/version/interpolate-filter.js"></script>
+       <script async defer
+	       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAQiW8AYj0aQF4_6WEInYXewu02FZ62oFI">
+       </script>
 
-<!--[if lt IE 7]>
-<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
-    your browser</a> to improve your experience.</p>
-<![endif]-->
+       <ul class="menu">
+	 <li><a href="#!/dining">Dining</a></li>
+	 <li><a href="#!/login">Login</a></li>
+	 <li><a href="#!/maps">Maps</a><li>
+       </ul>
 
-<div ng-view></div>
+       <!--[if lt IE 7]>
+	 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
+	 your browser</a> to improve your experience.</p>
+       <![endif]-->
 
-<!--<div>Angular seed app: v<span app-version></span></div>-->
+       <div ng-view></div>
+
+       <!--<div>Angular seed app: v<span app-version></span></div>-->
 
 
-</body>
-</html>
+	  </body>
+	</html>
