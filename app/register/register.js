@@ -33,9 +33,14 @@ var app = angular.module('myApp.register', ['ngRoute'])
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         data: $.param({name: $scope.account.name, password: $scope.account.password, first: $scope.account.first, last: $scope.account.last})
       }).then(function successCallback(response) {
-        var data = response.data;
-        console.log(data);
-        $location.path("/dining");
+        var userID = response.data.UserID;
+        if (userID != -1) {
+          $cookies.put('user', userID);
+          $cookies.put('user_name',$scope.account.name);
+          $location.path("/dining");
+        } else {
+          alert('Register failed');
+        }
         // this callback will be called asynchronously
         // when the response is available
         }, function errorCallback(response) {

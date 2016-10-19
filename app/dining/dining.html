@@ -15,15 +15,20 @@
             md-component-id="left"
             md-whiteframe="4">
         <md-toolbar class="md-theme-indigo">
-            <h1 class="md-toolbar-tools">User</h1>
+            <h1 ng-if="getUserName() != undefined" class="md-toolbar-tools">{{getUserName()}}</h1>
+            <h1 ng-if="getUserName() == undefined" class="md-toolbar-tools">User</h1>
         </md-toolbar>
         <md-content layout-padding ng-controller="LeftCtrl">
-            <md-button ng-click="close()" class="md-primary" hide-gt-md>
-                Close Sidenav Left
+            <md-button ng-if="getUserID() == -1 || getUserID() == undefined" href="#!/login" class="md-accent">
+                Login
             </md-button>
-            <p hide show-gt-md>
-                Settings
-            </p>
+            <md-button ng-if="getUserID() != -1 && getUserID() != undefined" ng-click="logout()" class="md-accent">
+                Logout
+            </md-button>
+            <br/>
+            <md-button ng-click="toggleLeft()" class="md-accent">
+                Close this Sidenav
+            </md-button>
         </md-content>
     </md-sidenav>
 
