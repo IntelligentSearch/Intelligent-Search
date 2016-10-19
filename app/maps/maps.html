@@ -1,5 +1,15 @@
 <body>
   <div id="map"></div>
   <div>{{user}}</div>
-  <ng-map center="[40.4237, -86.9212]"></ng-map>
+  <ng-map style="width: 68%; float:left; height: 100%;" center="[40.4237, -86.9212]">
+    <directions
+	  draggable="true"
+   panel="directions-panel"
+   travel-mode="DRIVING"
+   origin="40.431103, -86.914727"
+   destination="40.423703, -86.910800">
+    </directions>
+  </ng-map>
+  <div id="directions-panel" style="width: 28%; float:left; height: 100%; overflow: auto; padding: 0px 5px">
+  </div>
 </body>
