@@ -3,9 +3,11 @@
 // Declare app level module which depends on views, and components
 var app = angular.module('myApp', [
     'ngRoute',
+    'ngMap',
     'ngMaterial',
     'myApp.login',
     'myApp.dining',
+    'myApp.maps',
     'myApp.register',
     'myApp.version'
 ]).directive('head', ['$rootScope', '$compile',
