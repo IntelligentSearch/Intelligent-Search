@@ -36,6 +36,7 @@ var app = angular.module('myApp.register', ['ngRoute'])
         var userID = response.data.UserID;
         if (userID != -1) {
           $cookies.put('user', userID);
+          $cookies.put('user_name',$scope.account.name);
           $location.path("/dining");
         } else {
           alert('Register failed');

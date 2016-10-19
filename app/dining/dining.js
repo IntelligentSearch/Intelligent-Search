@@ -34,6 +34,16 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         $scope.lastSearchString = "";
         var offset = -5.0;
         var userId = $cookies.get('user', -1);
+        var userName = $cookies.get('user_name');
+
+        $scope.getUserID = function () {
+            return userId;
+        }
+
+        $scope.getUserName = function () {
+            return userName;
+        }
+
         var clientDate = new Date();
         var utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
 
@@ -175,7 +185,21 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             }
         });
 
-    }]).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    }]).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $cookies) {
+        var userID = $cookies.get('user', -1);
+        console.log("LeftCTRL:" + userID);
+
+        $scope.getUserID = function () {
+            return userID;
+        }
+
+        $scope.logout =  function() {
+            userID = -1;
+            $cookies.remove('user');
+            $cookies.remove('user_name');
+            $location.path("/dining");
+        };
+
         $scope.close = function () {
             // Component lookup should always be available since we are not using `ng-if`
             $mdSidenav('left').close()

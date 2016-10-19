@@ -40,6 +40,7 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
                 var userID = response.data.user.UserID;
                 if (userID != -1) {
                     $cookies.put('user', userID);
+                    $cookies.put('user_name', $scope.user.userName);
                     $location.path("/dining");
                  } else {
                     alert('Login failed');
