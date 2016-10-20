@@ -7,6 +7,7 @@ var app = angular.module('myApp', [
     'ngMaterial',
     'myApp.login',
     'myApp.dining',
+    'myApp.settings',
     'myApp.maps',
     'myApp.register',
     'myApp.version'
