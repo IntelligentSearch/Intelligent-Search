@@ -36,7 +36,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
         $scope.getUserID = function () {
             var response = $cookies.get('user');
-            if (response.data != undefined) {
+            if (response != undefined && response.data != undefined) {
                 var userID = response.data.user.UserID;
                 console.log("GetUserId:" + userID);
                 return userID;
@@ -144,7 +144,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
 
             $http({
-                url: "https://cs307.cs.purdue.edu:8443/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
+                url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
                 method: "GET"
             }).success(function (data, status, headers, config) {
                 if (data != null) {
@@ -172,7 +172,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
                 var pathParam = $scope.searchString.split(' ').join('%20');
                 $http({
-                    url: "https://cs307.cs.purdue.edu:8443/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/search/" + pathParam,
+                    url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/search/" + pathParam,
                     method: "GET"
                 }).success(function (data, status, headers, config) {
                     $scope.lastSearchString = $scope.searchString;
@@ -194,7 +194,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
         $scope.getUserID = function () {
             var response = $cookies.get('user');
-            if (response.data != undefined) {
+            if (response != undefined && response.data != undefined) {
                 var userID = response.data.user.UserID;
                 return userID;
             } else {
