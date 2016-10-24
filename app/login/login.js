@@ -19,7 +19,7 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
             password: ''
         }
 
-        $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
+        $scope.base_url = "https://cs307.cs.purdue.edu:8443/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
 
         $scope.auth = function () {
             // GET request for logging into an account:
@@ -39,7 +39,7 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
                 // when the response is available
                 var userID = response.data.user.UserID;
                 if (userID != -1) {
-                    $cookies.put('user', userID);
+                    $cookies.put('user', response);
                     $cookies.put('user_name', $scope.user.userName);
                     $location.path("/dining");
                  } else {

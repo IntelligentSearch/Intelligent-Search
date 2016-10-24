@@ -35,9 +35,14 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         var offset = -5.0;
 
         $scope.getUserID = function () {
-            var userID = $cookies.get('user', -1);
-            console.log("GetUserId:"+userID);
-            return userID;
+            var response = $cookies.get('user');
+            if (response.data != undefined) {
+                var userID = response.data.user.UserID;
+                console.log("GetUserId:" + userID);
+                return userID;
+            } else {
+                return response;
+            }
         }
 
         $scope.getUserName = function () {
@@ -139,7 +144,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
 
             $http({
-                url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
+                url: "https://cs307.cs.purdue.edu:8443/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
                 method: "GET"
             }).success(function (data, status, headers, config) {
                 if (data != null) {
@@ -167,7 +172,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
                 var pathParam = $scope.searchString.split(' ').join('%20');
                 $http({
-                    url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/search/" + pathParam,
+                    url: "https://cs307.cs.purdue.edu:8443/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/search/" + pathParam,
                     method: "GET"
                 }).success(function (data, status, headers, config) {
                     $scope.lastSearchString = $scope.searchString;
@@ -188,9 +193,13 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
     }]).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $cookies) {
 
         $scope.getUserID = function () {
-            var userID = $cookies.get('user', -1);
-            console.log("GetUser:"+userID);
-            return userID;
+            var response = $cookies.get('user');
+            if (response.data != undefined) {
+                var userID = response.data.user.UserID;
+                return userID;
+            } else {
+                return response;
+            }
         }
 
         $scope.logout =  function() {
