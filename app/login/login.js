@@ -27,19 +27,14 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
                 method: 'POST',
                 url: $scope.base_url + '/login',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                // transformRequest: function (obj) {
-                //     var str = [];
-                //     for (var p in obj)
-                //         str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                //     return str.join("&");
-                // },
                 data: $.param({name: $scope.user.userName, password: $scope.user.password})
             }).then(function successCallback(response) {
                 // this callback will be called asynchronously
                 // when the response is available
                 var userID = response.data.user.UserID;
                 if (userID != -1) {
-                    $cookies.put('user', response);
+                    console.log(response.data);
+                    $cookies.putObject('user', response.data);
                     $cookies.put('user_name', $scope.user.userName);
                     $location.path("/dining");
                  } else {

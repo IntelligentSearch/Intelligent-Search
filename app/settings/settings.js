@@ -14,42 +14,85 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
         });
     }])
     .controller('SettingsCtrl', function ($scope, $location, $http, $cookies) {
-        $scope.user = {
-            userName: '',
-            password: ''
-        }
-
-        $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
-
-        $scope.auth = function () {
-            // GET request for logging into an account:
-            $http({
-                method: 'POST',
-                url: $scope.base_url + '/settings',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                // transformRequest: function (obj) {
-                //     var str = [];
-                //     for (var p in obj)
-                //         str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                //     return str.join("&");
-                // },
-                data: $.param({name: $scope.user.userName, password: $scope.user.password})
-            }).then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
-                var userID = response.data.user.UserID;
-                if (userID != -1) {
-                    $cookies.put('user', userID);
-                    $cookies.put('user_name', $scope.user.userName);
-                    $location.path("/dining");
-                 } else {
-                    alert('Settings failed');
-                 }
-
-            }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                alert('Settings failed' + angular.toJson(response));
+        var response = $cookies.getObject('user');
+        console.log(response);
+        if (response != undefined) {
+            $scope.userID = response.user.UserID;
+            $scope.preferences = response.prefs;
+            angular.forEach($scope.preferences, function (value, key) {
+               console.log(key + ' : '+ value)
             });
+            console.log("Prefs: " +response.prefs);
+            $scope.name = {
+                firstName: response.user.FirstName,
+                lastName: response.user.LastName
+            }
+
+            $scope.password = {
+                oldPassword: '',
+                newPassword: ''
+            }
+
+
+            $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
+
+            $scope.auth = function ($scope, $http, $timeout, $location, $log, $cookies) {
+
+                //POST request for updating name
+                $http({
+                    method: 'POST',
+                    url: $scope.base_url + '/update-name',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    data: $.param({
+                        userID: $scope.userID,
+                        newFirst: $scope.name.firstName,
+                        newLast: $scope.name.lastName
+                    })
+                }).then(function successCallback(response) {
+
+                }, function errorCallback(response) {
+                    alert('Updating name failed' + angular.toJson(response));
+                });
+
+                //POST request for updating password
+                $http({
+                    method: 'POST',
+                    url: $scope.base_url + '/update-password',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    data: $.param({
+                        userID: $scope.userID,
+                        newPassword: $scope.password.newPassword,
+                        oldPassword: $scope.password.oldPassword
+                    })
+                }).then(function successCallback(response) {
+
+                }, function errorCallback(response) {
+                    alert('Settings failed' + angular.toJson(response));
+                });
+
+                // POST request for setting preferences
+                $http({
+                    method: 'POST',
+                    url: $scope.base_url + '/set-pref',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    data: $.param({userID: $scope.userID, prefs: $scope.preferences})
+                }).then(function successCallback(response) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    var userID = response.data.user.UserID;
+                    if (userID != -1) {
+                       // $cookies.put('user', userID);
+                        $cookies.put('user_name', $scope.user.userName);
+                        $location.path("/dining");
+                    } else {
+                        alert('Settings failed');
+                    }
+
+                }, function errorCallback(response) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                    alert('Settings failed' + angular.toJson(response));
+                });
+            }
         }
     });

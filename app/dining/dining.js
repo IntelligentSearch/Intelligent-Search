@@ -35,7 +35,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         var offset = -5.0;
 
         $scope.getUserID = function () {
-            var response = $cookies.get('user');
+            var response = $cookies.getObject('user');
             if (response != undefined && response.data != undefined) {
                 var userID = response.data.user.UserID;
                 console.log("GetUserId:" + userID);
@@ -193,7 +193,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
     }]).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $cookies) {
 
         $scope.getUserID = function () {
-            var response = $cookies.get('user');
+            var response = $cookies.getObject('user');
             if (response != undefined && response.data != undefined) {
                 var userID = response.data.user.UserID;
                 return userID;
