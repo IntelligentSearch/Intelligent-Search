@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.sql.*;
 import org.json.*;
@@ -67,8 +67,10 @@ public class Call {
 						prep_stmt.setString(1, "%"+diningCourt+"%");
 						res = prep_stmt.executeQuery();
 						Helper.readItems(res,ja,userID);
+						// ja.put(new JSONObject().put("loc",diningCourt));
 				} catch (Exception e) {
 						System.out.println("\n"+e.toString());
+						ja.put(new JSONObject().put("error",e.toString()));
 				}
 				finally{
 						try{
@@ -348,10 +350,12 @@ public class Call {
 				PreparedStatement prep_stmt = null;
 				ResultSet res = null;
 				JSONObject jo = new JSONObject();
+				jo.put("UserName",user);
+				//jo.put("password:",pass);
 				try{
 						Class.forName("com.mysql.jdbc.Driver");
 						con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT User_ID "
+						String query = "SELECT User_ID,First_Name,Last_Name "
 								+	"FROM User "
 								+	"WHERE User_Name = ? AND Password = ?";
 						prep_stmt = con.prepareStatement(query);
@@ -361,6 +365,8 @@ public class Call {
 						if (res.next()) {
 								int userId = res.getInt("USER_ID");
 								jo.put("UserID", userId);
+								jo.put("FirstName",res.getString("First_Name"));
+								jo.put("LastName",res.getString("Last_Name"));
 						}
 						else {
 								jo.put("UserID", -1);
@@ -663,21 +669,31 @@ public class Call {
 				try{
 						Class.forName("com.mysql.jdbc.Driver");
 						con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "Select F.Item_ID,F.Location,I.Name "
-								+	"From Favorites as F "
-								+ 	"JOIN Item as I "
-								+	"Where USER_ID = ? AND I.Item_ID = F.ITEM_ID";//THIS line takes longer then need be;
+						String query = "Select Item_ID,Location "
+								+	"From Favorites "
+								+	"Where USER_ID = ?"; 
 						prep_stmt = con.prepareStatement(query);
 						prep_stmt.setInt(1, userID);
 						res = prep_stmt.executeQuery();
 						while(res.next()){
 								JSONObject jo = new JSONObject();
-								String item_id = res.getString("F.Item_ID");
+								String item_id = res.getString("Item_ID");
 								jo.put("Food_ID", item_id);
-								String loc = res.getString("F.Location");
+								String loc = res.getString("Location");
 								jo.put("Location", loc );
-								String name = res.getString("I.Name");
-								jo.put("Name", name);
+								String name = "";
+								if(item_id != null){
+									query = "Select Name FROM Item Where Item_ID = ?";
+									prep_stmt = con.prepareStatement(query);
+									prep_stmt.setString(1, item_id);
+									res = prep_stmt.executeQuery();
+									if(!res.next()){
+										jo.put(name,"food not found");
+										continue;
+									}
+									name = res.getString("Name");
+									jo.put("Name", name);
+								}
 								if(item_id != null && loc != null){
 									jo.put("Item Cards", getItemDin(loc,name,userID));
 								}
@@ -685,6 +701,7 @@ public class Call {
 									jo.put("Item Cards", getItem(name,userID));
 								}
 								else if(loc != null){
+									//jo.put("location is being checked",loc);
 									jo.put("Item Cards",getFoodDining(loc,userID));
 								}
 								ja.put(jo);
@@ -692,6 +709,7 @@ public class Call {
 				}
 				catch (Exception e) {
 						e.printStackTrace();
+						ja.put(new JSONObject().put("error",e.toString()));
 				}
 				finally{
 						try{

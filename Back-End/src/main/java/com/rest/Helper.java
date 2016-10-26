@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.sql.*;
 import java.text.DateFormat;
@@ -198,6 +198,7 @@ public class Helper {
 			}
 			while (res.next()){
 				String name = res.getString("I.NAME");
+				//ja.put(new JSONObject().put("Name",name));
 				//System.out.println(name);
 				String diningCourt = res.getString("D.LOCATION");
 				String station = res.getString("D.STATION");
@@ -219,6 +220,9 @@ public class Helper {
 				JSONObject jo = i.processItem();
 				if(jo != null){
 					ja.put(jo);
+				}
+				else{
+					//ja.put(new JSONObject().put("object","eror object as it is null"));
 				}
 		}
 		}

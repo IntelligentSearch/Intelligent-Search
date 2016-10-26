@@ -71,6 +71,7 @@ public class Services {
 	@Path("search/{param}")
 	@Produces("application/json")
 	public Response startSearch(@PathParam("param") String search) throws JSONException, ClassNotFoundException {
+		int userID = 0;
 		File infile = new File("/home/cs307/Intelligent-Search/files/search.txt");
 		String outfile = "/home/cs307/Intelligent-Search/files/tokens.txt";
 		String tokens = "";
@@ -100,7 +101,7 @@ public class Services {
 
 		//USE TOKENS TO DO CALLS
 		//j.put("tokens", tokens);
-		JSONArray j = Parsed.stringParser(tokens);
+		JSONArray j = Parsed.stringParser(tokens,userID);
 		result += j.toString();	
 		return Response.status(200).entity(result).build();
 	}

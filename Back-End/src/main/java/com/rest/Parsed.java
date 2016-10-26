@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,8 +13,15 @@ public class Parsed{
 	static final String DAY = "MEAL_DAY=";
 	static final String TIME = "MEAL_TIME=";//mm-dd-yyyy
 	static final String NAME = "ITEM_NAME=";
-	public Parsed(){
+	static final String CALORIE_FLAG = "CALORIE_FLAG=";
+	static final String CALORIES = "NUM_CALORIES=";
+	static final int CALORIES_LESS = 1;
+	static final int CALORIES_EQUAL = 2;
+	static final int CALORIES_GREATER = 3;
+	int userID = 0;
+	public Parsed(int userID){
 		this.court = null;
+		this.userID = userID;
 		this.hascourt = false;
 		this.day = null;
 		this.hasday = false;
@@ -22,6 +29,8 @@ public class Parsed{
 		this.hastime = false;
 		this.name = null;
 		this.hasname = false;
+		this.numCalories =0;
+		this.caloriesFlag = 0;
 	}
 	String court;
 	boolean hascourt;
@@ -71,13 +80,43 @@ public class Parsed{
 	public boolean hasName(){
 		return this.hasname;
 	}
+	int caloriesFlag;
+	int numCalories;
+	public void setCalories(int numCalories){
+		
+		this.numCalories = numCalories;
+	}
+	public void setCalorieFlag(int flag){
+		this.caloriesFlag = flag;
+	}
+	public int getCalories(){
+		return this.numCalories;
+	}
+	public int getCaloriesFlag(){
+		return this.caloriesFlag;
+	}
 	public String toString(){
-		return court+","+time+","+day+","+name+"\n";
+		String type;
+		switch(this.caloriesFlag){
+			case CALORIES_LESS:
+				type = "less than";
+				break;
+			case CALORIES_EQUAL:
+				type = "equal";
+				break;
+			case CALORIES_GREATER:
+				type = "greater than";
+				break;
+			default:
+				type = "none";
+				break;
+		}
+		return court+","+time+","+day+","+name+","+type+" "+numCalories+"Calories\n";
 	}
 	public static JSONArray stringParser(String x, int userID) throws  ClassNotFoundException, JSONException{
 		x=x+";";
 		int index;
-		Parsed p = new Parsed();
+		Parsed p = new Parsed(userID);
 		while((index = x.indexOf(';')) != -1){
 			
 			String temp = x.substring(0,index);
@@ -97,6 +136,10 @@ public class Parsed{
 				case NAME:
 					p.setName(value);
 					break;
+				case CALORIE_FLAG:
+					p.setCalorieFlag(Integer.parseInt(value));
+				case CALORIES:
+					p.setCalories(Integer.parseInt(value));
 			}
 			x = x.substring(index+1);
 		}
@@ -120,6 +163,8 @@ public class Parsed{
 		e.put("Court", p.getCourt());
 		e.put("name", p.getName());
 		e.put("time", p.getTime());
+		e.put("calorieflag", p.getCaloriesFlag());
+		e.put("calories", p.getCalories());
 		empty.put(e);
 
 		if(p.hasDay()){
@@ -146,7 +191,7 @@ public class Parsed{
 				else if (p.hasCourt() && p.hasName() && p.hasTime()){
 					return APICaller.apiCallLocItemAtTime(p.getDay(),p.getCourt(),p.getName(),p.getTime(),userID);
 				}
-				else if (p.hasCourt() && !p.hasName() && !p.hasTime()){
+				else if (p.hasCourt() && !p.hasName() && p.hasTime()){
 					return APICaller.apiCallLocAtTime(p.getDay(),p.getCourt(),p.getTime(),userID);
 				}
 				return empty;
