@@ -8,7 +8,7 @@
             </div>
         </md-toolbar>
         <md-card-content>
-            <form name="Form" ng-submit="auth()">
+            <form name="Form" ng-submit="auth()" ng-controller="SettingsCtrl">
                 <md-input-container class="md-block">
                     <label>First Name</label>
                     <input type="text" name="firstName" ng-model="name.firstName" placeholder="First Name" required=""
@@ -31,7 +31,7 @@
 
                 <md-input-container class="md-block">
                     <label>New Password</label>
-                    <input type="password" name="newPassword" ng-model="password.newPassword" placeholder="Enter New Password" required=""
+                    <input type="password" name="newPassword" ng-model="password.newPassword" placeholder="Enter New Password"
                            md-maxlength="16"/>
                     <div ng-messages="Form.newPassword.$error" role="alert" multiple="">
                         <div ng-message="md-maxlength" class="my-message">You must supply a valid new password.</div>
@@ -39,7 +39,7 @@
                 </md-input-container>
                 <md-input-container class="md-block">
                     <label>Old Password</label>
-                    <input type="password" name="oldPassword" ng-model="password.oldPassword" placeholder="Enter Old Password" required=""
+                    <input type="password" name="oldPassword" ng-model="password.oldPassword" placeholder="Enter Old Password" ng-required="password.newPassword"
                            md-maxlength="16"/>
                     <div ng-messages="Form.oldPassword.$error" role="alert" multiple="">
                         <div ng-message="required" class="my-message">You must type in your old password.</div>
@@ -47,9 +47,9 @@
                     </div>
                 </md-input-container>
 
-                <md-switch class="md-primary" ng-repeat="(key,value) in preferences" aria-label="item[0]"
-                           ng-true-value="'true'" ng-false-value="'false'">
-                    {{key}}
+                <md-switch  class="md-primary" ng-repeat="(key,value) in preferences" aria-label="item[0]"
+                           ng-true-value="'true'" ng-false-value="'false'" ng-model="preferences[key]">
+                    {{key}} {{preferences[key]}}
                 </md-switch>
 
                 <div layout-gt-sm="row">
