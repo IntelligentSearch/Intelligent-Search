@@ -13,17 +13,13 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
             css: 'app/settings/settings.css'
         });
     }])
-    .controller('SettingsCtrl', function ($scope, $location, $http, $cookies) {
+    .controller('SettingsCtrl', function ($scope, $location, $http, $cookies, $httpParamSerializer) {
         var response = $cookies.getObject('user');
         console.log(response);
         $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
         if (response != undefined) {
             $scope.userID = response.user.UserID;
             $scope.preferences = response.prefs;
-            angular.forEach($scope.preferences, function (value, key) {
-                console.log(key + ' : ' + value)
-            });
-            console.log("Prefs: " + response.prefs);
             $scope.name = {
                 firstName: response.user.FirstName,
                 lastName: response.user.LastName
@@ -33,8 +29,6 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
                 oldPassword: '',
                 newPassword: ''
             }
-            console.log($scope.base_url);
-
 
         }
         $scope.auth = function () {
@@ -82,16 +76,20 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
 
             }
             console.log("user: " + $scope.userID, "prefs: " + $scope.preferences);
+            angular.forEach($scope.preferences, function (value, key) {
+                console.log(key + ' : ' + value)
+            });
             // POST request for setting preferences
+            var myPrefs = $httpParamSerializer($scope.preferences);
             $http({
                 method: 'POST',
                 url: $scope.base_url + '/set-pref',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                data: $.param({userID: $scope.userID, prefs: $scope.preferences})
+                data: $.param({userID: $scope.userID, prefs: myPrefs})
             }).then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
-               console.log(response);
+                var response = $cookies.getObject('user');
+                response.prefs = $scope.preferences;
+                $cookies.putObject('user', response);
             }, function errorCallback(response) {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
