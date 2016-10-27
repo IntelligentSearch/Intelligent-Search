@@ -1,4 +1,4 @@
-package com.rest;
+//package com.rest;
 
 import java.util.ArrayList;
 import org.json.JSONException;
@@ -19,7 +19,8 @@ public class Item {
 	boolean[] userPrefs;
 	ArrayList<String> nameNut;
 	ArrayList<String> valueNut;
-	Item(String n, String i, String s,String d,String in,String date,boolean[] uP) {
+	Parsed p;
+	Item(String n, String i, String s,String d,String in,String date,boolean[] uP,Parsed p) {
 		this.station = s;
 		this.name = n;
 		this.id = i;
@@ -27,6 +28,7 @@ public class Item {
 		this.ingred = in;
 		this.date = date;
 		this.userPrefs = uP;
+		this.p = p;
 		
 	}
 	
@@ -88,6 +90,24 @@ public class Item {
 			for(int i = 0; i < 10;i++){
 				allergens[i] = false;
 			}
+		}
+		jo.put("Calories index", this.nameNut.indexOf("Calories"));
+		switch(this.p.caloriesFlag){
+			case Parsed.CALORIES_EQUAL:
+				if(!this.nameNut.contains("Calories") || p.getCalories() != Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+					return null;
+				}
+				break;
+			case Parsed.CALORIES_GREATER:
+				if(!this.nameNut.contains("Calories") || p.getCalories() < Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+					return null;
+				}
+				break;
+			case Parsed.CALORIES_LESS:
+				if(!this.nameNut.contains("Calories") || p.getCalories() > Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+					return null;
+				}
+				break;
 		}
 		if(this.userPrefs != null && !Helper.matchPrefs(this.userPrefs,this.allergens)){
 			return null;

@@ -1,4 +1,4 @@
-package com.rest;
+//package com.rest;
 
 import java.sql.*;
 import org.json.*;
@@ -11,7 +11,7 @@ public class Call {
 		* calorie count
 		*/
 		//give userID as greater than 0 if you dont have a userID
-		public static JSONArray getAll(int userID) throws JSONException{
+		public static JSONArray getAll(int userID,Parsed p) throws JSONException{
 			JSONArray ja = new JSONArray();
 			PreparedStatement prep_stmt = null;
 			ResultSet res = null;
@@ -26,7 +26,7 @@ public class Call {
 							+	"ON D.ITEM_ID = I.Item_ID ";
 					prep_stmt = conn.prepareStatement(query);
 					res = prep_stmt.executeQuery();
-					Helper.readItems(res,ja,userID);
+					Helper.readItems(res,ja,userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -50,7 +50,7 @@ public class Call {
 			return ja;
 		}
 		
-		public static JSONArray getFoodDining(String diningCourt, int userID){
+		public static JSONArray getFoodDining(String diningCourt, int userID,Parsed p) throws JSONException{
 				JSONArray ja = new JSONArray();
 				Connection conn = null;
 				ResultSet res = null;
@@ -66,7 +66,7 @@ public class Call {
 						prep_stmt = conn.prepareStatement(query);
 						prep_stmt.setString(1, "%"+diningCourt+"%");
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 						// ja.put(new JSONObject().put("loc",diningCourt));
 				} catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -89,7 +89,7 @@ public class Call {
 				}
 				return ja;			
 		}
-		public static JSONArray getItemDin(String diningCourt, String item,int userID) throws JSONException {
+		public static JSONArray getItemDin(String diningCourt, String item,int userID,Parsed p ) throws JSONException {
 				JSONArray ja = new JSONArray();
 				PreparedStatement prep_stmt = null;
 				ResultSet res = null;
@@ -110,7 +110,7 @@ public class Call {
 						  jo.put("Query",prep_stmt.toString());
 						  ja.put(jo);*/
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 				}
 				catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -134,7 +134,7 @@ public class Call {
 				return ja;
 		}
 		
-		public static JSONArray getItem(String item,int userID) throws ClassNotFoundException, JSONException{
+		public static JSONArray getItem(String item,int userID,Parsed p) throws ClassNotFoundException, JSONException{
 			JSONArray ja = new JSONArray();
 			Connection con = null;
 			PreparedStatement prep_stmt = null;
@@ -150,7 +150,7 @@ public class Call {
 				prep_stmt = con.prepareStatement(query);
 				prep_stmt.setString(1,"%"+item+"%");
 				res = prep_stmt.executeQuery();
-				Helper.readItems(res,ja,userID);
+				Helper.readItems(res,ja,userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -173,7 +173,7 @@ public class Call {
 			}
 			return ja;
 		}
-		public static JSONArray getAtTime(String time,int userID) throws JSONException{
+		public static JSONArray getAtTime(String time,int userID,Parsed p) throws JSONException{
 			JSONArray ja = new JSONArray();
 			PreparedStatement prep_stmt = null;
 			ResultSet res = null;
@@ -192,7 +192,7 @@ public class Call {
 					//prep_stmt.setString(1, "I."+time);
 					System.out.println(prep_stmt);
 					res = prep_stmt.executeQuery();
-					Helper.readItems(res,ja, userID);
+					Helper.readItems(res,ja, userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -215,7 +215,7 @@ public class Call {
 			}
 			return ja;
 		}
-		public static JSONArray getItemAtTime(String time,String item,int userID) throws JSONException{
+		public static JSONArray getItemAtTime(String time,String item,int userID,Parsed p) throws JSONException{
 			JSONArray ja = new JSONArray();
 			PreparedStatement prep_stmt = null;
 			ResultSet res = null;
@@ -235,7 +235,7 @@ public class Call {
 					//prep_stmt.setString(1, "I."+time);
 					System.out.println(prep_stmt);
 					res = prep_stmt.executeQuery();
-					Helper.readItems(res,ja, userID);
+					Helper.readItems(res,ja, userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -258,7 +258,7 @@ public class Call {
 			}
 			return ja;
 		}
-		public static JSONArray getItemDinAtTime(String time,String diningCourt,String item, int userID) throws JSONException{
+		public static JSONArray getItemDinAtTime(String time,String diningCourt,String item, int userID,Parsed p) throws JSONException{
 			JSONArray ja = new JSONArray();
 			PreparedStatement prep_stmt = null;
 			ResultSet res = null;
@@ -279,7 +279,7 @@ public class Call {
 					  jo.put("Query",prep_stmt.toString());
 					  ja.put(jo);*/
 					res = prep_stmt.executeQuery();
-					Helper.readItems(res,ja,userID);
+					Helper.readItems(res,ja,userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -302,7 +302,7 @@ public class Call {
 			}
 			return ja;
 		}
-		public static JSONArray getDinAtTime(String time,String diningCourt, int userID) throws JSONException{
+		public static JSONArray getDinAtTime(String time,String diningCourt, int userID,Parsed p) throws JSONException{
 			JSONArray ja = new JSONArray();
 			PreparedStatement prep_stmt = null;
 			ResultSet res = null;
@@ -322,7 +322,7 @@ public class Call {
 					  jo.put("Query",prep_stmt.toString());
 					  ja.put(jo);*/
 					res = prep_stmt.executeQuery();
-					Helper.readItems(res,ja,userID);
+					Helper.readItems(res,ja,userID,p);
 			}
 			catch (Exception e) {
 					System.out.println("\n"+e.toString());
@@ -686,30 +686,35 @@ public class Call {
 									query = "Select Name FROM Item Where Item_ID = ?";
 									prep_stmt = con.prepareStatement(query);
 									prep_stmt.setString(1, item_id);
-									res = prep_stmt.executeQuery();
-									if(!res.next()){
+									ResultSet res2 = prep_stmt.executeQuery();
+									if(!res2.next()){
 										jo.put(name,"food not found");
 										continue;
 									}
-									name = res.getString("Name");
+									name = res2.getString("Name");
 									jo.put("Name", name);
 								}
 								if(item_id != null && loc != null){
-									jo.put("Item Cards", getItemDin(loc,name,userID));
+									jo.put("Item Cards", getItemDin(loc,name,userID,null));
 								}
 								else if(item_id != null){
-									jo.put("Item Cards", getItem(name,userID));
+									jo.put("Item Cards", getItem(name,userID,null));
 								}
 								else if(loc != null){
 									//jo.put("location is being checked",loc);
-									jo.put("Item Cards",getFoodDining(loc,userID));
+									jo.put("Item Cards",getFoodDining(loc,userID,null));
 								}
 								ja.put(jo);
 						}
 				}
 				catch (Exception e) {
 						e.printStackTrace();
-						ja.put(new JSONObject().put("error",e.toString()));
+						try{
+							ja.put(new JSONObject().put("error",e.toString()));
+						}
+						catch(Exception e1){
+							
+						}
 				}
 				finally{
 						try{
