@@ -3,8 +3,22 @@
     <span>{{user}}</span>
     <span>
       <button ng-click="useCurr()">route from current</button>
+      <button ng-click="hideSilver()">Silver</button>
+      <button ng-click="gold=!gold">Gold</button>
   <br>
   <ng-map style="width: 68%; float:left; height: 100%;" center="[40.4237, -86.9212]">
+    <shape name="polyline" id="silver"
+	   path={{path}}
+    	   stroke-color="#222222"
+	   stroke-opacity="1.0"
+    	   stroke-weight="4">
+    </shape>
+    <shape name="polyline" id="gold" ng-show="gold"
+	   path={{path2}}
+   	   stroke-color="FF0000"
+       	   stroke-opacity="1.0"
+	   stroke-weight="4">
+    </shape>
     <directions
 	  draggable="true"
    panel="directions-panel"
