@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.sql.*;
 import java.text.DateFormat;
