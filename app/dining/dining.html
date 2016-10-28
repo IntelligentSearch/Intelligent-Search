@@ -26,7 +26,7 @@
                 Logout
             </md-button>
             <br/>
-            <md-button href="#!/settings" class="md-accent">Settings</md-button>
+            <md-button ng-if="getUserID() == -1 || getUserID() == undefined" href="#!/settings" class="md-accent">Settings</md-button>
             <br/>
             <md-button ng-click="toggleLeft()" class="md-accent">
                 Close this Sidenav
