@@ -15,7 +15,7 @@ var app = angular.module('myApp.maps', ['ngRoute'])
 }])
 .controller('MapsCtrl', function(NgMap, $scope, $location, $http) {
   NgMap.getMap().then(function(map) {
-   vm.map = map;
+   $scope.map = map;
   }); 
   $scope.user = 'hello'; 
   $scope.location = {
@@ -40,8 +40,16 @@ var app = angular.module('myApp.maps', ['ngRoute'])
   ];
   $scope.origpath1 = null;
   $scope.origpath2 = null;
+  $scope.silver = false;
   $scope.hideSilver = function() {
-    vm.map.shapes.silver.setMap(null);
+    console.log($scope.map.shapes);
+    $scope.map.shapes.silver.setMap(null);
+    console.log($scope.map.shapes);
+    if($scope.silver) {
+      $scope.map.shapes.silver.setMap($scope.map);
+      $scope.silver = false;
+    } else
+    $scope.silver = true;
   }
   $scope.useCurr = function() {
     $scope.location.start = "40.428103, -86.913727";
