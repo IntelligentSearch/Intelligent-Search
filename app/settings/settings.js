@@ -33,8 +33,10 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
         }
         $scope.auth = function () {
             console.log("user: " + $scope.userID);
+            var changed = false;
             if (($scope.name.firstName != undefined && $scope.name.lastName != undefined)
-            && (response.user.FirstName != $scope.name.firstName || response.user.LastName != $scope.name.lastName)) {
+                && (response.user.FirstName != $scope.name.firstName || response.user.LastName != $scope.name.lastName)) {
+                changed = true;
                 console.log("Changing name");
                 //POST request for updating name
                 $http({
@@ -53,12 +55,14 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
                     $cookies.putObject('user', response);
                 }, function errorCallback(response) {
                     alert('Updating name failed' + angular.toJson(response));
+                    changed = false;
                 });
             }
             console.log("user: " + $scope.userID);
             //POST request for updating password
             if ($scope.password.newPassword != undefined && $scope.password.oldPassword) {
                 console.log("Changing password");
+                changed = true;
                 $http({
                     method: 'POST',
                     url: $scope.base_url + '/update-password',
@@ -72,11 +76,16 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
 
                 }, function errorCallback(response) {
                     alert('Settings failed' + angular.toJson(response));
+                    changed = false;
                 });
 
             }
             console.log("user: " + $scope.userID, "prefs: " + $scope.preferences);
+            var originalPreferences = $cookies.getObject('user').prefs;
             angular.forEach($scope.preferences, function (value, key) {
+                if (originalPreferences[key] != value) {
+                    changed = true;
+                }
                 console.log(key + ' : ' + value)
             });
             // POST request for setting preferences
@@ -94,7 +103,12 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
                 alert('Settings failed' + angular.toJson(response));
+                changed = false;
             });
+            if (changed) {
+                alert("Changes applied");
+                $location.path("/dining");
+            }
         }
         $scope.onChange = function (index, key) {
             $scope.preferences[key] = !$scope.preferences[key];
