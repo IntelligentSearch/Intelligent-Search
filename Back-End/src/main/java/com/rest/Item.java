@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.util.ArrayList;
 import org.json.JSONException;
