@@ -1,0 +1,6 @@
+.page-login md-card {
+    padding: 0!important;
+}
+.page-login md-card md-card-title {
+    background-color: dodgerblue;
+}

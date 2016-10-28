@@ -35,9 +35,14 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         var offset = -5.0;
 
         $scope.getUserID = function () {
-            var userID = $cookies.get('user', -1);
-            console.log("GetUserId:"+userID);
-            return userID;
+            var response = $cookies.getObject('user');
+            if (response != undefined && response.data != undefined) {
+                var userID = response.data.user.UserID;
+                console.log("GetUserId:" + userID);
+                return userID;
+            } else {
+                return response;
+            }
         }
 
         $scope.getUserName = function () {
@@ -178,6 +183,24 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                         else {
                             $scope.featureNotSupported = false;
                         }
+                        var response = $cookies.getObject('user');
+                        if (response != undefined) {
+                            var preferences = response.prefs;
+                            for (var i = data.length - 1; i >= 0; i--) {
+                                if ((data[i]["Peanuts"] && preferences["Peanuts"])
+                                    || (data[i]["Shellfish"] && preferences["Shellfish"])
+                                    || (data[i]["Eggs"] && preferences["Eggs"])
+                                    || (data[i]["Fish"] && preferences["Fish"])
+                                    || (data[i]["Milk"] && preferences["Milk"])
+                                    || (data[i]["Tree_nuts"] && preferences["Tree_nuts"])
+                                    || (data[i]["Veg"] && preferences["Veg"])
+                                    || (data[i]["Soy"] && preferences["Soy"])
+                                    || (data[i]["Wheat"] && preferences["Wheat"])
+                                    || (data[i]["Gluten"] && preferences["Gluten"])) {
+                                    data.splice(i, 1);
+                                }
+                            }
+                        }
                         $scope.searchResult = data;
                     }
                 }).error(function (data, status, headers, config) {
@@ -188,12 +211,16 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
     }]).controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $cookies) {
 
         $scope.getUserID = function () {
-            var userID = $cookies.get('user', -1);
-            console.log("GetUser:"+userID);
-            return userID;
+            var response = $cookies.getObject('user');
+            if (response != undefined && response.data != undefined) {
+                var userID = response.data.user.UserID;
+                return userID;
+            } else {
+                return response;
+            }
         }
 
-        $scope.logout =  function() {
+        $scope.logout = function () {
             $cookies.remove('user');
             $cookies.remove('user_name');
             $location.path("/dining");
