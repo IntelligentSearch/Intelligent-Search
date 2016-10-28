@@ -1,4 +1,4 @@
-//package com.rest;
+package com.rest;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
