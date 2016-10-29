@@ -92,22 +92,24 @@ public class Item {
 			}
 		}
 		jo.put("Calories index", this.nameNut.indexOf("Calories"));
-		switch(this.p.caloriesFlag){
-			case Parsed.CALORIES_EQUAL:
-				if(!this.nameNut.contains("Calories") || p.getCalories() != Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
-					return null;
-				}
-				break;
-			case Parsed.CALORIES_GREATER:
-				if(!this.nameNut.contains("Calories") || p.getCalories() < Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
-					return null;
-				}
-				break;
-			case Parsed.CALORIES_LESS:
-				if(!this.nameNut.contains("Calories") || p.getCalories() > Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
-					return null;
-				}
-				break;
+		if(this.p != null){
+			switch(this.p.caloriesFlag){
+				case Parsed.CALORIES_EQUAL:
+					if(!this.nameNut.contains("Calories") || p.getCalories() != Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+						return null;
+					}
+					break;
+				case Parsed.CALORIES_GREATER:
+					if(!this.nameNut.contains("Calories") || p.getCalories() < Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+						return null;
+					}
+					break;
+				case Parsed.CALORIES_LESS:
+					if(!this.nameNut.contains("Calories") || p.getCalories() > Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
+						return null;
+					}
+					break;
+			}
 		}
 		if(this.userPrefs != null && !Helper.matchPrefs(this.userPrefs,this.allergens)){
 			return null;

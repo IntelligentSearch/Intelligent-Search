@@ -149,7 +149,7 @@ public class Call {
 						prep_stmt = con.prepareStatement(query);
 						prep_stmt.setString(1,"%"+item+"%");
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 				}
 				catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -700,14 +700,14 @@ public class Call {
 										res2.close();
 								}
 								if(item_id != null && loc != null){
-										jo.put("Item Cards", getItemDin(loc,name,userID));
+										jo.put("Item Cards", getItemDin(loc,name,userID,null));
 								}
 								else if(item_id != null){
-										jo.put("Item Cards", getItem(name,userID));
+										jo.put("Item Cards", getItem(name,userID,null));
 								}
 								else if(loc != null){
 										//jo.put("location is being checked",loc);
-										jo.put("Item Cards",getFoodDining(loc,userID));
+										jo.put("Item Cards",getFoodDining(loc,userID,null));
 								}
 								ja.put(jo);
 						}
