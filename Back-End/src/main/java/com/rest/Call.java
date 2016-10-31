@@ -11,46 +11,46 @@ public class Call {
 		 * calorie count
 		 */
 		//give userID as greater than 0 if you dont have a userID
-		public static JSONArray getAll(int userID) throws JSONException{
-				JSONArray ja = new JSONArray();
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
-				Connection conn = null;
-				try {
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
-								+	"FROM Daily AS D "
-								+	"JOIN Item AS I "
-								+	"ON D.ITEM_ID = I.Item_ID ";
-						prep_stmt = conn.prepareStatement(query);
-						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
-				}
-				catch (Exception e) {
-						System.out.println("\n"+e.toString());
-						ja.put(new JSONObject().put("error",e.toString()));
-				}
-				finally{
-						try{
-								if(conn != null){
-										conn.close();
-								}
-								if(res != null){
-										res.close();
-								}
-								if(prep_stmt != null){
-										prep_stmt.close();
-								}
-						}	
-						catch(Exception e){
-						}
-				}
-				return ja;
+		public static JSONArray getAll(int userID,Parsed p) throws JSONException{
+			JSONArray ja = new JSONArray();
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
+			Connection conn = null;
+			try {
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+					String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
+							+	"FROM Daily AS D "
+							+	"JOIN Item AS I "
+							+	"ON D.ITEM_ID = I.Item_ID ";
+					prep_stmt = conn.prepareStatement(query);
+					res = prep_stmt.executeQuery();
+					Helper.readItems(res,ja,userID,p);
+			}
+			catch (Exception e) {
+					System.out.println("\n"+e.toString());
+					ja.put(new JSONObject().put("error",e.toString()));
+			}
+			finally{
+					try{
+							if(conn != null){
+									conn.close();
+							}
+							if(res != null){
+									res.close();
+							}
+							if(prep_stmt != null){
+									prep_stmt.close();
+							}
+					}	
+					catch(Exception e){
+					}
+			}
+			return ja;
 		}
-
-		public static JSONArray getFoodDining(String diningCourt, int userID){
+		
+		public static JSONArray getFoodDining(String diningCourt, int userID,Parsed p) throws JSONException{
 				JSONArray ja = new JSONArray();
 				Connection conn = null;
 				ResultSet res = null;
@@ -66,7 +66,7 @@ public class Call {
 						prep_stmt = conn.prepareStatement(query);
 						prep_stmt.setString(1, "%"+diningCourt+"%");
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 						// ja.put(new JSONObject().put("loc",diningCourt));
 				} catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -89,7 +89,7 @@ public class Call {
 				}
 				return ja;			
 		}
-		public static JSONArray getItemDin(String diningCourt, String item,int userID) throws JSONException {
+		public static JSONArray getItemDin(String diningCourt, String item,int userID,Parsed p ) throws JSONException {
 				JSONArray ja = new JSONArray();
 				PreparedStatement prep_stmt = null;
 				ResultSet res = null;
@@ -110,7 +110,7 @@ public class Call {
 						  jo.put("Query",prep_stmt.toString());
 						  ja.put(jo);*/
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 				}
 				catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -133,13 +133,12 @@ public class Call {
 				}
 				return ja;
 		}
-
-		public static JSONArray getItem(String item,int userID) throws ClassNotFoundException, JSONException{
-				JSONArray ja = new JSONArray();
-				Connection con = null;
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
+		public static JSONArray getItem(String item,int userID,Parsed p) throws ClassNotFoundException, JSONException{
+			JSONArray ja = new JSONArray();
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
 				try{
 						Class.forName("com.mysql.jdbc.Driver");
 						con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
@@ -150,7 +149,7 @@ public class Call {
 						prep_stmt = con.prepareStatement(query);
 						prep_stmt.setString(1,"%"+item+"%");
 						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
+						Helper.readItems(res,ja,userID,p);
 				}
 				catch (Exception e) {
 						System.out.println("\n"+e.toString());
@@ -173,177 +172,177 @@ public class Call {
 				}
 				return ja;
 		}
-		public static JSONArray getAtTime(String time,int userID) throws JSONException{
-				JSONArray ja = new JSONArray();
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
-				Connection conn = null;
-				try {
-
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
-								+	"FROM Daily AS D "
-								+	"JOIN Item AS I "
-								+	"ON D.ITEM_ID = I.Item_ID "
-								+	"WHERE D."+time +"= true";
-						prep_stmt = conn.prepareStatement(query);
-						//prep_stmt.setString(1, "I."+time);
-						System.out.println(prep_stmt);
-						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja, userID);
-				}
-				catch (Exception e) {
-						System.out.println("\n"+e.toString());
-						ja.put(new JSONObject().put("error",e.toString()));
-				}
-				finally{
-						try{
-								if(conn != null){
-										conn.close();
-								}
-								if(res != null){
-										res.close();
-								}
-								if(prep_stmt != null){
-										prep_stmt.close();
-								}
-						}	
-						catch(Exception e){
-						}
-				}
-				return ja;
+		public static JSONArray getAtTime(String time,int userID,Parsed p) throws JSONException{
+			JSONArray ja = new JSONArray();
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
+			Connection conn = null;
+			try {
+					
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+					String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
+							+	"FROM Daily AS D "
+							+	"JOIN Item AS I "
+							+	"ON D.ITEM_ID = I.Item_ID "
+							+	"WHERE D."+time +"= true";
+					prep_stmt = conn.prepareStatement(query);
+					//prep_stmt.setString(1, "I."+time);
+					System.out.println(prep_stmt);
+					res = prep_stmt.executeQuery();
+					Helper.readItems(res,ja, userID,p);
+			}
+			catch (Exception e) {
+					System.out.println("\n"+e.toString());
+					ja.put(new JSONObject().put("error",e.toString()));
+			}
+			finally{
+					try{
+							if(conn != null){
+									conn.close();
+							}
+							if(res != null){
+									res.close();
+							}
+							if(prep_stmt != null){
+									prep_stmt.close();
+							}
+					}	
+					catch(Exception e){
+					}
+			}
+			return ja;
 		}
-		public static JSONArray getItemAtTime(String time,String item,int userID) throws JSONException{
-				JSONArray ja = new JSONArray();
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
-				Connection conn = null;
-				try {
-
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
-								+	"FROM Daily AS D "
-								+	"JOIN Item AS I "
-								+	"ON D.ITEM_ID = I.Item_ID "
-								+	"WHERE D."+time +"= true AND I.NAME LIKE ?";
-						prep_stmt = conn.prepareStatement(query);
-						prep_stmt.setString(1,"%"+item+"%");
-						//prep_stmt.setString(1, "I."+time);
-						System.out.println(prep_stmt);
-						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja, userID);
-				}
-				catch (Exception e) {
-						System.out.println("\n"+e.toString());
-						ja.put(new JSONObject().put("error",e.toString()));
-				}
-				finally{
-						try{
-								if(conn != null){
-										conn.close();
-								}
-								if(res != null){
-										res.close();
-								}
-								if(prep_stmt != null){
-										prep_stmt.close();
-								}
-						}	
-						catch(Exception e){
-						}
-				}
-				return ja;
+		public static JSONArray getItemAtTime(String time,String item,int userID,Parsed p) throws JSONException{
+			JSONArray ja = new JSONArray();
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
+			Connection conn = null;
+			try {
+					
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+					String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
+							+	"FROM Daily AS D "
+							+	"JOIN Item AS I "
+							+	"ON D.ITEM_ID = I.Item_ID "
+							+	"WHERE D."+time +"= true AND I.NAME LIKE ?";
+					prep_stmt = conn.prepareStatement(query);
+					prep_stmt.setString(1,"%"+item+"%");
+					//prep_stmt.setString(1, "I."+time);
+					System.out.println(prep_stmt);
+					res = prep_stmt.executeQuery();
+					Helper.readItems(res,ja, userID,p);
+			}
+			catch (Exception e) {
+					System.out.println("\n"+e.toString());
+					ja.put(new JSONObject().put("error",e.toString()));
+			}
+			finally{
+					try{
+							if(conn != null){
+									conn.close();
+							}
+							if(res != null){
+									res.close();
+							}
+							if(prep_stmt != null){
+									prep_stmt.close();
+							}
+					}	
+					catch(Exception e){
+					}
+			}
+			return ja;
 		}
-		public static JSONArray getItemDinAtTime(String time,String diningCourt,String item, int userID) throws JSONException{
-				JSONArray ja = new JSONArray();
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
-				Connection conn = null;
-				try {
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
-								+	"FROM Daily AS D "
-								+	"JOIN Item AS I "
-								+	"ON D.ITEM_ID = I.Item_ID "
-								+	"WHERE D."+time +"= true AND I.NAME LIKE ? AND D.LOCATION LIKE ?";
-						prep_stmt = conn.prepareStatement(query);
-						prep_stmt.setString(1, "%"+item+"%");
-						prep_stmt.setString(2,"%"+diningCourt+"%");
-						/*JSONObject jo = new JSONObject();
-						  jo.put("Query",prep_stmt.toString());
-						  ja.put(jo);*/
-						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
-				}
-				catch (Exception e) {
-						System.out.println("\n"+e.toString());
-						ja.put(new JSONObject().put("error",e.toString()));
-				}
-				finally{
-						try{
-								if(conn != null){
-										conn.close();
-								}
-								if(res != null){
-										res.close();
-								}
-								if(prep_stmt != null){
-										prep_stmt.close();
-								}
-						}	
-						catch(Exception e){
-						}
-				}
-				return ja;
+		public static JSONArray getItemDinAtTime(String time,String diningCourt,String item, int userID,Parsed p) throws JSONException{
+			JSONArray ja = new JSONArray();
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
+			Connection conn = null;
+			try {
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+					String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
+							+	"FROM Daily AS D "
+							+	"JOIN Item AS I "
+							+	"ON D.ITEM_ID = I.Item_ID "
+							+	"WHERE D."+time +"= true AND I.NAME LIKE ? AND D.LOCATION LIKE ?";
+					prep_stmt = conn.prepareStatement(query);
+					prep_stmt.setString(1, "%"+item+"%");
+					prep_stmt.setString(2,"%"+diningCourt+"%");
+					/*JSONObject jo = new JSONObject();
+					  jo.put("Query",prep_stmt.toString());
+					  ja.put(jo);*/
+					res = prep_stmt.executeQuery();
+					Helper.readItems(res,ja,userID,p);
+			}
+			catch (Exception e) {
+					System.out.println("\n"+e.toString());
+					ja.put(new JSONObject().put("error",e.toString()));
+			}
+			finally{
+					try{
+							if(conn != null){
+									conn.close();
+							}
+							if(res != null){
+									res.close();
+							}
+							if(prep_stmt != null){
+									prep_stmt.close();
+							}
+					}	
+					catch(Exception e){
+					}
+			}
+			return ja;
 		}
-		public static JSONArray getDinAtTime(String time,String diningCourt, int userID) throws JSONException{
-				JSONArray ja = new JSONArray();
-				PreparedStatement prep_stmt = null;
-				ResultSet res = null;
-				//sets up connection
-				Connection conn = null;
-				try {
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
-						String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
-								+	"FROM Daily AS D "
-								+	"JOIN Item AS I "
-								+	"ON D.ITEM_ID = I.Item_ID "
-								+	"WHERE D."+time +"= true AND D.LOCATION LIKE ?";
-						prep_stmt = conn.prepareStatement(query);
-						prep_stmt.setString(1,"%"+diningCourt+"%");
-						/*JSONObject jo = new JSONObject();
-						  jo.put("Query",prep_stmt.toString());
-						  ja.put(jo);*/
-						res = prep_stmt.executeQuery();
-						Helper.readItems(res,ja,userID);
-				}
-				catch (Exception e) {
-						System.out.println("\n"+e.toString());
-						ja.put(new JSONObject().put("error",e.toString()));
-				}
-				finally{
-						try{
-								if(conn != null){
-										conn.close();
-								}
-								if(res != null){
-										res.close();
-								}
-								if(prep_stmt != null){
-										prep_stmt.close();
-								}
-						}	
-						catch(Exception e){
-						}
-				}
-				return ja;
+		public static JSONArray getDinAtTime(String time,String diningCourt, int userID,Parsed p) throws JSONException{
+			JSONArray ja = new JSONArray();
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			//sets up connection
+			Connection conn = null;
+			try {
+					Class.forName("com.mysql.jdbc.Driver");
+					conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+					String query = "SELECT D.ITEM_ID,D.LOCATION,D.LateLunch,I.Ingredients,I.Item_ID, I.NAME,D.STATION,D.BREAKFAST,D.LUNCH,D.DINNER "
+							+	"FROM Daily AS D "
+							+	"JOIN Item AS I "
+							+	"ON D.ITEM_ID = I.Item_ID "
+							+	"WHERE D."+time +"= true AND D.LOCATION LIKE ?";
+					prep_stmt = conn.prepareStatement(query);
+					prep_stmt.setString(1,"%"+diningCourt+"%");
+					/*JSONObject jo = new JSONObject();
+					  jo.put("Query",prep_stmt.toString());
+					  ja.put(jo);*/
+					res = prep_stmt.executeQuery();
+					Helper.readItems(res,ja,userID,p);
+			}
+			catch (Exception e) {
+					System.out.println("\n"+e.toString());
+					ja.put(new JSONObject().put("error",e.toString()));
+			}
+			finally{
+					try{
+							if(conn != null){
+									conn.close();
+							}
+							if(res != null){
+									res.close();
+							}
+							if(prep_stmt != null){
+									prep_stmt.close();
+							}
+					}	
+					catch(Exception e){
+					}
+			}
+			return ja;
 		}
 		public static JSONObject login(String user, String pass) throws JSONException {
 				Connection con = null;
@@ -701,21 +700,26 @@ public class Call {
 										res2.close();
 								}
 								if(item_id != null && loc != null){
-										jo.put("Item Cards", getItemDin(loc,name,userID));
+										jo.put("Item Cards", getItemDin(loc,name,userID,null));
 								}
 								else if(item_id != null){
-										jo.put("Item Cards", getItem(name,userID));
+										jo.put("Item Cards", getItem(name,userID,null));
 								}
 								else if(loc != null){
 										//jo.put("location is being checked",loc);
-										jo.put("Item Cards",getFoodDining(loc,userID));
+										jo.put("Item Cards",getFoodDining(loc,userID,null));
 								}
 								ja.put(jo);
 						}
 				}
 				catch (Exception e) {
 						e.printStackTrace();
-						ja.put(new JSONObject().put("error",e.toString()));
+						try{
+							ja.put(new JSONObject().put("error",e.toString()));
+						}
+						catch(Exception e1){
+							
+						}
 				}
 				finally{
 						try{

@@ -45,106 +45,111 @@ public class APICaller {
 		}
 		return json;
 	}
-	public static JSONArray apiCallItem(String date,String itemName,int userID) throws JSONException{
+	public static JSONArray apiCall(Parsed p) throws JSONException{
 		JSONArray ja = new JSONArray();
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
 		JSONObject json = getJSON(url);
 		JSONArray locations = json.getJSONArray("Location");
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
-			parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,null);
-		}		
-		return ja;
-	}
-	public static JSONArray apiCallItemAtTime(String date,String itemName,String time,int userID) throws JSONException{
-		JSONArray ja = new JSONArray();
-		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
-		JSONObject json = getJSON(url);
-		JSONArray locations = json.getJSONArray("Location");
-		for (int i = 0; i < locations.length(); i++) {
-			JSONObject o = locations.getJSONObject(i);
-			parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,time);
-		}		
-		return ja;
-	}
-	
-	public static JSONArray apiCallAll(String date,int userID) throws JSONException{
-		JSONArray ja = new JSONArray();
-		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
-		JSONObject json = getJSON(url);
-		JSONArray locations = json.getJSONArray("Location");
-		for (int i = 0; i < locations.length(); i++) {
-			JSONObject o = locations.getJSONObject(i);
-			parseLocationData(o.get("Name").toString(), date,ja,userID,null,null);
-		}		
-		return ja;
-	}
-	public static JSONArray apiCallAtTime(String date,int userID,String time) throws JSONException{
-		JSONArray ja = new JSONArray();
-		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
-		JSONObject json = getJSON(url);
-		JSONArray locations = json.getJSONArray("Location");
-		for (int i = 0; i < locations.length(); i++) {
-			JSONObject o = locations.getJSONObject(i);
-			parseLocationData(o.get("Name").toString(), date,ja,userID,null,time);
-		}		
-		return ja;
-	}
-	public static JSONArray apiCallLocation(String date,String location,int userID) throws JSONException{
-		JSONArray ja = new JSONArray();
-		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
-		JSONObject json = getJSON(url);
-		JSONArray locations = json.getJSONArray("Location");
-		for (int i = 0; i < locations.length(); i++) {
-			JSONObject o = locations.getJSONObject(i);
-			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
-				parseLocationData(o.get("Name").toString(), date,ja,userID,null,null);
+			if(p.getCourt() == null || o.get("Name").toString().toLowerCase().equals(p.getCourt().toLowerCase())){
+				parseLocationData(o.get("Name").toString(),ja,p);
 			}
 		}		
 		return ja;
 	}
-	public static JSONArray apiCallLocAtTime(String date,String location,String time,int userID) throws JSONException{
+/*	//same as apiCallItem 
+	public static JSONArray apiCallItemAtTime(Parsed p) throws JSONException{
 		JSONArray ja = new JSONArray();
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
 		JSONObject json = getJSON(url);
 		JSONArray locations = json.getJSONArray("Location");
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
-			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
-				parseLocationData(o.get("Name").toString(), date,ja,userID,null,time);
-			}
+			parseLocationData(o.get("Name").toString(),ja,p);
 		}		
 		return ja;
 	}
-	public static JSONArray apiCallLocItem(String date,String location,String itemName,int userID) throws JSONException{
+	//same as apiCallItem 
+	public static JSONArray apiCallAll(Parsed p) throws JSONException{
 		JSONArray ja = new JSONArray();
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
 		JSONObject json = getJSON(url);
 		JSONArray locations = json.getJSONArray("Location");
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
-			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
-				parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,null);
-			}
+			parseLocationData(o.get("Name").toString(),ja,p);
 		}		
 		return ja;
 	}
-	public static JSONArray apiCallLocItemAtTime(String date,String location,String itemName,String time,int userID) throws JSONException{
+	//same as apiCallItem 
+	public static JSONArray apiCallAtTime(Parsed p) throws JSONException{
 		JSONArray ja = new JSONArray();
 		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
 		JSONObject json = getJSON(url);
 		JSONArray locations = json.getJSONArray("Location");
 		for (int i = 0; i < locations.length(); i++) {
 			JSONObject o = locations.getJSONObject(i);
-			if(o.get("Name").toString().toLowerCase().equals(location.toLowerCase())){
-				parseLocationData(o.get("Name").toString(), date,ja,userID,itemName,time);
-			}
+			parseLocationData(o.get("Name").toString(),ja,p);
 		}		
 		return ja;
 	}
 
-	public static boolean parseLocationData(String loc, String date,JSONArray ja,int userID,String item,String time) throws JSONException {
-		String url = "https://api.hfs.purdue.edu/menus/v2/locations/" + loc.replaceAll(" ", "%20") + "/" + date;
+	public static JSONArray apiCallLocation(Parsed p) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(p.getCourt().toLowerCase())){
+				parseLocationData(o.get("Name").toString(),ja,p);
+			}
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocAtTime(Parsed p) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(p.getCourt().toLowerCase())){
+				parseLocationData(o.get("Name").toString(),ja,p);
+			}
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocItem(Parsed p) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(p.getCourt().toLowerCase())){
+				parseLocationData(o.get("Name").toString(),ja,p);
+			}
+		}		
+		return ja;
+	}
+	public static JSONArray apiCallLocItemAtTime(Parsed p) throws JSONException{
+		JSONArray ja = new JSONArray();
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/";
+		JSONObject json = getJSON(url);
+		JSONArray locations = json.getJSONArray("Location");
+		for (int i = 0; i < locations.length(); i++) {
+			JSONObject o = locations.getJSONObject(i);
+			if(o.get("Name").toString().toLowerCase().equals(p.getCourt().toLowerCase())){
+				parseLocationData(o.get("Name").toString(),ja,p);
+			}
+		}		
+		return ja;
+	}
+*/
+	public static boolean parseLocationData(String loc,JSONArray ja,Parsed p) throws JSONException {
+		String url = "https://api.hfs.purdue.edu/menus/v2/locations/" + loc.replaceAll(" ", "%20") + "/" + p.getDay();
 		JSONObject json = getJSON(url);
 		JSONArray meals = json.getJSONArray("Meals");
 		HashMap<String, Item> item_list = new HashMap<String, Item>();
@@ -156,10 +161,11 @@ public class APICaller {
 			String meal = m.get("Name").toString().replaceAll(" ", "");
 			//go through stations
 			if (!m.has("Stations") || m.isNull("Stations"))	continue;	
-			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc,date,userID,item); //get items to put into daily table
+			item_list = getItems(item_list, m.getJSONArray("Stations"), meal,loc,p); //get items to put into daily table
 		}
 		for (String s : item_list.keySet()) {
 			Item i = item_list.get(s);
+			
 
 			//check if item exists, if not - get item
 			if (!checkItem(i.id)) {
@@ -171,14 +177,16 @@ public class APICaller {
 			Helper.getNutrition(i.id,i);
 			
 			JSONObject jo = i.processItem();
-			if(jo != null && i.atTime(time)){
+			if(jo != null && i.atTime(p.getTime())){
 				ja.put(jo);
 			}
 		}
 		return true;
 	}
-	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court,String date,int userID,String getItem) throws JSONException {
+	public static HashMap<String, Item> getItems(HashMap<String, Item> item_list, JSONArray stations, String meal,String court,Parsed p) throws JSONException {
 		boolean[] userPrefs = null;
+		String getItem = p.getName();
+		int userID = p.getUserID();
 		if(getItem != null){
 			getItem = getItem.toLowerCase();
 		}
@@ -207,7 +215,7 @@ public class APICaller {
 					if (item_list.containsKey(item_name)) { //item exists
 						food = item_list.remove(item_name);
 					} else {
-						food = new Item(item_name, item.getString("ID"), station,court,Helper.getIngred(item.getString("ID")),date,userPrefs);
+						food = new Item(item_name, item.getString("ID"), station,court,Helper.getIngred(item.getString("ID")),p.getDay(),userPrefs,p);
 					}
 					if (meal.equals("Breakfast")){
 						food.setBreakfast(true);

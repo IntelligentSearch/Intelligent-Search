@@ -191,7 +191,7 @@ public class Helper {
 			}
 			return true;
 		}
-		public static void readItems(ResultSet res,JSONArray ja, int userID) throws SQLException, JSONException{
+		public static void readItems(ResultSet res,JSONArray ja, int userID,Parsed p) throws SQLException, JSONException{
 			boolean[] userPrefs = null; 
 			if(userID > 0){
 				userPrefs = Helper.getUsersPref(userID);
@@ -210,7 +210,7 @@ public class Helper {
 				String ingred = res.getString("I.Ingredients");
 				DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 				Date dateobj = new Date();
-				Item i = new Item(name,id,station,diningCourt,ingred,df.format(dateobj),userPrefs);
+				Item i = new Item(name,id,station,diningCourt,ingred,df.format(dateobj),userPrefs,p);
 				i.setBreakfast(breakfast);
 				i.setLunch(lunch);
 				i.setDinner(dinner);

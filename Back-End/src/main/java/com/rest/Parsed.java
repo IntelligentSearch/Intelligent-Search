@@ -95,6 +95,9 @@ public class Parsed{
 	public int getCaloriesFlag(){
 		return this.caloriesFlag;
 	}
+	public int getUserID(){
+		return this.userID;
+	}
 	public String toString(){
 		String type;
 		switch(this.caloriesFlag){
@@ -170,31 +173,33 @@ public class Parsed{
 		if(p.hasDay()){
 			//NOT CURRENT DAY
 			if(!isToday(p.getDay())){
-				if(!p.hasCourt() && !p.hasName() && !p.hasTime()){
-					return APICaller.apiCallAll(p.getDay(),userID);
+				return APICaller.apiCall(p);
+				/*if(!p.hasCourt() && !p.hasName() && !p.hasTime()){
+					return APICaller.apiCallAll(p);
 				}
 				else if(p.hasCourt() && !p.hasName() && !p.hasTime()){
-					return APICaller.apiCallLocation(p.getDay(),p.getCourt(),userID);
+					return APICaller.apiCallLocation(p);
 				}
 				else if(p.hasCourt() && p.hasName() && !p.hasTime()){
-					return APICaller.apiCallLocItem(p.getDay(),p.getCourt(),p.getName(),userID);
+					return APICaller.apiCallLocItem(p);
 				}
 				else if(!p.hasCourt() && p.hasName() && !p.hasTime()){
-					return APICaller.apiCallItem(p.getDay(),p.getName(),userID);
+					return APICaller.apiCallItem(p);
 				}
 				else if (!p.hasCourt() && !p.hasName() && p.hasTime()){
-					return APICaller.apiCallAtTime(p.getDay(), userID, p.getTime());
+					return APICaller.apiCallAtTime(p);
 				}
 				else if (!p.hasCourt() && p.hasName() && p.hasTime()){
-					return APICaller.apiCallItemAtTime(p.getDay(),p.getName(),p.getTime(),userID);
+					return APICaller.apiCallItemAtTime(p);
 				}
 				else if (p.hasCourt() && p.hasName() && p.hasTime()){
-					return APICaller.apiCallLocItemAtTime(p.getDay(),p.getCourt(),p.getName(),p.getTime(),userID);
+					return APICaller.apiCallLocItemAtTime(p);
 				}
 				else if (p.hasCourt() && !p.hasName() && p.hasTime()){
-					return APICaller.apiCallLocAtTime(p.getDay(),p.getCourt(),p.getTime(),userID);
+					return APICaller.apiCallLocAtTime(p);
 				}
 				return empty;
+				*/
 			}
 		}
 		//TODAY
@@ -203,41 +208,41 @@ public class Parsed{
 		//TOKEN DINING COURT, TOKEN TODAY
 		if(p.hasCourt() && !p.hasName() && !p.hasTime()){
 			System.out.println("Dining");
-			return Call.getFoodDining(p.getCourt(),userID);
+			return Call.getFoodDining(p.getCourt(),userID,p);
 		}
 
 		//searching item
 		//TOKEN ITEM, TOKEN TODAY
 		else if(!p.hasCourt() && p.hasName() && !p.hasTime()){
 			System.out.println("Item");
-			return Call.getItem(p.getName(),userID);
+			return Call.getItem(p.getName(),userID,p);
 		}
 
 		//has item and dining Court
 		//TOKEN ITEM, TOKEN DINING COURT
 		else if(p.hasCourt() && p.hasName() && !p.hasTime()){
 			System.out.println("Item at court");
-			return Call.getItemDin(p.getCourt(), p.getName(),userID);
+			return Call.getItemDin(p.getCourt(), p.getName(),userID,p);
 		}
 		else if(!p.hasCourt() && !p.hasName() && !p.hasTime()){
 			System.out.println("just date");
-			return Call.getAll(userID);
+			return Call.getAll(userID,p);
 		}
 		else if(!p.hasCourt() && !p.hasName() && p.hasTime()){
 			System.out.println("time");
-			return Call.getAtTime(p.getTime(),userID);
+			return Call.getAtTime(p.getTime(),userID,p);
 		}
 		else if(!p.hasCourt() && p.hasName() && p.hasTime()){
 			System.out.println("time name");
-			return Call.getItemAtTime(p.getTime(),p.getName(),userID);
+			return Call.getItemAtTime(p.getTime(),p.getName(),userID,p);
 		}
 		else if(p.hasCourt() && p.hasName() && p.hasTime()){
 			System.out.println("time name item");
-			return Call.getItemDinAtTime(p.getTime(),p.getCourt(),p.getName(),userID);
+			return Call.getItemDinAtTime(p.getTime(),p.getCourt(),p.getName(),userID,p);
 		}
 		else if(p.hasCourt() && !p.hasName() && p.hasTime()){
 			System.out.println("time court");
-			return Call.getDinAtTime(p.getTime(),p.getCourt(),userID);
+			return Call.getDinAtTime(p.getTime(),p.getCourt(),userID,p );
 		}
 		return empty;
 	}
