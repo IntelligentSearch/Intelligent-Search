@@ -17,13 +17,13 @@ public class Bus_Call {
 				JSONArray stops = getRouteStops(object.getString("id"));
 				jo.put("stops", stops);
 				jo.put("route", object);
-				ja.put(ret);
+				ret.put(jo);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return ja;
+		return ret;
 	}
 	public static JSONArray getAllRoutes(){
 		String query = "SELECT route_id, route_short_name,route_long_name,route_desc,route_type,route_color,route_text_color "
@@ -34,13 +34,13 @@ public class Bus_Call {
 		//sets up connection
 		Connection conn = null;
 		try {
-				JSONObject jo = new JSONObject();
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
 				prep_stmt = conn.prepareStatement(query);
 				System.out.println(prep_stmt);
 				res = prep_stmt.executeQuery();
 				while(res.next()){
+					JSONObject jo = new JSONObject();
 					jo.put("id",res.getString("route_id"));
 					jo.put("short_name",res.getString("route_short_name"));
 					jo.put("long_name",res.getString("route_long_name"));
@@ -106,8 +106,13 @@ public class Bus_Call {
 				prep_stmt.setString(1,route_id);
 				System.out.println(prep_stmt);
 				res = prep_stmt.executeQuery();
-				res.next();
-				String id = res.getString("s.stop_id");
+				String id = null;
+				if(res.next()){
+					id = res.getString("s.stop_id");
+				}
+				else{
+					return ja.put(new JSONObject().put("stop_id","error"));
+				}
 				boolean t = false;
 				do{
 					JSONObject jo = new JSONObject();

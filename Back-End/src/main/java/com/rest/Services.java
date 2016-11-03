@@ -255,5 +255,25 @@ public class Services {
 		String output = j.toString();
 		return Response.status(200).entity(output).build();
 	}
-	
+	@GET
+	@Path("get-all-routes/")
+	public Response getAllRoutes(){
+		JSONArray j = Bus_Call.getAllRoutes();
+		String output = j.toString();
+		return Response.status(200).entity(output).build();
+	}
+	@GET
+	@Path("get-all-routes-stops/")
+	public Response getAllRoutesStops(){
+		JSONArray j = Bus_Call.getAllRoutesStops();
+		 String output = j.toString();
+         return Response.status(200).entity(output).build();		
+	}
+	@GET
+	@Path("get-stops/{id}")
+	public Response getRouteStops(@PathParam("id")String id){
+		JSONArray j = Bus_Call.getRouteStops(id);
+		String output = j.toString();
+		return Response.status(200).entity(output).build();
+	}	
 }
