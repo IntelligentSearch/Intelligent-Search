@@ -3,6 +3,7 @@ package com.rest;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import org.json.*;
 
@@ -158,5 +159,163 @@ public class Bus_Call {
 		}
 		return ja;
 	}
-	
+	public static class routeStops{
+		JSONArray Stops;
+		JSONObject Route;
+		ArrayList<String> Stop;
+		String id;
+		public routeStops(String id){
+			this.id = id;
+			Stops = new JSONArray();
+			Route = new JSONObject();
+			Stop = new ArrayList<String>();
+		}
+		public JSONArray getStops() {
+			return Stops;
+		}
+		public JSONObject getRoute() {
+			return Route;
+		}
+		public ArrayList<String> getStopsLists() {
+			return Stop;
+		}
+		public void addStop(String s){
+			Stop.add(s);
+		}
+		public boolean stopExist(String s){
+			return Stop.contains(s);
+		}
+		@Override
+		public String toString(){
+			return this.id;
+		}
+		@Override
+		public boolean equals(Object o){
+			return ((String)o).equals(id);
+		}
+		
+	}
+	public static int indexItem(String o,ArrayList<routeStops> r){
+		int i = 0;
+		for(routeStops x:r ){
+			if(x.equals(o)){
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	public static JSONArray getStops(){
+		ArrayList<routeStops> a = new ArrayList<routeStops>();
+		String query = "SELECT st.stop_sequence,t.route_id, r.route_short_name,r.route_long_name,r.route_desc,r.route_type,r.route_color,r.route_text_color,s.stop_id,s.stop_code,s.stop_name,s.stop_desc,s.stop_lat,s.stop_lon,s.location_type "
+				+ "From Trips as t "
+				+ "Join Routes as r "
+				+ "on r.route_id = t.route_id "
+				+ "Join Stop_Times as st "
+				+ "on t.trip_id = st.trip_id "
+				+ "Join Stops as s "
+				+ "on st.stop_id = s.stop_id  "
+				+ "Where t.service_id = ( "
+				+ "Select service_id From Calendar where date = ? LIMIT 1) "
+				+ "Order By st.stop_sequence";
+		JSONArray ja = new JSONArray();
+		PreparedStatement prep_stmt = null;
+		ResultSet res = null;
+		//sets up connection
+		Connection conn = null;
+		//list of all routes to make sure only use once
+		//ArrayList<String> routes_used = new ArrayList<String>();
+		int count = 0;
+		try {
+				DateFormat df = new SimpleDateFormat("yyyyMMdd");
+				Date dateobj = new Date();
+				String date = df.format(dateobj);
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+				prep_stmt = conn.prepareStatement(query);
+				prep_stmt.setString(1,date);
+				//System.out.println(prep_stmt);
+				res = prep_stmt.executeQuery();
+				String s_id = "-567";
+				String r_id = "-467";
+				boolean newRoute = true;
+				int index = -1;
+				while(res.next()){
+					String id_route = res.getString("t.route_id");
+					String id_stop = res.getString("s.stop_id");
+					if(id_stop.equals(s_id) && r_id.equals(res.getString("t.route_id"))){
+						continue;
+					}
+					s_id = id_stop;
+					if(!r_id.equals(id_route)){
+						//route_id
+						if((index = indexItem(id_route,a)) < 0){
+							routeStops routeStop = new routeStops(res.getString("t.route_id"));
+							r_id = id_route;		
+							routeStop.getRoute().put("id",id_route);
+							routeStop.getRoute().put("short_name",res.getString("r.route_short_name"));
+							routeStop.getRoute().put("long_name",res.getString("r.route_long_name"));
+							routeStop.getRoute().put("desc",res.getString("r.route_desc"));
+							routeStop.getRoute().put("type",res.getString("r.route_type"));
+							routeStop.getRoute().put("color",res.getString("r.route_color"));
+							routeStop.getRoute().put("text_color",res.getString("r.route_text_color"));
+							s_id = res.getString("s.stop_id");
+							a.add(routeStop);
+							index = indexItem(id_route,a);
+						}
+						newRoute = true;
+					}
+					newRoute = false;
+					routeStops rs = a.get(index);
+					if(!rs.stopExist(res.getString("s.stop_id"))){
+						JSONObject jo = new JSONObject();
+						jo.put("stop_count", res.getString("st.stop_sequence"));
+						jo.put("stop_id", res.getString("s.stop_id"));
+						jo.put("stop_code", res.getString("s.stop_code"));
+						jo.put("stop_name", res.getString("s.stop_name"));
+						jo.put("stop_desc", res.getString("s.stop_desc"));
+						jo.put("stop_lat", res.getString("s.stop_lat"));
+						jo.put("stop_long", res.getString("s.stop_lon"));
+						jo.put("stop_lat", res.getString("s.stop_lat"));
+						rs.getStops().put(jo);
+						rs.addStop(res.getString("s.stop_id"));
+					}
+				}
+		}
+		catch (Exception e) {
+				System.out.println("\n"+e.toString());
+				try {
+					e.printStackTrace();
+					ja.put(new JSONObject().put("error",e.toString()));
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
+		}
+		finally{
+				for(routeStops routes: a ){
+					if(routes != null){
+						try {
+							ja.put(new JSONObject().put("routes",routes.getRoute()).put("stops",routes.getStops()));
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				try{
+						if(conn != null){
+								conn.close();
+						}
+						if(res != null){
+								res.close();
+						}
+						if(prep_stmt != null){
+								prep_stmt.close();
+						}
+				}	
+				catch(Exception e){
+				}
+		}
+		return ja;
+	}
 }
