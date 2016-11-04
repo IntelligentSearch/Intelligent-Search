@@ -2,9 +2,11 @@ package com.rest;
 
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 
 import org.json.*;
 
@@ -225,5 +227,30 @@ public class Helper {
 					//ja.put(new JSONObject().put("object","eror object as it is null"));
 				}
 		}
+		}
+		public static String date(String date){
+			Date dateGiven = null;
+			try {
+				dateGiven = new SimpleDateFormat("MM-dd-yyyy").parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "error";
+			}
+			Calendar c = Calendar.getInstance();
+			c.setTime(dateGiven);
+			int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+			Calendar c2 = Calendar.getInstance();
+			int actualDayOfWeek = c2.get(Calendar.DAY_OF_WEEK);
+			if(dayOfWeek == actualDayOfWeek){
+				return "Today";
+			}
+			else if((actualDayOfWeek+1)%7 == (dayOfWeek)){
+				return "Tomorrow";
+			}
+			else{
+				SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE");
+				return dateFormat.format(c.getTime());
+			}
 		}
 }

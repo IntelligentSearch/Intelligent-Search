@@ -118,6 +118,7 @@ public class Item {
 		jo.put("FoodName",this.name);
 		jo.put("Ingredients",this.ingred);
 		jo.put("Date",this.date);
+		jo.put("Date_format", Helper.date(date));
 		jo.put("Station", this.station);
 		jo.put("Food_ID", this.id);
 		jo.put("Breakfast", this.breakfast);

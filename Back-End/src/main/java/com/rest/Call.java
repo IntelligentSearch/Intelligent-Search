@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class Call {
 		/*TODO USER STORIES 
-		 * calorie count
+		 *  test calorie count
 		 */
 		//give userID as greater than 0 if you dont have a userID
 		public static JSONArray getAll(int userID,Parsed p) throws JSONException{
@@ -699,7 +699,7 @@ public class Call {
 										prep_stmt2.close();
 										res2.close();
 								}
-								if(item_id != null && loc != null){
+								/*if(item_id != null && loc != null){
 										jo.put("Item Cards", getItemDin(loc,name,userID,null));
 								}
 								else if(item_id != null){
@@ -708,7 +708,7 @@ public class Call {
 								else if(loc != null){
 										//jo.put("location is being checked",loc);
 										jo.put("Item Cards",getFoodDining(loc,userID,null));
-								}
+								}*/
 								ja.put(jo);
 						}
 				}
