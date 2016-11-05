@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.lang.ProcessBuilder;
 
 @Path("/rest")
 public class Services {
@@ -265,7 +266,7 @@ public class Services {
 	@GET
 	@Path("get-all-routes-stops/")
 	public Response getAllRoutesStops(){
-		JSONArray j = Bus_Call.getAllRoutesStops();
+		JSONArray j = Bus_Call.getStops();
 		 String output = j.toString();
          return Response.status(200).entity(output).build();		
 	}
@@ -275,5 +276,105 @@ public class Services {
 		JSONArray j = Bus_Call.getRouteStops(id);
 		String output = j.toString();
 		return Response.status(200).entity(output).build();
-	}	
+	}
+	@GET
+	@Path("end-bus/")	
+	public Response end(){
+		String output ="okay";
+		PreparedStatement prep_stmt = null;
+		Connection conn = null;
+		try{
+			String query = "UPDATE reference set count = count - 1 where count > 0";
+			Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			prep_stmt.executeUpdate();
+			
+		}
+		catch(Exception e){
+			output= e.toString();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt!= null){
+					prep_stmt.close();
+				}
+			}
+			catch(Exception e){
+
+			}
+		}
+		return Response.status(200).entity(output).build();
+	}
+	@GET
+    @Path("start-bus/")
+    public Response start(){
+		String output ="okay";
+        PreparedStatement prep_stmt = null;
+        Connection conn = null;
+        ResultSet res = null;
+		try{
+            String query = "Select count,pid from reference";
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+            prep_stmt = conn.prepareStatement(query);
+	        res = prep_stmt.executeQuery();
+			boolean startProcess = false;
+			//deals with if not there
+			if(!res.next()){	
+				startProcess = true;
+				prep_stmt.close();
+				query = "Insert INTO VALUES (0,0)";
+				prep_stmt = conn.prepareStatement(query);
+				prep_stmt.executeUpdate();
+				
+			}
+			else{
+				if(res.getInt("count") == 0 && res.getInt("pid") == -1){
+					startProcess = true;	
+				}
+			}
+			res.close();
+			prep_stmt.close();
+			if(!startProcess){
+				query = "UPDATE reference set count = count + 1";
+				prep_stmt = conn.prepareStatement(query);
+            	prep_stmt.executeUpdate();
+			}
+			else{	
+				output = "start process";
+				ProcessBuilder pb = new ProcessBuilder("/home/cs307/Intelligent-Search/Scripts/Vehicle/run.sh");
+				pb=pb.directory(new File("/home/cs307/Intelligent-Search/Scripts/Vehicle/"));
+				pb.start();
+			}
+        }
+        catch(Exception e){
+            output= e.toString();
+        }
+        finally{
+            try{
+                if(conn != null){
+                    conn.close();
+                }
+                if(prep_stmt!= null){
+                    prep_stmt.close();
+                }
+            }
+            catch(Exception e){
+ 
+            }
+        }
+	    return Response.status(200).entity(output).build();
+	}
+	@GET
+    @Path("live-stops/{stop}")
+	@Produces("application/json")
+	public Response live_stops(@PathParam("stop") String code){
+			JSONObject jo = Stop_Handler.parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716&code="+code);
+			String output = jo.toString();
+			return Response.status(200).entity(output).build();	
+	}
 }
