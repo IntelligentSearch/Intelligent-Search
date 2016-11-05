@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.json.*;
 
 public class Bus_Call {
@@ -160,30 +162,46 @@ public class Bus_Call {
 		return ja;
 	}
 	public static class routeStops{
-		JSONArray Stops;
+		JSONArray Stops0;
+		JSONArray Stops1;
 		JSONObject Route;
-		ArrayList<String> Stop;
+		HashMap<String,String> Stop;
 		String id;
 		public routeStops(String id){
 			this.id = id;
-			Stops = new JSONArray();
+			Stops0 = new JSONArray();
 			Route = new JSONObject();
-			Stop = new ArrayList<String>();
+			Stop = new HashMap<String,String>();
+			Stops1 = new JSONArray();
 		}
-		public JSONArray getStops() {
-			return Stops;
+		public JSONArray getStopsByID(int id) {
+			if(id == 0){
+				return Stops0;
+			}
+			return Stops1;
+		}
+		public JSONArray getStops(){
+			try{
+				for(int i = 0; i < Stops1.length(); i++){
+					Stops0.put(Stops1.get(i));
+				}
+				return Stops0;
+			}
+			catch(Exception e){
+				return null;
+			}
 		}
 		public JSONObject getRoute() {
 			return Route;
 		}
-		public ArrayList<String> getStopsLists() {
+		public HashMap<String,String> getStopsLists() {
 			return Stop;
 		}
 		public void addStop(String s){
-			Stop.add(s);
+			Stop.put(s, s);
 		}
 		public boolean stopExist(String s){
-			return Stop.contains(s);
+			return Stop.containsKey(s);
 		}
 		@Override
 		public String toString(){
@@ -207,7 +225,7 @@ public class Bus_Call {
 	}
 	public static JSONArray getStops(){
 		ArrayList<routeStops> a = new ArrayList<routeStops>();
-		String query = "SELECT st.stop_sequence,t.route_id, r.route_short_name,r.route_long_name,r.route_desc,r.route_type,r.route_color,r.route_text_color,s.stop_id,s.stop_code,s.stop_name,s.stop_desc,s.stop_lat,s.stop_lon,s.location_type "
+		String query = "SELECT t.direction_id,st.stop_id,st.stop_sequence,t.route_id, r.route_short_name,r.route_long_name,r.route_desc,r.route_type,r.route_color,r.route_text_color,s.stop_id,s.stop_code,s.stop_name,s.stop_desc,s.stop_lat,s.stop_lon,s.location_type "
 				+ "From Trips as t "
 				+ "Join Routes as r "
 				+ "on r.route_id = t.route_id "
@@ -217,10 +235,12 @@ public class Bus_Call {
 				+ "on st.stop_id = s.stop_id  "
 				+ "Where t.service_id = ( "
 				+ "Select service_id From Calendar where date = ? LIMIT 1) "
-				+ "Order By st.stop_sequence";
+				+ "Group By t.direction_id,t.route_id,s.stop_id,st.stop_id "
+				+ "Order By st.stop_sequence, t.route_id";
 		JSONArray ja = new JSONArray();
 		PreparedStatement prep_stmt = null;
 		ResultSet res = null;
+		long mil = System.currentTimeMillis();
 		//sets up connection
 		Connection conn = null;
 		//list of all routes to make sure only use once
@@ -234,8 +254,10 @@ public class Bus_Call {
 				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
 				prep_stmt = conn.prepareStatement(query);
 				prep_stmt.setString(1,date);
-				//System.out.println(prep_stmt);
+				System.err.println(prep_stmt);
 				res = prep_stmt.executeQuery();
+				System.err.println("time it takes to run "+(System.currentTimeMillis()-mil));
+				mil = System.currentTimeMillis();
 				String s_id = "-567";
 				String r_id = "-467";
 				boolean newRoute = true;
@@ -277,7 +299,8 @@ public class Bus_Call {
 						jo.put("stop_lat", res.getString("s.stop_lat"));
 						jo.put("stop_long", res.getString("s.stop_lon"));
 						jo.put("stop_lat", res.getString("s.stop_lat"));
-						rs.getStops().put(jo);
+						jo.put("travel_dir",res.getString("t.direction_id"));
+						rs.getStopsByID(res.getInt("t.direction_id")).put(jo);
 						rs.addStop(res.getString("s.stop_id"));
 					}
 				}
@@ -302,6 +325,7 @@ public class Bus_Call {
 						}
 					}
 				}
+				System.err.println("time it takes to run "+(System.currentTimeMillis()-mil));
 				try{
 						if(conn != null){
 								conn.close();
