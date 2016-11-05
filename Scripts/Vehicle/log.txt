@@ -1,0 +1,9 @@
+1
+mysql: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+javac: file not found: Vehicle_Handler.java
+Usage: javac <options> <source files>
+use -help for a list of possible options
+Error: Could not find or load main class Vehicle_Handler
+mysql: [Warning] Using a password on the command line interface can be insecure.
