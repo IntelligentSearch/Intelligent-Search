@@ -139,6 +139,45 @@ public class Helper {
 			}
 			return ingred;
 		}
+
+		public static ArrayList<String> getUserFavs(int userID) {
+			Connection con = null;
+			PreparedStatement prep_stmt = null;
+			ResultSet res = null;
+			ArrayList<String> names = new ArrayList<String>();
+			try{
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+				String query = "select Item.Name from Item inner join Favorites on Item.Item_ID = Favorites.Item_ID where Favorites.User_ID = ?";
+				prep_stmt = con.prepareStatement(query);
+				prep_stmt.setInt(1, userID);
+				res = prep_stmt.executeQuery();
+				while (res.next()) {
+					String item = res.getString("Item.Name");	
+					item = item.toLowerCase();
+					names.add(item);
+				}
+			}
+			catch (Exception e) {
+				System.out.println("\n"+e.toString());
+			}
+			finally{
+				try{
+					if(con != null){
+						con.close();
+					}
+					if(res != null){
+						res.close();
+					}
+					if(prep_stmt != null){
+						prep_stmt.close();
+					}
+				}	
+				catch(Exception e){
+				}
+			}
+			return names;	
+		}
 		public static boolean[] getUsersPref(int userID){
 			Connection con = null;
 			PreparedStatement prep_stmt = null;
