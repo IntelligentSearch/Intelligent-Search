@@ -342,4 +342,57 @@ public class Bus_Call {
 		}
 		return ja;
 	}
+	public static JSONArray getLiveVehicles(){
+		JSONArray ja = new JSONArray();
+		PreparedStatement prep_stmt = null;
+		Connection conn = null;
+		ResultSet res = null;
+		String query = "Select dateTime, lat,vlong,spd,dir,sched_status,sched_delta,route_status,route_key,route_name,pattern_key,pattern_name,trip_key,trip_name,name from live_data";
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			res = prep_stmt.executeQuery();
+			while(res.next()){
+				JSONObject jo = new JSONObject();
+				jo.put("Name",res.getString("name"));
+				jo.put("dateTime",res.getString("dateTime"));
+				jo.put("Lat",res.getString("lat"));
+				jo.put("Long",res.getString("vlong"));
+				jo.put("Spd",res.getString("spd"));
+				jo.put("Dir",res.getString("dir"));
+				jo.put("SchedStatus",res.getString("sched_status"));
+				jo.put("SchedDelta",res.getString("sched_delta"));
+				jo.put("RouteStatus",res.getString("route_status"));
+				jo.put("Route_Key",res.getString("route_key"));
+				jo.put("Route_Name",res.getString("route_name"));
+				jo.put("Trip_Key",res.getString("pattern_key"));
+				jo.put("Trip_Name",res.getString("pattern_name"));
+				jo.put("Pattern_Key",res.getString("trip_key"));
+				jo.put("Pattern_Name",res.getString("trip_name"));
+				ja.put(jo);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt != null){
+					prep_stmt.close();
+				}
+				if(res != null){
+					res.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
+			
+		}
+		return ja; 
+	}
 }
