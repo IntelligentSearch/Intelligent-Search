@@ -17,7 +17,20 @@ var app = angular.module('myApp.maps', ['ngRoute'])
 .controller('MapsCtrl', function(NgMap, $scope, $location, $http) {
   NgMap.getMap().then(function(map) {
     $scope.map = map;
-  }); 
+  });
+  $scope.data;
+  $scope.loadRoutes = function() {
+    $http({
+      url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
+      method: "GET"
+    }).success(function (data, status, headers, config) {
+      if(data != null) {
+	$scope.data = data;
+      }
+    }).error(function(data, status, headers, config) {
+      console.log("ERROR");
+    }); 
+  };
   $scope.user = 'hello'; 
   $scope.location = {
     start : "40.431103, -86.914727",
@@ -53,6 +66,7 @@ var app = angular.module('myApp.maps', ['ngRoute'])
     } else
       $scope.silver = true;
   }
+<<<<<<< HEAD
   $http({
     url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
     method: "GET"
@@ -82,6 +96,8 @@ var app = angular.module('myApp.maps', ['ngRoute'])
   }).error(function(data, status, headers, config) {
     console.log("ERROR");
   });
+=======
+>>>>>>> 00c9002873eb4607bf6a22c75a95d5954138da33
   $scope.useCurr = function() {
     $scope.location.start = "40.428103, -86.913727";
     console.log($scope);
