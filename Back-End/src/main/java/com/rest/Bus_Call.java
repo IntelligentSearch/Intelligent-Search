@@ -10,6 +10,58 @@ import java.util.HashMap;
 import org.json.*;
 
 public class Bus_Call {
+	public static JSONArray scheduleStaticOneRoute(String time,String day,String stop1,String stop2){
+		JSONArray ja = new JSONArray();
+		PreparedStatement prep_stmt = null;
+		ResultSet res = null;
+		//sets up connection
+		Connection conn = null;
+		String query = "Select r.route_short_name from stops as s"
+				+ "Join(Select * from Stop_Times where departure_time > ? as st "//AND departure_time < ?) as st "
+				+ "on st.stop_id = s.stop_id "
+				+ "Join trips as t "
+				+ "on t.trip_id = st.trip_id"
+				+ "Join (Select * from Calendar where date = ?) as c "
+				+ "on c.service_id = t.service_id "
+				+ "Join Routes as r "
+				+ "on r.route_id = t.route_id"
+				+ "where stop_code = ?)";
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			prep_stmt.setString(1, time);
+			prep_stmt.setString(2, day);
+			prep_stmt.setString(3, stop1);
+			//prep_stmt.setString(4, stop2);
+			res = prep_stmt.executeQuery();
+			System.out.println(prep_stmt);
+			while(res.next()){
+				System.out.println(res.getString("r.route_short_name"));
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt != null){
+					prep_stmt.close();
+				}
+				if(res != null){
+					res.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
+		}
+		
+		return ja;
+	}
 	public static JSONArray getAllRoutesStops(){
 		JSONArray ja = getAllRoutes();
 		JSONArray ret = new JSONArray();
@@ -341,6 +393,118 @@ public class Bus_Call {
 				}
 		}
 		return ja;
+	}
+	public static JSONObject getClosestStopByRouteID(float lon,float lat,String routeID){
+		String query = "select DISTINCT s.stop_code,s.stop_id,s.stop_name,s.stop_desc,s.stop_lat,s.stop_lon,s.location_type from Stops as s "
+				+	"JOIN Stop_Times as st on st.stop_id = s.stop_id "
+				+ 	"JOIN Trips as t on st.trip_id = t.trip_id "
+				+	"JOIN Calendar as c on c.service_id = t.service_id "
+				+ 	"where t.route_id = '?' and c.date = '?' "
+				+	"order by (power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
+		
+		JSONObject jo = new JSONObject();
+		PreparedStatement prep_stmt = null;
+		Connection conn = null;
+		ResultSet res = null;
+		try{
+			DateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date dateobj = new Date();
+	
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			
+			prep_stmt.setString(1,routeID);
+			prep_stmt.setString(2,df.format(dateobj));
+			prep_stmt.setFloat(3,lon);
+			prep_stmt.setFloat(4,lat);
+			
+			res = prep_stmt.executeQuery();
+			if(!res.next()){
+				jo.put("error", "no stops near by");
+			}
+			else{
+				jo.put("stop_id", res.getString("s.stop_id"));
+				jo.put("stop_code",res.getString("s.stop_code"));
+				jo.put("stop_name",res.getString("s.stop_name"));
+				jo.put("stop_desc",res.getString("s.stop_desc"));
+				jo.put("stop_lat",res.getFloat("s.stop_lat"));
+				jo.put("stop_lon",res.getFloat("s.stop_lon"));
+				jo.put("location_type",res.getString("s.location_type"));
+				jo.put("stop_times",Stop_Handler.parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716&code="+res.getString("s.stop_code")));
+			}
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt != null){
+					prep_stmt.close();
+				}
+				if(res != null){
+					res.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
+		}
+		return jo;
+	}
+	public static JSONObject getClosestStop(float lon, float lat){
+		String query = "select stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type from Stops "
+				+ "order by (power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
+		JSONObject jo = new JSONObject();
+		PreparedStatement prep_stmt = null;
+		Connection conn = null;
+		ResultSet res = null;
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			prep_stmt.setFloat(1,lon);
+			prep_stmt.setFloat(2,lat);
+			res = prep_stmt.executeQuery();
+			if(!res.next()){
+				jo.put("error", "no stops near by");
+			}
+			else{
+				jo.put("stop_id", res.getString("stop_id"));
+				jo.put("stop_code",res.getString("stop_code"));
+				jo.put("stop_name",res.getString("stop_name"));
+				jo.put("stop_desc",res.getString("stop_desc"));
+				jo.put("stop_lat",res.getFloat("stop_lat"));
+				jo.put("stop_lon",res.getFloat("stop_lon"));
+				jo.put("location_type",res.getString("location_type"));
+				jo.put("stop_times",Stop_Handler.parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716&code="+res.getString("s.stop_code")));
+			}
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt != null){
+					prep_stmt.close();
+				}
+				if(res != null){
+					res.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
+		}
+		return jo;
 	}
 	public static JSONArray getLiveVehicles(){
 		JSONArray ja = new JSONArray();
