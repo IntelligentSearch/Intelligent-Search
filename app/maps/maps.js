@@ -44,16 +44,6 @@ var app = angular.module('myApp.maps', ['ngRoute'])
   $scope.silver = false;
 
   $scope.hideSilver = function() {
-    $http({
-      url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
-      method: "GET"
-    }).success(function (data, status, headers, config) {
-      if(data != null) {
-	console.log(data);
-      }
-    }).error(function(data, status, headers, config) {
-      console.log("ERROR");
-    });
     console.log($scope.map.shapes);
     $scope.map.shapes.silver.setMap(null);
     console.log($scope.map.shapes);
@@ -68,7 +58,26 @@ var app = angular.module('myApp.maps', ['ngRoute'])
     method: "GET"
   }).success(function (data, status, headers, config) {
     if(data != null) {
-      console.log("data found");
+      console.log(data);
+	$scope.array = []
+	$scope.origin = "";
+	$scope.dest = "";
+    	for(var i = 0; i < data.length; i++) {
+		for(var j = 0; j < data[i].stops.length; j++) {
+			var latitude = data[i].stops[j].stop_lat;
+			var longitude = data[i].stops[j].stop_long;
+			var location = {}
+			location['lat'] = Number(latitude)
+			location['lng'] = Number(longitude)
+			var location_object = {};
+			location_object['location'] = location;
+			if(i == 0) $scope.array.push(location_object);
+			if(j == 0) $scope.origin = latitude  + ", " + longitude;
+			if(j == data[i].stops.length - 1) $scope.dest = latitude  + ", " + longitude;  
+		}
+		//PUSH IN BIG ARRAY
+		//$scope.array.push(location_object);
+	}
     }
   }).error(function(data, status, headers, config) {
     console.log("ERROR");
@@ -77,6 +86,8 @@ var app = angular.module('myApp.maps', ['ngRoute'])
     $scope.location.start = "40.428103, -86.913727";
     console.log($scope);
   }
+
+
 });
 
 
