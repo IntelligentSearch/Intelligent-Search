@@ -140,11 +140,14 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             $scope.showSpinner = true;
 
             var stringDate = $scope.selectedDate.toISOString().substring(0, 10);
-            var stringDate = $scope.selectedDate.toISOString().substring(0, 10);
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
-
+            var myUrl = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate;
+            var userId = getUserID();
+            if (userId != undefined) {
+                myUrl += "/" + getUserID();
+            }
             $http({
-                url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate,
+                url: myUrl,
                 method: "GET"
             }).success(function (data, status, headers, config) {
                 if (data != null) {
