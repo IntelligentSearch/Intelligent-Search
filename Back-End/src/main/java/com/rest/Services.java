@@ -65,7 +65,35 @@ public class Services {
 								+ "\n"
 								+ "\t- /set-pref/\n"
 								+ "\t  POST\n"
-								+ "\n";
+								+ "\n"
+								+ "\t- /get-all-routes-stops/\n"
+								+ "\t  GET\n"
+								+ "\n"
+								+ "\t- /get-stops/{route-id}/\n"
+								+ "\t  GET\n"
+								+ "\n"
+								+ "\t- /get-all-routes/\n"
+								+ "\t  GET\n"
+								+ "\n"
+								+ "\t- /start-bus/\n"
+								+ "\t  GET\n"
+								+ "\n"
+								+ "\t- /end-bus/\n"
+								+ "\t  GET\n"
+								+ "\n"
+								+ "\t- /live-stops/{stop-code}\n"
+ 								+ "\t  GET\n"
+ 								+ "\n"
+								+ "\t- /get-close-stop-by-route/{route-id}/{lon}/{lat}/\n"
+								+ "\t  GET\n"
+ 								+ "\n"
+								+ "\t- /get-close-stop/{lon}/{lat}/\n"
+                + "\t  GET\n"
+                + "\n"
+                + "\t- /live_buses\n"
+                + "\t  GET\n"
+                + "\n";
+
 						return Response.status(200).entity(result).build();
 				}
 
@@ -112,7 +140,7 @@ public class Services {
 				@Path("menu/{location}/{date}/{uid}")
 				@Produces("application/json")
 				public Response getMenu(@PathParam("location") String location, @PathParam("date") String date, @PathParam("uid") String uid) throws JSONException, ClassNotFoundException {	
-						String u = "https://api.hfs.purdue.edu/menus/v1/locations/" + location + "/" + date;
+						String u = "https://api.hfs.purdue.edu/menus/v2/locations/" + location + "/" + date;
 						String result = "";
 
 						int id;
@@ -388,11 +416,27 @@ public class Services {
 						return Response.status(200).entity(output).build();	
 				}
 		@GET
-				@Path("live-busses")
+				@Path("live-buses/")
 				@Produces("application/json")
 				public Response lives_busses(){
 						JSONArray ja = Bus_Call.getLiveVehicles();
 						String output = ja.toString();
 						return Response.status(200).entity(output).build();
+				}
+		@GET
+				@Path("get-close-stop-by-route/{route-id}/{lon}/{lat}")
+				@Produces("application/json")
+				public Response getClosestStopByRoute(@PathParam("route-id") String route_id , @PathParam("lon") float lon , @PathParam("lat") float lat){
+						JSONObject jo = Bus_Call.getClosestStopByRouteID(lon,lat,route_id);
+						String output = jo.toString();
+						return Response.status(200).entity(output).build();
+				}
+		@GET
+				@Path("get-close-stop/{lon}/{lat}")
+				@Produces("application/json")
+				public Response getClosestStop(@PathParam("lon") float lon,@PathParam("lat") float lat){
+					JSONObject jo = Bus_Call.getClosestStop(lon,lat);
+					String output = jo.toString();
+					return Response.status(200).entity(output).build();
 				}
 }

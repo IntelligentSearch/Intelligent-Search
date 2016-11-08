@@ -399,7 +399,7 @@ public class Bus_Call {
 				+	"JOIN Stop_Times as st on st.stop_id = s.stop_id "
 				+ 	"JOIN Trips as t on st.trip_id = t.trip_id "
 				+	"JOIN Calendar as c on c.service_id = t.service_id "
-				+ 	"where t.route_id = '?' and c.date = '?' "
+				+ 	"where t.route_id = ? and c.date = ? "
 				+	"order by (power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
 		
 		JSONObject jo = new JSONObject();
@@ -436,7 +436,7 @@ public class Bus_Call {
 			
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			jo.put("error",e.toString());
 		}
 		finally{
 			try{
@@ -481,12 +481,12 @@ public class Bus_Call {
 				jo.put("stop_lat",res.getFloat("stop_lat"));
 				jo.put("stop_lon",res.getFloat("stop_lon"));
 				jo.put("location_type",res.getString("location_type"));
-				jo.put("stop_times",Stop_Handler.parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716&code="+res.getString("s.stop_code")));
+				jo.put("stop_times",Stop_Handler.parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716&code="+res.getString("stop_code")));
 			}
 			
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			jo.put("error",e.toString());
 		}
 		finally{
 			try{
