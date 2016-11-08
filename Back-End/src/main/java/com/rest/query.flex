@@ -51,6 +51,12 @@ sb.append(match + ";");
 }
 
 
+[1-9][0-9][0-9]*  {
+String calories = yytext();
+sb.append("CALORIES=");
+sb.append(calories + ";");
+}
+
 {DayWeek} {
 today = false;
 String in = yytext();
