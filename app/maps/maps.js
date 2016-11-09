@@ -17,7 +17,20 @@ var app = angular.module('myApp.maps', ['ngRoute'])
 .controller('MapsCtrl', function(NgMap, $scope, $location, $http) {
   NgMap.getMap().then(function(map) {
     $scope.map = map;
-  }); 
+  });
+  $scope.data;
+  $scope.loadRoutes = function() {
+    $http({
+      url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
+      method: "GET"
+    }).success(function (data, status, headers, config) {
+      if(data != null) {
+	$scope.data = data;
+      }
+    }).error(function(data, status, headers, config) {
+      console.log("ERROR");
+    }); 
+  };
   $scope.user = 'hello'; 
   $scope.location = {
     start : "40.431103, -86.914727",
