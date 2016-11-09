@@ -10,6 +10,7 @@ var app = angular.module('myApp', [
     'myApp.settings',
     'myApp.maps',
     'myApp.register',
+    'myApp.favorites',
     'myApp.version'
 ]).directive('head', ['$rootScope', '$compile',
     function ($rootScope, $compile) {

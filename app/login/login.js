@@ -17,7 +17,7 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
         $scope.user = {
             userName: '',
             password: ''
-        }
+        };
 
         $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
 
@@ -34,6 +34,9 @@ var app = angular.module('myApp.login', ['ngRoute', 'ngCookies'])
                 var userID = response.data.user.UserID;
                 if (userID != -1) {
                     console.log(response.data);
+                    var favorites = response.data.favs;
+                    delete response.data.favs;
+                    $cookies.putObject('user_' + userID + '_favorites', favorites);
                     $cookies.putObject('user', response.data);
                     $cookies.put('user_name', $scope.user.userName);
                     $location.path("/dining");

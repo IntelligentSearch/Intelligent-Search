@@ -50,6 +50,10 @@ body {
     cursor: pointer;
 }
 
+.red {
+    color: red;
+}
+
 /*.menu-container {*/
 /*padding: 50px;*/
 /*}*/

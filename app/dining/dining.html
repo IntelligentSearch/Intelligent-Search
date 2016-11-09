@@ -9,7 +9,6 @@
 </head>
 
 <body ng-controller="DiningCtrl" ng-cloak>
-
     <md-sidenav
             class="md-sidenav-left"
             md-component-id="left"
@@ -19,15 +18,21 @@
             <h1 ng-if="getUserName() == undefined" class="md-toolbar-tools">User</h1>
         </md-toolbar>
         <md-content layout-padding ng-controller="LeftCtrl">
-            <md-button ng-if="getUserID() == -1 || getUserID() == undefined" href="#!/login" class="md-accent">
+            <md-button ng-if="getUserObj() == -1 || getUserObj() == undefined" href="#!/login" class="md-accent">
                 Login
             </md-button>
-            <md-button ng-if="getUserID() != -1 && getUserID() != undefined" ng-click="logout()" class="md-accent">
+            <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" ng-click="logout()" class="md-accent">
                 Logout
             </md-button>
             <br/>
-            <md-button ng-if="getUserID() != -1 || getUserID() != undefined" href="#!/settings" class="md-accent">Settings</md-button>
-            <br ng-if="getUserID() != -1 || getUserID() != undefined"/>
+            <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" href="#!/favorites" class="md-accent">
+                Favorites
+            </md-button>
+            <br>
+            <md-button ng-if="getUserObj() != -1 || getUserObj() != undefined" href="#!/settings" class="md-accent">
+                Settings
+            </md-button>
+            <br ng-if="getUserObj() != -1 || getUserObj() != undefined"/>
             <md-button ng-click="toggleLeft()" class="md-accent">
                 Close this Sidenav
             </md-button>
@@ -83,27 +88,27 @@
 
                 <md-content class="menu-container" layout="row" ng-hide="showSpinner">
                     <!--<div flex-xs flex-gt-xs="33" layout="column" ng-repeat="(key, value) in mealData">-->
-                    <div class="md-padding" flex="33" flex-xs="100" flex-sm="50" ng-repeat="(key, value) in mealData">
+                    <div class="md-padding" flex="33" flex-xs="100" flex-sm="50" ng-repeat="(key, value) in mealData.Meals">
                         <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
                         <div class="my-card md-padding">
                             <md-card-title>
                                 <md-card-title-text>
-                                    <span class="md-headline">{{key}}</span>
+                                    <span class="md-headline">{{value.Name}}</span>
                                 </md-card-title-text>
                             </md-card-title>
                             <md-card-content>
                                 <!--ng-controller="ListCtrl"-->
                                 <br>
                                 <md-list ng-cloak>
-                                            <span ng-repeat="$index in value">
-                                                <md-subheader class="md-no-sticky theme-purdue">{{value[$index].Name}}</md-subheader>
-                                                <md-list-item ng-repeat="item in value[$index].Items">
-                                                <p> {{ item.Name }} </p>
-                                                <md-button class="md-icon-button">
-                                                    <md-icon aria-label="Favorites" class="material-icons">favorites</md-icon>
-                                                </md-button>
-                                            </md-list-item>
-                                            </span>
+                                    <span ng-repeat="$index in value.Stations">
+                                    <md-subheader class="md-no-sticky theme-purdue">{{value.Stations[$index].Name}}</md-subheader>
+                                    <md-list-item ng-repeat="item in value.Stations[$index].Items">
+                                        <p> {{ item.Name }} </p>
+                                        <md-button class="md-icon-button" ng-click="toggleFavorite(item);">
+                                            <md-icon aria-label="Favorites" class="material-icons" ng-class="{'red':item.isFavorite}">favorites</md-icon>
+                                        </md-button>
+                                    </md-list-item>
+                                    </span>
                                 </md-list>
                             </md-card-content>
                         </div>

@@ -5,8 +5,6 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
     .config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common["X-Requested-With"];
-        $httpProvider.defaults.headers.common["Accept"] = 'application/x-www-form-urlencoded';
-        $httpProvider.defaults.headers.common["Content-Type"] = 'application/x-www-form-urlencoded';
         $routeProvider.when('/settings', {
             templateUrl: 'app/settings/settings.html',
             controller: 'SettingsCtrl',
@@ -23,7 +21,7 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
             $scope.name = {
                 firstName: response.user.FirstName,
                 lastName: response.user.LastName
-            }
+            };
 
             $scope.password = {
                 oldPassword: '',
@@ -109,7 +107,7 @@ var app = angular.module('myApp.settings', ['ngRoute', 'ngCookies'])
                 alert("Changes applied");
                 $location.path("/dining");
             }
-        }
+        };
         $scope.onChange = function (index, key) {
             $scope.preferences[key] = !$scope.preferences[key];
             console.log(key + " " + $scope.preferences[key]);

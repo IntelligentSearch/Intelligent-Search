@@ -1,0 +1,29 @@
+<body>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<md-content ng-controller="FavoritesCtrl" layout="row" layout-align="space-around" layout-padding="layout-padding"
+            ng-cloak="ng-cloak" class="page-settings">
+    <md-card flex="flex" flex-gt-sm="50" flex-gt-md="33">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2><span>Favorites</span></h2>
+            </div>
+        </md-toolbar>
+        <md-card-content>
+            <!--ng-controller="ListCtrl"-->
+            <!--<br>-->
+            <md-list ng-cloak>
+                <span>
+                <!--<md-subheader class="md-no-sticky theme-purdue"></md-subheader>-->
+                <md-list-item ng-repeat="item in favorites">
+                    <p> {{ item.Name }} </p>
+                    <md-button class="md-icon-button" ng-click="unfavoriteItem(item);">
+                        <md-icon aria-label="Favorites" class="material-icons" ng-class="{'red':item.isFavorite}">favorites</md-icon>
+                    </md-button>
+                </md-list-item>
+                </span>
+            </md-list>
+        </md-card-content>
+    </md-card>
+</md-content>
+<!-- Angular Material Dependencies-->
+</body>
