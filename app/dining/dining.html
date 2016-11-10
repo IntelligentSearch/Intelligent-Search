@@ -83,23 +83,6 @@
 
 </md-toolbar>
 
-<div ng-show="!showSearch && showAlerts">
-    <md-content>
-        <md-list class="md-dense">
-            <md-list-item class="md-3-line" ng-repeat="alert in alerts">
-                <div class="md-list-item-text">
-                    <h4 style="font-weight: bold">{{alert.Name}}</h4>
-                    <h4 ng-if="alert.Breakfast == true">Breakfast</h4><h4 ng-if="alert.Lunch == true">Lunch</h4><h4
-                        ng-if="alert.Late_Lunch == true">Late Lunch</h4><h4 ng-if="alert.Dinner == true">Dinner</h4>
-                    <h4>{{alert.Station}}</h4>
-                    <h4 style="font-weight: bold">{{alert.Location}}</h4>
-                </div>
-                <md-divider ng-if="!$last"></md-divider>
-            </md-list-item>
-        </md-list>
-    </md-content>
-</div>
-
 <div ng-show="!showSearch">
     <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
         <md-tab ng-repeat="tab in tabs"
@@ -107,6 +90,29 @@
                 label="{{tab.title}}">
 
             <md-progress-linear md-mode="indeterminate" ng-hide="!showSpinner"></md-progress-linear>
+
+            <div ng-show="!showSearch && showAlerts">
+                <md-content>
+                    <md-list class="md-dense">
+                        <md-list-item class="md-3-line">
+                            <div class="md-list-item-text">
+                                <h2 style="font-weight: bold">Favorited Items Available Today</h2>
+                            </div>
+                        </md-list-item>
+                        <md-list-item class="md-3-line" ng-repeat="alert in alerts">
+                            <div class="md-list-item-text">
+                                <h4 style="font-weight: bold">{{alert.Name}}</h4>
+                                <h4 ng-if="alert.Breakfast == true">Breakfast</h4><h4 ng-if="alert.Lunch == true">Lunch</h4><h4
+                                    ng-if="alert.Late_Lunch == true">Late Lunch</h4><h4 ng-if="alert.Dinner == true">Dinner</h4>
+                                <h4>{{alert.Station}}</h4>
+                                <h4 style="font-weight: bold">{{alert.Location}}</h4>
+                            </div>
+                            <md-divider></md-divider>
+                        </md-list-item>
+                    </md-list>
+                </md-content>
+            </div>
+
 
             <md-content class="menu-container" layout="row" ng-hide="showSpinner">
                 <!--<div flex-xs flex-gt-xs="33" layout="column" ng-repeat="(key, value) in mealData">-->
