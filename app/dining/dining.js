@@ -52,6 +52,72 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             return $cookies.get('user_name');
         };
 
+
+        $scope.getAlerts = function () {
+
+            var response = {
+                "alerts": [{
+                    "Station": "Abby Road Deli",
+                    "Breakfast": 0,
+                    "Dinner": 1,
+                    "Late Lunch": 1,
+                    "Item_ID": "0c5ea9f5-df6e-4a66-a3a8-f2fd49534fa9",
+                    "Name": "Caesar Salad",
+                    "Location": "Windsor",
+                    "Lunch": 1
+                }, {
+                    "Station": "Potato, Potäto",
+                    "Breakfast": 0,
+                    "Dinner": 1,
+                    "Late Lunch": 0,
+                    "Item_ID": "b24583e1-1446-489d-98f4-96ff76f0f6c6",
+                    "Name": "Western Beef Barbecue",
+                    "Location": "Ford",
+                    "Lunch": 0
+                }],
+                "favs": [{
+                    "Food_ID": "ceeea7de-f6ee-4155-976a-89ffccca9950",
+                    "Name": "Eggs Benedict Casserole"
+                }, {"Location": "Ford"}, {
+                    "Food_ID": "46a95bfe-8cae-4107-b8ea-9eef19070111",
+                    "Name": "Hamburgers and Toppings"
+                }, {
+                    "Food_ID": "98676547-45a9-46ae-8da8-e6a8b7ad88ab",
+                    "Name": "Sausage Pizza"
+                }, {
+                    "Food_ID": "0dae092d-a36d-46af-a327-3407680f7f40",
+                    "Name": "Noodles with BBQ Chinese Pork"
+                }, {
+                    "Food_ID": "0c5ea9f5-df6e-4a66-a3a8-f2fd49534fa9",
+                    "Name": "Caesar Salad"
+                }, {"Food_ID": "b24583e1-1446-489d-98f4-96ff76f0f6c6", "Name": "Western Beef Barbecue"}],
+                "user": {"UserName": "test1", "UserID": 13, "FirstName": "test", "LastName": "user13"},
+                "prefs": {
+                    "Peanuts": false,
+                    "Shellfish": false,
+                    "Fish": false,
+                    "Veg": false,
+                    "Soy": false,
+                    "Gluten": false,
+                    "Wheat": false,
+                    "Eggs": false,
+                    "Tree_Nuts": false,
+                    "Milk": false
+                }
+            }
+            //return response
+            response = $cookies.getObject('user');
+            if (response != undefined && response.alerts != undefined) {
+                 var alerts = response.alerts;
+                 console.log("alerts:" + alerts);
+                return alerts
+            } else {
+                return undefined
+            }
+        }
+        $scope.alerts = $scope.getAlerts();
+
+
         var clientDate = new Date();
         var utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 60000);
 
@@ -59,6 +125,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
         $scope.searchString = "";
         $scope.showSearch = false;
+        $scope.showAlerts = false;
 
         $scope.toggleLeft = buildDelayedToggler('left');
         /**
@@ -115,15 +182,15 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         ];
 
         var tabs = [
-            {title: 'Earhart'},
-            {title: 'Ford'},
-            {title: 'Hillenbrand'},
-            {title: 'The Gathering Place'},
-            {title: 'Wiley'},
-            {title: 'Windsor'}
-        ],
-        selected = null,
-        previous = null;
+                {title: 'Earhart'},
+                {title: 'Ford'},
+                {title: 'Hillenbrand'},
+                {title: 'The Gathering Place'},
+                {title: 'Wiley'},
+                {title: 'Windsor'}
+            ],
+            selected = null,
+            previous = null;
         $scope.tabs = tabs;
         $scope.selectedIndex = 0;
         $scope.$watch('selectedIndex', function (current, old) {
@@ -174,7 +241,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                     url: getAPIURL() + "search/" + pathParam,
                     method: "GET",
                     headers: {
-                        'Accept' : 'application/json',
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     }
                 }).success(function (data, status, headers, config) {
@@ -211,11 +278,11 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             }
         });
 
-        $scope.toggleFavorite = function(item) {
+        $scope.toggleFavorite = function (item) {
             var userID = $scope.getUserObj().user.UserID;
             $scope.favorites = $cookies.getObject('user_' + userID + '_favorites');
 
-            if(item.isFavorite === undefined || !item.isFavorite) {
+            if (item.isFavorite === undefined || !item.isFavorite) {
                 $http({
                     url: getAPIURL() + "favorite-item/",
                     method: "POST",
@@ -227,11 +294,11 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                 }).success(function (data, status, headers, config) {
                     item.isFavorite = true;
 
-                    for(var i in $scope.mealData.Meals) {
-                        for(var j in $scope.mealData.Meals[i].Stations) {
-                            for(var k in $scope.mealData.Meals[i].Stations[j].Items) {
+                    for (var i in $scope.mealData.Meals) {
+                        for (var j in $scope.mealData.Meals[i].Stations) {
+                            for (var k in $scope.mealData.Meals[i].Stations[j].Items) {
                                 var element = $scope.mealData.Meals[i].Stations[j].Items[k];
-                                if(element.ID == item.ID) {
+                                if (element.ID == item.ID) {
                                     element.isFavorite = true;
                                 }
                             }
@@ -256,19 +323,19 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                 }).success(function (data, status, headers, config) {
                     item.isFavorite = false;
 
-                    for(var i in $scope.mealData.Meals) {
-                        for(var j in $scope.mealData.Meals[i].Stations) {
-                            for(var k in $scope.mealData.Meals[i].Stations[j].Items) {
+                    for (var i in $scope.mealData.Meals) {
+                        for (var j in $scope.mealData.Meals[i].Stations) {
+                            for (var k in $scope.mealData.Meals[i].Stations[j].Items) {
                                 var element = $scope.mealData.Meals[i].Stations[j].Items[k];
-                                if(element.ID == item.ID) {
+                                if (element.ID == item.ID) {
                                     element.isFavorite = false;
                                 }
                             }
                         }
                     }
 
-                    for(var index in $scope.favorites) {
-                        if($scope.favorites[index].Food_ID === item.Food_ID) {
+                    for (var index in $scope.favorites) {
+                        if ($scope.favorites[index].Food_ID === item.Food_ID) {
                             $scope.favorites.splice(index, 1);
                             $cookies.putObject('user_' + userID + '_favorites', $scope.favorites);
                             break;

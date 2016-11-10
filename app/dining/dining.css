@@ -46,6 +46,10 @@ body {
     background-color: #cea645;
 }
 
+.theme-red-icon {
+    fill: red;
+}
+
 .clickable {
     cursor: pointer;
 }
