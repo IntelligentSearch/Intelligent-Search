@@ -1,4 +1,4 @@
-jflex query.flex
+//jflex query.flex
 javac Query.java
 input="./input.txt"
 while IFS= read -r var

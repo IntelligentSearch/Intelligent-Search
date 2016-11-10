@@ -27,7 +27,7 @@ import java.io.File;
 DiningCourt = wiley|earhart|meredith|ford|hillenbrand|windsor|"the gathering place"
 DayWeek = monday|tuesday|wednesday|thursday|friday|saturday|sunday|tomorrow|today  
 MealTime = lunch|dinner|breakfast|late\ lunch
-Trash = be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|yash|does|we|you|us
+Trash = calories|less|more|than|be|have|for|what|whats|there|to|eat|where|at|is|what's|can|on|will|get|i|any|yash|does|we|you|us
 TrashWords = (have|for|at|there|{MealTime}|{DayWeek}|{DiningCourt})
 SigWord = !({TrashWords}|\ )
 %%
@@ -100,7 +100,8 @@ if(today) {
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item.substring(0,item.length()-1)+";");
 String fin = sb.toString().substring(0,sb.length()-1);
-File f = new File("/home/cs307/Intelligent-Search/files/tokens.txt");
+//File f = new File("/home/cs307/Intelligent-Search/files/tokens.txt");
+File f = new File(argv[1]);
 PrintWriter writer = new PrintWriter(f);
 writer.println(fin);
 System.out.println(fin);
