@@ -781,8 +781,8 @@ if(today) {
 String item = itemBuild.toString();
 if(!item.equals("")) sb.append("ITEM_NAME="+item.substring(0,item.length()-1)+";");
 String fin = sb.toString().substring(0,sb.length()-1);
-//File f = new File("/home/cs307/Intelligent-Search/files/tokens.txt");
-File f = new File("in1.txt");
+File f = new File("/home/cs307/Intelligent-Search/files/tokens.txt");
+//File f = new File("in1.txt");
 PrintWriter writer = new PrintWriter(f);
 writer.println(fin);
 System.out.println(fin);
