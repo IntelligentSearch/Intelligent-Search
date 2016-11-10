@@ -91,8 +91,15 @@ public class Item {
 				allergens[i] = false;
 			}
 		}
-		jo.put("Calories index", this.nameNut.indexOf("Calories"));
-		if(this.p != null){
+		//jo.put("CALORIES", this.nameNut.indexOf("Calories"));
+		if(this.p.numCalories == 0){
+			jo.put("CALORIES_FLAG",0);
+	  }
+		else{
+			jo.put("CALORIES_FLAG",this.p.caloriesFlag);
+			jo.put("CALORIES_index",this.p.numCalories);
+		}
+		/*if(this.p != null){
 			switch(this.p.caloriesFlag){
 				case Parsed.CALORIES_EQUAL:
 					if(!this.nameNut.contains("Calories") || p.getCalories() != Integer.parseInt(this.valueNut.get(this.nameNut.indexOf("Calories")))){
@@ -110,7 +117,7 @@ public class Item {
 					}
 					break;
 			}
-		}
+		}*/
 		if(this.userPrefs != null && !Helper.matchPrefs(this.userPrefs,this.allergens)){
 			return null;
 		}
@@ -127,6 +134,9 @@ public class Item {
 		jo.put("LateLunch ",this.lateLunch);
 		if(this.nameNut != null){
 			for(int i = 0; i < this.nameNut.size();i++){
+				/*if(nameNut.get(i).equals("Calories")){
+					continue;
+				}*/
 				jo.put(nameNut.get(i), valueNut.get(i));
 			}
 		}

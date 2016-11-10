@@ -659,6 +659,83 @@ public class Call {
 				}
 				return jo;
 		}
+
+		public static JSONArray getAlerts(int userID) {
+				JSONArray ja = new JSONArray();
+				Connection con = null;
+				PreparedStatement prep_stmt = null;
+				ResultSet res = null;
+				try{
+						Class.forName("com.mysql.jdbc.Driver");
+						con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DINING", "root", "cz002");
+						String query = "Select Daily.* from Daily inner join Favorites on Daily.Item_ID = Favorites.Item_ID where Favorites.User_ID=?";
+						prep_stmt = con.prepareStatement(query);
+						prep_stmt.setInt(1, userID);
+						res = prep_stmt.executeQuery();
+						while (res.next()) {
+								JSONObject jo = new JSONObject();
+								String item_id = res.getString("Item_ID");
+								String loc = res.getString("Location");
+								String station = res.getString("Station");
+								int breakfast = res.getInt("Breakfast");
+								int lunch = res.getInt("Lunch");
+								int dinner = res.getInt("Dinner");
+								int llunch = res.getInt("LateLunch");
+
+								jo.put("Item_ID", item_id);
+								String name = "";
+								if(item_id != null){
+										PreparedStatement prep_stmt2 = null;
+										ResultSet res2 = null;
+
+										query = "Select Name FROM Item Where Item_ID = ?";
+										prep_stmt2 = con.prepareStatement(query);
+										prep_stmt2.setString(1, item_id);
+										res2 = prep_stmt2.executeQuery();
+										if(!res2.next()){
+												jo.put(name,"food not found");
+												prep_stmt2.close();
+												res2.close();
+												continue;
+										}
+										name = res2.getString("Name");
+										jo.put("Name", name);
+										prep_stmt2.close();
+										res2.close();
+								}
+								jo.put("Location", loc);
+								jo.put("Station", station);
+								jo.put("Breakfast", breakfast);
+								jo.put("Lunch", lunch);
+								jo.put("Late Lunch", llunch);
+								jo.put("Dinner", dinner);
+								ja.put(jo);
+						}
+				} catch (Exception e) {
+						e.printStackTrace();
+						try{
+							ja.put(new JSONObject().put("error",e.toString()));
+						}
+						catch(Exception e1){
+						}
+				}
+				finally{
+						try{
+								if(con != null){
+										con.close();
+								}
+								if(res != null){
+										res.close();
+								}
+								if(prep_stmt != null){
+										prep_stmt.close();
+								}
+						}	
+						catch(Exception e){
+						}
+				}
+				return ja;
+		}
 		public static JSONArray getFavs(int userID){
 				JSONArray ja = new JSONArray();
 				Connection con = null;

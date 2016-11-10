@@ -81,9 +81,9 @@ public class Services {
 								+ "\t- /end-bus/\n"
 								+ "\t  GET\n"
 								+ "\n"
-								+ "\t- /live-stops/{stop-code}\n"
- 								+ "\t  GET\n"
- 								+ "\n"
+								+ "\t- /hard-route/{name}\n"
+								+ "\t  GET\n"
+								+ "\n"
 								+ "\t- /get-close-stop-by-route/{route-id}/{lon}/{lat}/\n"
 								+ "\t  GET\n"
  								+ "\n"
@@ -230,6 +230,8 @@ public class Services {
 								jo.put("prefs",j1);
 								JSONArray j2 = Call.getFavs(userID);
 								jo.put("favs",j2);
+								JSONArray j3 = Call.getAlerts(userID);
+								jo.put("alerts", j3);
 						}
 						//String output = "POST:\nCreate User: " + name + " with password " + password;
 						String output = jo.toString();
@@ -316,6 +318,13 @@ public class Services {
 						return Response.status(200).entity(output).build();
 				}
 		@GET
+				@Path("hard-route/{name}")
+				public Response getHardRoutes(@PathParam("name")String name){
+						JSONArray j = Bus_Call.getHardRoute(name);
+						String output = j.toString();
+						return Response.status(200).entity(output).build();
+				}
+		@GET
 				@Path("end-bus/")	
 				public Response end(){
 						String output ="okay";
@@ -345,7 +354,10 @@ public class Services {
 
 								}
 						}
-						return Response.status(200).entity(output).build();
+						JSONObject r = new JSONObject();
+						r.put("Result", output);						
+
+						return Response.status(200).entity(r.toString()).build();
 				}
 		@GET
 				@Path("start-bus/")
@@ -405,7 +417,10 @@ public class Services {
 
 								}
 						}
-						return Response.status(200).entity(output).build();
+						JSONObject r = new JSONObject();
+						r.put("Result", output);						
+
+						return Response.status(200).entity(r.toString()).build();
 				}
 		@GET
 				@Path("live-stops/{stop}")
