@@ -14,7 +14,7 @@ public class Parsed{
 	static final String TIME = "MEAL_TIME=";//mm-dd-yyyy
 	static final String NAME = "ITEM_NAME=";
 	static final String CALORIE_FLAG = "CALORIE_FLAG=";
-	static final String CALORIES = "NUM_CALORIES=";
+	static final String CALORIES = "CALORIES=";
 	static final int CALORIES_LESS = 1;
 	static final int CALORIES_EQUAL = 2;
 	static final int CALORIES_GREATER = 3;
@@ -30,7 +30,7 @@ public class Parsed{
 		this.name = null;
 		this.hasname = false;
 		this.numCalories =0;
-		this.caloriesFlag = 0;
+		this.caloriesFlag = CALORIES_LESS;
 	}
 	String court;
 	boolean hascourt;
@@ -142,7 +142,10 @@ public class Parsed{
 				case CALORIE_FLAG:
 					p.setCalorieFlag(Integer.parseInt(value));
 				case CALORIES:
+					
+					//p.setName(value);
 					p.setCalories(Integer.parseInt(value));
+					
 			}
 			x = x.substring(index+1);
 		}

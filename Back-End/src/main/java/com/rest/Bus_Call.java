@@ -506,6 +506,48 @@ public class Bus_Call {
 		}
 		return jo;
 	}
+	public static JSONArray getHardRoute(String name) {
+		JSONArray ja = new JSONArray();
+		PreparedStatement prep_stmt = null;
+		Connection conn = null;
+		ResultSet res = null;
+		String query = "select * from Hard_Route where Route=? ORDER BY Ord";
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+			prep_stmt = conn.prepareStatement(query);
+			prep_stmt.setString(1,name);
+			res = prep_stmt.executeQuery();
+			while (res.next()) {
+				JSONObject jo = new JSONObject();
+				jo.put("Latitude", res.getLong("Lat"));
+				jo.put("Longitude", res.getLong("Lon"));
+				jo.put("Order", res.getInt("Ord"));
+				ja.put(jo);
+			}
+}
+				catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(conn != null){
+					conn.close();
+				}
+				if(prep_stmt != null){
+					prep_stmt.close();
+				}
+				if(res != null){
+					res.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
+			
+		}
+		return ja;
+	}
 	public static JSONArray getLiveVehicles(){
 		JSONArray ja = new JSONArray();
 		PreparedStatement prep_stmt = null;
