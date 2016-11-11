@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-MEAL_DAY=11-10-2016;ITEM_NAME=eggs
-=======
-Ford with calories 500
 >>>>>>> a67524111f74b06de9d11e90400987bf9e5491b0

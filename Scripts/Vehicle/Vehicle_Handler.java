@@ -383,13 +383,13 @@ public class Vehicle_Handler extends DefaultHandler {
 		Statement stat = null;
 		try{
 		    Class.forName("com.mysql.jdbc.Driver");
-        	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
-			stat = conn.createStatement();	
-			stat.addBatch("update reference set pid = -2");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/CITYBUS", "root", "cz002");
+				stat = conn.createStatement();	
+			//stat.addBatch("update reference set pid = -2");
 			stat.addBatch("drop Table IF EXISTS live_data");
 			stat.addBatch("CREATE TABLE live_data( dateTime varchar(100) NOT NULL ,lat float, vlong float, spd float, dir int(11), sched_status int(11), sched_delta int(11), route_status int(11), route_key varchar(255) NOT NULL, route_name varchar(255), pattern_key varchar(255) NOT NULL, pattern_name varchar(255), trip_key varchar(255) NOT NULL, trip_name varchar(255), name varchar(100) PRIMARY KEY, foreign key(route_key) REFERENCES Routes(route_id),foreign key(trip_key) REFERENCES Trips(trip_id))");
 			parseURL("http://myride.gocitybus.com/161027Purdue/Default1.aspx?pwd=cs307-102716",stat);
-			stat.addBatch("update reference set pid = 1");
+			//stat.addBatch("update reference set pid = 1");
 			stat.executeBatch();
 		}
 		catch(Exception e){

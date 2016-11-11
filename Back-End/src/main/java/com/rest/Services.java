@@ -360,8 +360,8 @@ public class Services {
 						return Response.status(200).entity(r.toString()).build();
 				}
 		@GET
-				@Path("start-bus/")
-				public Response start(){
+				@Path("start-bus/{flag}")
+				public Response start(@PathParam("flag") int flag){
 						String output ="okay";
 						PreparedStatement prep_stmt = null;
 						Connection conn = null;
@@ -385,6 +385,14 @@ public class Services {
 								else{
 										if(res.getInt("count") == 0 && res.getInt("pid") == -1){
 												startProcess = true;	
+										}
+										else if(flag == 1 && res.getInt("pid") > 0){
+											ProcessBuilder builder = new ProcessBuilder("kill",res.getInt("pid")+"");
+											builder.start();
+											startProcess = true;
+										}
+										else if(flag == 1){
+											startProcess = true;
 										}
 								}
 								res.close();

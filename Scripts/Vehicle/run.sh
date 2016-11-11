@@ -1,7 +1,8 @@
 #!/bin/bash
 #LOG=/home/cs307/Intelligent-Search/Scripts/Vehicle/log.txt
 #rm $LOG
-mysql -u root -pcz002 CITYBUS -e "update reference set pid = 1"
+echo $$
+mysql -u root -pcz002 CITYBUS -e "update reference set pid = $$"
 mysql -u root -pcz002 CITYBUS -e "update reference set count = 1"
 while :
 do
