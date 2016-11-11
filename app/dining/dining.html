@@ -91,7 +91,7 @@
 
             <md-progress-linear md-mode="indeterminate" ng-hide="!showSpinner"></md-progress-linear>
 
-            <div ng-show="!showSearch && showAlerts">
+            <div ng-if="!showSearch && (alerts != undefined && alerts.length != 0 )" ng-show="showAlerts">
                 <md-content>
                     <md-list class="md-dense">
                         <md-list-item class="md-3-line">
