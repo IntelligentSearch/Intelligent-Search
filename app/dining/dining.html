@@ -160,7 +160,7 @@
             <div class="md-toolbar-tools">
                 <h3>{{item.FoodName}}</h3>
                 <span flex="" class="flex"></span>
-                Today
+                {{item.Date_format}}
                 <span ng-show="!item.itemDetails"><md-icon size="64" class="material-icons clickable"
                                                            ng-click="item.itemDetails = true">expand_more</md-icon></span>
                 <span ng-show="item.itemDetails"><md-icon size="64" class="material-icons clickable"
