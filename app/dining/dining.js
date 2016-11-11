@@ -211,19 +211,21 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             var stringDate = $scope.selectedDate.toISOString().substring(0, 10);
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
 
+            $scope.userID = "0";
+            if($scope.getUserObj() != null) {
+                $scope.userID = $scope.getUserObj().user.UserID;
+            }
+
             $http({
-                url: getAPIURL() + "menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate + "/" + $scope.getUserObj().user.UserID,
+                url: getAPIURL() + "menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate + "/" + $scope.userID,
                 method: "GET"
             }).success(function (data, status, headers, config) {
                 if (data != null) {
                     $scope.mealData = data;
                 }
-
                 $timeout(function () {
                     $scope.showSpinner = false;
                 }, 2000);
-
-
             }).error(function (data, status, headers, config) {
                 $scope.showSpinner = false;
             });
