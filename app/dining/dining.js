@@ -353,7 +353,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         $scope.logout = function () {
             $cookies.remove('user');
             $cookies.remove('user_name');
-            $location.path("/dining");
+            $location.path("/login");
         };
 
         $scope.close = function () {
