@@ -3,6 +3,8 @@
     <span>
       <button ng-click="hideSilver()">Silver</button>
       <button ng-click="gold=!gold">Gold</button>
+      <br>
+      <p ng-repeat="c in crap">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
   <br>
   <ng-map style="width: 100%; float:left; height: 100%;" center="[40.4237, -86.9212]">
     <shape name="polyline" id="silver"
@@ -13,24 +15,21 @@
     </shape>
     <marker ng-repeat="p in silStops track by $index"
 	id="custom-stop-{{$index}}"
-  	on-click="map.showInfo('infow', 'custom-stop-{{$index}}')"
+  	on-click="showCrap(this)"
 	position="{{p.location}}"
  	icon="{
   	  path:'CIRCLE',
-          scale:7,
-  	  fillColor:'silver',
-  	  fillOpacity:.7
-    	  }"
- 	>
+          scale:7
+	  }">
     </marker>
+    <custom-marker ng-repeat="n in silBuses"
+	    position="{{n.numLoc}}">
+      <div class="bus-num">13</div>
+    </custom-marker>
     <marker ng-repeat="b in silBuses track by $index"
 	id="custom-bus-{{$index}}"
  	position="{{b.location}}"
   	icon={{busIcon}}>
-    </marker>
-    <marker ng-repeat="n in silBuses"
-	    position="{{n.location}}"
-     label="{13}"
     </marker>
 
 <!--    <info-window id="infow">
