@@ -25,6 +25,21 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   });
   $scope.stops;
   $scope.buses;
+  $scope.crap=[];
+  $scope.showCrap = function(e, sid) {
+    var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/live-stops/" + sid.p.id;
+    $http({
+      url: url,
+      method: "GET"
+    }).success(function(data,status,headers,config) {
+      $scope.crap = [];
+      for(var i = 0; i < data.stops.length; i++) {
+	$scope.crap.push(data.stops[i]);
+      }
+    }).error(function(data,status,headers,config) {
+      console.log("live stop error");
+    });
+  }
   $scope.silBuses= [];
   $scope.loadLive = function() {
     $http({
@@ -37,12 +52,14 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	$scope.silBuses = [];
 	for(var i = 0; i < $scope.buses.length; i++) {
 	  var bus = $scope.buses[i];
-	  if(bus['Route_Name'].includes("4")) {
+	  if(bus['Route_Name'].includes(" ")) {
 	    var loc = [];
 	    loc.push(bus.Lat);
 	    loc.push(bus.Long);
 	    var toAdd = {};
 	    toAdd['location'] = loc;
+	    toAdd['numLoc'] = angular.copy(toAdd.location);
+	    toAdd.numLoc[0] = String(Number(toAdd.numLoc[0]) + .00044) 
 	    $scope.silBuses.push(toAdd);
 	  }
 	}
@@ -119,17 +136,19 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   }).success(function (data, status, headers, config) {
     if(data != null) {
       var stops = [];
-      for(var i = 0; i < data.length; i++) {
+      for(var i = 0; i < 2; i++) { //change 2 to length tomorrow
 	for(var j = 0; j < data[i].stops.length; j++) {
 	  var latitude = data[i].stops[j].stop_lat;
 	  var longitude = data[i].stops[j].stop_long;
+	  var stopCode = data[i].stops[j].stop_code;
 	  var location = []; 
 	  location.push(Number(latitude))
 	  location.push( Number(longitude))
-	  var location_object = {};
-	  location_object['location'] = location;
-	  if(i == 7) {
-	    stops.push(location_object);
+	  var stop_object = {};
+	  stop_object['location'] = location;
+	  stop_object['id'] = stopCode;
+	  if(i == 0) { //change to 7 tomorrow
+	    stops.push(stop_object);
 	  }
 	}
 	$scope.silStops = angular.copy(stops);
