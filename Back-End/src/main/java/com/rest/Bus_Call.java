@@ -400,7 +400,7 @@ public class Bus_Call {
 				+ 	"JOIN Trips as t on st.trip_id = t.trip_id "
 				+	"JOIN Calendar as c on c.service_id = t.service_id "
 				+ 	"where t.route_id = ? and c.date = ? "
-				+	"order by (power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
+				+	"order by SQRT(power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
 		
 		JSONObject jo = new JSONObject();
 		PreparedStatement prep_stmt = null;
@@ -458,7 +458,7 @@ public class Bus_Call {
 	}
 	public static JSONObject getClosestStop(float lon, float lat){
 		String query = "select stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type from Stops "
-				+ "order by (power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
+				+ "order by SQRT(power((?-stop_lon),2)+power((?-stop_lat),2)) LIMIT 1";
 		JSONObject jo = new JSONObject();
 		PreparedStatement prep_stmt = null;
 		Connection conn = null;

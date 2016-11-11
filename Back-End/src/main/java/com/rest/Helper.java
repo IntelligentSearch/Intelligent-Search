@@ -284,11 +284,15 @@ public class Helper {
 			if(dayOfWeek == actualDayOfWeek){
 				return "Today";
 			}
-			else if((actualDayOfWeek+1)%7 == (dayOfWeek)){
+			else if((actualDayOfWeek+1) == (dayOfWeek)){
+				return "Tomorrow";
+			}
+			else if( actualDayOfWeek == 7 && dayOfWeek == 1){
 				return "Tomorrow";
 			}
 			else{
 				SimpleDateFormat dateFormat = new SimpleDateFormat("EEEEE");
+				//return ((actualDayOfWeek+1)%7)+" " +(dayOfWeek);
 				return dateFormat.format(c.getTime());
 			}
 		}

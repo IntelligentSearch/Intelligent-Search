@@ -29,8 +29,8 @@ public class Parsed{
 		this.hastime = false;
 		this.name = null;
 		this.hasname = false;
-		this.numCalories =0;
-		this.caloriesFlag = CALORIES_LESS;
+		this.numCalories =-1;
+		this.caloriesFlag = 0;
 	}
 	String court;
 	boolean hascourt;
@@ -83,7 +83,9 @@ public class Parsed{
 	int caloriesFlag;
 	int numCalories;
 	public void setCalories(int numCalories){
-		
+		if(this.caloriesFlag == 0){
+			this.caloriesFlag = 1;
+		}
 		this.numCalories = numCalories;
 	}
 	public void setCalorieFlag(int flag){
@@ -144,15 +146,17 @@ public class Parsed{
 					switch(value){
 						case "<":
 							flag = CALORIES_LESS;
+							break;
 						case ">":
 							flag = CALORIES_GREATER;
+							break;
 						case "=":
-							flag = CALORIES_EQUALS;
+							flag = CALORIES_EQUAL;
+							break;
 					}
 					p.setCalorieFlag(flag);
-				case CALORIES:
-					
-					//p.setName(value);
+					break;
+				case CALORIES:					
 					p.setCalories(Integer.parseInt(value));
 					
 			}
