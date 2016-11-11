@@ -133,7 +133,7 @@
                                             class="md-no-sticky theme-purdue">{{value.Stations[$index].Name}}</md-subheader>
                                     <md-list-item ng-repeat="item in value.Stations[$index].Items">
                                         <p> {{ item.Name }} </p>
-                                        <md-button class="md-icon-button" ng-click="toggleFavorite(item);">
+                                        <md-button ng-hide="userID == '0'" class="md-icon-button" ng-click="toggleFavorite(item);">
                                             <md-icon aria-label="Favorites" class="material-icons"
                                                      ng-class="{'red':item.isFavorite}">favorites</md-icon>
                                         </md-button>

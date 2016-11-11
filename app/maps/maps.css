@@ -1,0 +1,8 @@
+.stop-marker {
+  width:10px;
+  height:10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius:10px;
+  color:696969;
+}
