@@ -73,14 +73,13 @@
             <label>&nbsp;</label>
             <input ng-model="searchString" ng-model-options="{ debounce: 1000 }" placeholder="enter search">
         </md-input-container>
-        <md-button aria-label="Search" ng-click="showSearch = !showSearch">
-            <ng-md-icon icon="search"></ng-md-icon>
-        </md-button>
-        <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
-            <ng-md-icon icon="more_vert"></ng-md-icon>
-        </md-button>
     </div>
-
+    <md-slider-container ng-disabled="isDisabled">
+        &nbsp;
+        <span>Calories</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <md-slider flex min="0" max="100" ng-model="calorie" aria-label="red" id="calorie-slider"/>
+    </md-slider-container>
 </md-toolbar>
 
 <div ng-show="!showSearch">
@@ -155,7 +154,7 @@
     <span ng-show="lastSearchString != '' "> Showing results for <strong> {{lastSearchString}}</strong> </span>
     <br>
     <div ng-show="featureNotSupported && searchResult != undefined">Feature not Supported</div>
-    <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult" class="search-item">
+    <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult|filter:calorieRange(item)" class="search-item">
         <md-toolbar class="theme-purdue">
             <div class="md-toolbar-tools">
                 <h3>{{item.FoodName}}</h3>

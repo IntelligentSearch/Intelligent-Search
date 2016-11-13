@@ -234,6 +234,11 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
         $scope.getMealData();
 
+        $scope.isDisabled = true;
+        $scope.minCalorie = 0;
+        $scope.maxCalorie = 1000;
+        $scope.calorie = 1000;
+
         $scope.$watch('searchString', function () {
             if ($scope.searchString != undefined && $scope.searchString != null && $scope.searchString != "") {
 
@@ -257,6 +262,11 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                             $scope.featureNotSupported = false;
                         }
                         var response = $cookies.getObject('user');
+                        if (data[0].CALORIES_FLAG == 0) {
+                            $scope.isDisabled = false;
+                        } else {
+                            $scope.isDisabled = true;
+                        }
                         if (response != undefined && response.prefs != undefined) {
                             var preferences = response.prefs;
                             for (var i = data.length - 1; i >= 0; i--) {
@@ -274,12 +284,23 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                                 }
                             }
                         }
+
                         $scope.searchResult = data;
                     }
                 }).error(function (data, status, headers, config) {
                 });
             }
         });
+
+        $scope.calorieRange = function(item) {
+            if ($scope.isDisabled == false && item != undefined ) {
+                // return (parseInt(item["Calories"]) >= $scope.minCalorie && parseInt(item["Calories"]) <= $scope.maxCalorie);
+                console.log(parseInt[item["Calories"]] >= $scope.calorie);
+                return (parseInt[item["Calories"]] >= $scope.calorie);
+            } else {
+                return undefined;
+            }
+        };
 
         $scope.toggleFavorite = function (item) {
             var userID = $scope.getUserObj().user.UserID;
