@@ -257,7 +257,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                             $scope.featureNotSupported = false;
                         }
                         var response = $cookies.getObject('user');
-                        if (response != undefined) {
+                        if (response != undefined && response.prefs != undefined) {
                             var preferences = response.prefs;
                             for (var i = data.length - 1; i >= 0; i--) {
                                 if ((data[i]["Peanuts"] && preferences["Peanuts"])
