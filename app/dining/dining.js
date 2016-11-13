@@ -39,12 +39,12 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         /* We cannot have the same function live in so many different places */
         $scope.getUserObj = function () {
             var response = $cookies.getObject('user');
-            if (response != undefined && response.data != undefined) {
+            if (response != undefined && response.data != undefined && response.data.user != undefined) {
                 var userID = response.data.user.UserID;
                 console.log("GetUserId:" + userID);
                 return userID;
             } else {
-                return response;
+                return undefined;
             }
         };
 
@@ -212,15 +212,16 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
 
             $scope.userID = "0";
-            if($scope.getUserObj() != null) {
-                $scope.userID = $scope.getUserObj().user.UserID;
+            if($scope.getUserObj() != undefined) {
+                console.log($scope.getUserObj())
+                $scope.userID = $scope.getUserObj();
             }
 
             $http({
                 url: getAPIURL() + "menu/" + tabs[$scope.selectedIndex].title + "/" + stringDate + "/" + $scope.userID,
                 method: "GET"
             }).success(function (data, status, headers, config) {
-                if (data != null) {
+                if (data != undefined) {
                     $scope.mealData = data;
                 }
                 $timeout(function () {

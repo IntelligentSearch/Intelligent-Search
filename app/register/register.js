@@ -13,7 +13,7 @@ var app = angular.module('myApp.register', ['ngRoute'])
     css: 'app/register/register.css'
   });
 }])
-.controller('RegisterCtrl', function($scope, $http, $location) {
+.controller('RegisterCtrl', function($scope, $http, $location, $cookies) {
 
     $scope.base_url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest";
 
@@ -35,7 +35,7 @@ var app = angular.module('myApp.register', ['ngRoute'])
       }).then(function successCallback(response) {
         var userID = response.data.UserID;
         if (userID != -1) {
-          $cookies.putObject('user', response);
+          $cookies.putObject('user', response.data);
           $cookies.put('user_name',$scope.account.name);
           $location.path("/dining");
         } else {
