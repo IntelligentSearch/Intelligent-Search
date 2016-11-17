@@ -74,12 +74,12 @@
             <input ng-model="searchString" ng-model-options="{ debounce: 1000 }" placeholder="enter search">
         </md-input-container>
     </div>
-    <md-slider-container ng-disabled="isDisabled">
-        &nbsp;
-        <span>Calories</span>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <md-slider flex min="0" max="100" ng-model="calorie" aria-label="red" id="calorie-slider"/>
-    </md-slider-container>
+    <div ng-hide="isDisabled" layout="row" layout-align="center">
+        <span>Calories</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <rzslider min="slider.minCalorie" max="slider.maxCalorie" rz-slider-model="calorie" rz-slider-options="slider.options"
+                  aria-label="red" id="calorie-slider"/>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
 </md-toolbar>
 
 <div ng-show="!showSearch">
@@ -101,8 +101,10 @@
                         <md-list-item class="md-3-line" ng-repeat="alert in alerts">
                             <div class="md-list-item-text">
                                 <h4 style="font-weight: bold">{{alert.Name}}</h4>
-                                <h4 ng-if="alert.Breakfast == true">Breakfast</h4><h4 ng-if="alert.Lunch == true">Lunch</h4><h4
-                                    ng-if="alert.Late_Lunch == true">Late Lunch</h4><h4 ng-if="alert.Dinner == true">Dinner</h4>
+                                <h4 ng-if="alert.Breakfast == true">Breakfast</h4><h4 ng-if="alert.Lunch == true">
+                                Lunch</h4><h4
+                                    ng-if="alert.Late_Lunch == true">Late Lunch</h4><h4 ng-if="alert.Dinner == true">
+                                Dinner</h4>
                                 <h4>{{alert.Station}}</h4>
                                 <h4 style="font-weight: bold">{{alert.Location}}</h4>
                             </div>
@@ -132,7 +134,8 @@
                                             class="md-no-sticky theme-purdue">{{value.Stations[$index].Name}}</md-subheader>
                                     <md-list-item ng-repeat="item in value.Stations[$index].Items">
                                         <p> {{ item.Name }} </p>
-                                        <md-button ng-hide="userID == '0'" class="md-icon-button" ng-click="toggleFavorite(item);">
+                                        <md-button ng-hide="userID == '0'" class="md-icon-button"
+                                                   ng-click="toggleFavorite(item);">
                                             <md-icon aria-label="Favorites" class="material-icons"
                                                      ng-class="{'red':item.isFavorite}">favorites</md-icon>
                                         </md-button>
@@ -154,7 +157,8 @@
     <span ng-show="lastSearchString != '' "> Showing results for <strong> {{lastSearchString}}</strong> </span>
     <br>
     <div ng-show="featureNotSupported && searchResult != undefined">Feature not Supported</div>
-    <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult|filter:calorieRange(item)" class="search-item">
+    <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult|filter:calorieRange"
+         class="search-item">
         <md-toolbar class="theme-purdue">
             <div class="md-toolbar-tools">
                 <h3>{{item.FoodName}}</h3>

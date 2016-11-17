@@ -108,8 +108,8 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             //return response
             response = $cookies.getObject('user');
             if (response != undefined && response.alerts != undefined) {
-                 var alerts = response.alerts;
-                 console.log("alerts:" + alerts);
+                var alerts = response.alerts;
+                console.log("alerts:" + alerts);
                 return alerts
             } else {
                 return undefined
@@ -198,7 +198,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             previous = selected;
             selected = tabs[current];
             if (old + 1 && (old != current)) $log.debug('Goodbye ' + previous.title + '!');
-            if (current + 1)                $log.debug('Hello ' + selected.title + '!');
+            if (current + 1) $log.debug('Hello ' + selected.title + '!');
         });
 
         $scope.$watch('selectedDate', function () {
@@ -212,7 +212,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             stringDate = stringDate.substring(5, 7) + "-" + stringDate.substring(8, 10) + "-" + stringDate.substring(0, 4);
 
             $scope.userID = "0";
-            if($scope.getUserObj() != undefined) {
+            if ($scope.getUserObj() != undefined) {
                 console.log($scope.getUserObj())
                 $scope.userID = $scope.getUserObj();
             }
@@ -235,9 +235,17 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         $scope.getMealData();
 
         $scope.isDisabled = true;
-        $scope.minCalorie = 0;
-        $scope.maxCalorie = 1000;
         $scope.calorie = 1000;
+        $scope.slider = {
+            minCalorie: 0,
+            maxCalorie: 1000,
+            options: {
+                onEnd: function() {
+                    console.log("OnChange: " + $scope.calorie);
+                    $scope.$apply; // logs 'on change slider-id'
+                }
+            }
+        };
 
         $scope.$watch('searchString', function () {
             if ($scope.searchString != undefined && $scope.searchString != null && $scope.searchString != "") {
@@ -292,13 +300,16 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             }
         });
 
-        $scope.calorieRange = function(item) {
-            if ($scope.isDisabled == false && item != undefined ) {
+        $scope.calorieRange = function (item) {
+            // console.log("CalorieRange " + $scope.isDisabled + " " + item);
+
+            if ($scope.calorie == $scope.slider.maxCalorie) {
+                return true;
+            } else if ($scope.isDisabled == false && item != undefined) {
                 // return (parseInt(item["Calories"]) >= $scope.minCalorie && parseInt(item["Calories"]) <= $scope.maxCalorie);
-                console.log(parseInt[item["Calories"]] >= $scope.calorie);
-                return (parseInt[item["Calories"]] >= $scope.calorie);
+                return (Number(item["Calories"]) <= Number($scope.calorie));
             } else {
-                return undefined;
+                return false;
             }
         };
 

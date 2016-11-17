@@ -4,6 +4,7 @@
 var app = angular.module('myApp', [
     'ngRoute',
     'ngMap',
+    'rzModule',
     'ngMaterial',
     'myApp.login',
     'myApp.dining',
