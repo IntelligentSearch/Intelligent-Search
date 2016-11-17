@@ -235,13 +235,15 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         $scope.getMealData();
 
         $scope.isDisabled = true;
-        $scope.calorie = 1000;
+        $scope.calorie = 0;
+        $scope.minCalorie = 0;
+        $scope.maxCalorie = 1000;
         $scope.slider = {
-            minCalorie: 0,
-            maxCalorie: 1000,
             options: {
+                floor: $scope.minCalorie,
+                ceiling: $scope.maxCalorie,
+                step: 100,
                 onEnd: function() {
-                    console.log("OnChange: " + $scope.calorie);
                     $scope.$apply; // logs 'on change slider-id'
                 }
             }
@@ -301,13 +303,10 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         });
 
         $scope.calorieRange = function (item) {
-            // console.log("CalorieRange " + $scope.isDisabled + " " + item);
-
             if ($scope.calorie == $scope.slider.maxCalorie) {
                 return true;
             } else if ($scope.isDisabled == false && item != undefined) {
-                // return (parseInt(item["Calories"]) >= $scope.minCalorie && parseInt(item["Calories"]) <= $scope.maxCalorie);
-                return (Number(item["Calories"]) <= Number($scope.calorie));
+                return (parseInt(item["Calories"]) >= $scope.calorie && parseInt(item["Calories"]) <= $scope.maxCalorie);
             } else {
                 return false;
             }
