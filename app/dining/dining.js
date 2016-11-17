@@ -253,7 +253,8 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             if ($scope.searchString != undefined && $scope.searchString != null && $scope.searchString != "") {
 
                 $scope.searchResult = [];
-
+                $scope.searchResultLeft = [];
+                $scope.searchResultRight = [];
                 var pathParam = $scope.searchString.split(' ').join('%20');
                 $http({
                     url: getAPIURL() + "search/" + pathParam,
@@ -294,8 +295,10 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                                 }
                             }
                         }
-
                         $scope.searchResult = data;
+                        var mid = $scope.searchResult.length/2;
+                        $scope.searchResultLeft = $scope.searchResult.slice(0, mid);
+                        $scope.searchResultRight = $scope.searchResult.slice(mid, $scope.searchResult.length);
                     }
                 }).error(function (data, status, headers, config) {
                 });
