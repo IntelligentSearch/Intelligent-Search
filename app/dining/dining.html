@@ -76,7 +76,8 @@
     </div>
     <div ng-hide="isDisabled" layout="row" layout-align="center">
         <span>Calories</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <rzslider min="minCalorie" max="maxCalorie" rz-slider-model="calorie" rz-slider-high="maxCalorie" rz-slider-options="slider.options"
+        <rzslider min="minCalorie" max="maxCalorie" rz-slider-model="calorie" rz-slider-high="maxCalorie"
+                  rz-slider-options="slider.options"
                   aria-label="red" id="calorie-slider"/>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </div>
@@ -157,57 +158,58 @@
     <span ng-show="lastSearchString != '' "> Showing results for <strong> {{lastSearchString}}</strong> </span>
     <br>
     <div ng-show="featureNotSupported && searchResult != undefined">Feature not Supported</div>
-    <div ng-show="!featureNotSupported" flex="50" ng-repeat="item in searchResult|filter:calorieRange"
-         class="search-item">
-        <md-toolbar class="theme-purdue">
-            <div class="md-toolbar-tools">
-                <h3>{{item.FoodName}}</h3>
-                <span flex="" class="flex"></span>
-                {{item.Date_format}}
-                <span ng-show="!item.itemDetails"><md-icon size="64" class="material-icons clickable"
-                                                           ng-click="item.itemDetails = true">expand_more</md-icon></span>
-                <span ng-show="item.itemDetails"><md-icon size="64" class="material-icons clickable"
-                                                          ng-click="item.itemDetails = false">expand_less</md-icon></span>
-            </div>
-        </md-toolbar>
-        <md-content layout-padding>
-            <p>
-                <md-chips>
-                    <md-chip>{{item.DiningCourt}}</md-chip>
-                    <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
-                    <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
-                    <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
-                    <md-chip>{{item.Station}}</md-chip>
-                </md-chips>
-            </p>
-            <p ng-show="item.itemDetails">
-                <strong> Calcium: </strong> {{item.Calcium}} <br>
-                <strong> Shellfish: </strong> {{item.Shellfish}}<br>
-                <strong> Iron: </strong> {{item.Iron}}<br>
-                <strong> Eggs: </strong> {{item.Eggs}}<br>
-                <strong> Vitamin A: </strong> {{item['Vitamin A']}}<br>
-                <strong> Vitamin C: </strong> {{item['Vitamin C']}}<br>
-                <strong> Dietary Fiber: </strong> {{item['Dietary Fiber']}}<br>
-                <strong> Fish: </strong> {{item.Fish}}<br>
-                <strong> Serving Size: </strong> {{item['Serving Size']}}<br>
-                <strong> Gluten: </strong> {{item.Gluten}}<br>
-                <strong> Sugar: </strong> {{item.Sugar}}<br>
-                <strong> Milk: </strong> {{item.Milk}}<br>
-                <strong> Peanuts: </strong> {{item.Peanuts}}<br>
-                <strong> Saturated fat: </strong> {{item['Saturated fat']}}<br>
-                <strong> Total fat: </strong> {{item['Total fat']}}<br>
-                <strong> Calories: </strong> {{item.Calories}}<br>
-                <strong> Cholesterol: </strong> {{item.Cholesterol}}<br>
-                <strong> Protein: </strong> {{item.Protein}}<br>
-                <strong> Tree_nuts: </strong> {{item.Tree_nuts}}<br>
-                <strong> Calories from fat: </strong> {{item['Calories from fat']}}<br>
-                <strong> Sodium: </strong> {{item.Sodium}}<br>
-                <strong> Total Carbohydrate: </strong> {{item['Total Carbohydrat']}}<br>
-                <strong> Veg: </strong> {{item.Veg}}<br>
-                <strong> Soy: </strong> {{item.Soy}}<br>
-                <strong> Wheat: </strong> {{item.Wheat}}
-            </p>
-        </md-content>
+    <div ng-show="!featureNotSupported" layout="column">
+        <md-card flex="50" ng-repeat="item in searchResult|filter:calorieRange">
+            <md-toolbar class="theme-purdue">
+                <div class="md-toolbar-tools">
+                    <h3>{{item.FoodName}}</h3>
+                    <span flex="" class="flex"></span>
+                    {{item.Date_format}}
+                    <span ng-show="!item.itemDetails"><md-icon size="64" class="material-icons clickable"
+                                                               ng-click="item.itemDetails = true">expand_more</md-icon></span>
+                    <span ng-show="item.itemDetails"><md-icon size="64" class="material-icons clickable"
+                                                              ng-click="item.itemDetails = false">expand_less</md-icon></span>
+                </div>
+                <md-content layout-padding>
+                    <p>
+                        <md-chips>
+                            <md-chip>{{item.DiningCourt}}</md-chip>
+                            <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
+                            <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
+                            <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
+                            <md-chip>{{item.Station}}</md-chip>
+                        </md-chips>
+                    </p>
+                    <p ng-show="item.itemDetails">
+                        <strong> Calcium: </strong> {{item.Calcium}} <br>
+                        <strong> Shellfish: </strong> {{item.Shellfish}}<br>
+                        <strong> Iron: </strong> {{item.Iron}}<br>
+                        <strong> Eggs: </strong> {{item.Eggs}}<br>
+                        <strong> Vitamin A: </strong> {{item['Vitamin A']}}<br>
+                        <strong> Vitamin C: </strong> {{item['Vitamin C']}}<br>
+                        <strong> Dietary Fiber: </strong> {{item['Dietary Fiber']}}<br>
+                        <strong> Fish: </strong> {{item.Fish}}<br>
+                        <strong> Serving Size: </strong> {{item['Serving Size']}}<br>
+                        <strong> Gluten: </strong> {{item.Gluten}}<br>
+                        <strong> Sugar: </strong> {{item.Sugar}}<br>
+                        <strong> Milk: </strong> {{item.Milk}}<br>
+                        <strong> Peanuts: </strong> {{item.Peanuts}}<br>
+                        <strong> Saturated fat: </strong> {{item['Saturated fat']}}<br>
+                        <strong> Total fat: </strong> {{item['Total fat']}}<br>
+                        <strong> Calories: </strong> {{item.Calories}}<br>
+                        <strong> Cholesterol: </strong> {{item.Cholesterol}}<br>
+                        <strong> Protein: </strong> {{item.Protein}}<br>
+                        <strong> Tree_nuts: </strong> {{item.Tree_nuts}}<br>
+                        <strong> Calories from fat: </strong> {{item['Calories from fat']}}<br>
+                        <strong> Sodium: </strong> {{item.Sodium}}<br>
+                        <strong> Total Carbohydrate: </strong> {{item['Total Carbohydrat']}}<br>
+                        <strong> Veg: </strong> {{item.Veg}}<br>
+                        <strong> Soy: </strong> {{item.Soy}}<br>
+                        <strong> Wheat: </strong> {{item.Wheat}}
+                    </p>
+                </md-content>
+            </md-toolbar>
+        </md-card>
     </div>
 </div>
 
