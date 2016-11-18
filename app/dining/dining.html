@@ -42,20 +42,21 @@
     <div class="md-toolbar-tools">
         <md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu">
             <md-icon aria-label="Menu" class="material-icons">menu</md-icon>
-            <!--<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>-->
+        </md-button>
+        <md-button class="md-icon-button" href="#!/maps" aria-label="Bus">
+            <md-tooltip md-direction="bottom">Bus Routes</md-tooltip>
+            <md-icon aria-label="Menu" class="material-icons">directions_bus</md-icon>
         </md-button>
         <h2>
             <span> Dining Menu </span>
         </h2>
         <span flex></span>
-        <!--<md-button class="md-icon-button" aria-label="Favorite">-->
-        <!--<md-icon aria-label="Favorite" class="material-icons">favorite</md-icon>-->
-        <!--</md-button>-->
         <md-button ng-click="showSearch = !showSearch" class="md-icon-button" aria-label="More">
             <md-tooltip md-direction="bottom">Search</md-tooltip>
             <md-icon aria-label="Search" class="material-icons">search</md-icon>
         </md-button>
-        <md-button class="md-icon-button" aria-label="More" ng-show="alerts != undefined && alerts.length != 0" ng-click="showAlerts = !showAlerts">
+        <md-button class="md-icon-button" aria-label="More" ng-show="alerts != undefined && alerts.length != 0"
+                   ng-click="showAlerts = !showAlerts">
             <md-tooltip md-direction="bottom">Favorited Items Alert</md-tooltip>
             <md-icon style="color:red" size="64" class="material-icons">priority_high</md-icon>
         </md-button>

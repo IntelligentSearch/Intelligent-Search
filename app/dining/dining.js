@@ -41,7 +41,6 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             var response = $cookies.getObject('user');
             if (response != undefined && response.user != undefined) {
                 var userID = response.user.UserID;
-                console.log("GetUserId:" + userID);
                 return userID;
             } else {
                 return undefined;
