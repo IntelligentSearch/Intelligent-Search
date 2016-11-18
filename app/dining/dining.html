@@ -18,24 +18,23 @@
         <h1 ng-if="getUserName() == undefined" class="md-toolbar-tools">User</h1>
     </md-toolbar>
     <md-content layout-padding ng-controller="LeftCtrl">
-        <md-button ng-if="getUserObj() == -1 || getUserObj() == undefined" href="#!/login" class="md-accent">
-            Login
-        </md-button>
-        <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" ng-click="logout()" class="md-accent">
-            Logout
-        </md-button>
-        <br/>
-        <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" href="#!/favorites" class="md-accent">
-            Favorites
-        </md-button>
-        <br>
-        <md-button ng-if="getUserObj() != -1 || getUserObj() != undefined" href="#!/settings" class="md-accent">
-            Settings
-        </md-button>
-        <br ng-if="getUserObj() != -1 || getUserObj() != undefined"/>
-        <md-button ng-click="toggleLeft()" class="md-accent">
-            Close this Sidenav
-        </md-button>
+        <div layout="column">
+            <md-button ng-if="getUserObj() == -1 || getUserObj() == undefined" href="#!/login" class="md-accent">Login
+            </md-button>
+            <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" ng-click="logout()" class="md-accent">
+                Logout
+            </md-button>
+            <md-button ng-if="getUserObj() != -1 && getUserObj() != undefined" href="#!/favorites" class="md-accent">
+                Favorites
+            </md-button>
+            <md-button ng-if="getUserObj() != -1 || getUserObj() != undefined" href="#!/settings" class="md-accent">
+                Settings
+            </md-button>
+            <!--<br ng-if="getUserObj() != -1 || getUserObj() != undefined"/>-->
+            <md-button ng-click="toggleLeft()" class="md-accent">
+                Close this Sidenav
+            </md-button>
+        </div>
     </md-content>
 </md-sidenav>
 

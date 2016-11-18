@@ -39,8 +39,8 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         /* We cannot have the same function live in so many different places */
         $scope.getUserObj = function () {
             var response = $cookies.getObject('user');
-            if (response != undefined && response.data != undefined && response.data.user != undefined) {
-                var userID = response.data.user.UserID;
+            if (response != undefined && response.user != undefined) {
+                var userID = response.user.UserID;
                 console.log("GetUserId:" + userID);
                 return userID;
             } else {
