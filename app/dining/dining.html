@@ -160,7 +160,7 @@
     <div ng-show="featureNotSupported && searchResult != undefined">Feature not Supported</div>
     <div layout="row">
         <div ng-show="!featureNotSupported" layout="column" flex="50">
-            <md-card flex="50" ng-repeat="item in searchResultLeft|filter:calorieRange">
+            <md-card ng-repeat="item in searchResultLeft|filter:calorieRange">
                 <md-toolbar class="theme-purdue">
                     <div class="md-toolbar-tools">
                         <h3>{{item.FoodName}}</h3>
@@ -171,49 +171,33 @@
                         <span ng-show="item.itemDetails"><md-icon size="64" class="material-icons clickable"
                                                                   ng-click="item.itemDetails = false">expand_less</md-icon></span>
                     </div>
-                    <md-content layout-padding>
-                        <p>
-                            <md-chips>
-                                <md-chip>{{item.DiningCourt}}</md-chip>
-                                <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
-                                <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
-                                <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
-                                <md-chip>{{item.Station}}</md-chip>
-                            </md-chips>
-                        </p>
-                        <p ng-show="item.itemDetails">
-                            <strong> Calcium: </strong> {{item.Calcium}} <br>
-                            <strong> Shellfish: </strong> {{item.Shellfish}}<br>
-                            <strong> Iron: </strong> {{item.Iron}}<br>
-                            <strong> Eggs: </strong> {{item.Eggs}}<br>
-                            <strong> Vitamin A: </strong> {{item['Vitamin A']}}<br>
-                            <strong> Vitamin C: </strong> {{item['Vitamin C']}}<br>
-                            <strong> Dietary Fiber: </strong> {{item['Dietary Fiber']}}<br>
-                            <strong> Fish: </strong> {{item.Fish}}<br>
-                            <strong> Serving Size: </strong> {{item['Serving Size']}}<br>
-                            <strong> Gluten: </strong> {{item.Gluten}}<br>
-                            <strong> Sugar: </strong> {{item.Sugar}}<br>
-                            <strong> Milk: </strong> {{item.Milk}}<br>
-                            <strong> Peanuts: </strong> {{item.Peanuts}}<br>
-                            <strong> Saturated fat: </strong> {{item['Saturated fat']}}<br>
-                            <strong> Total fat: </strong> {{item['Total fat']}}<br>
-                            <strong> Calories: </strong> {{item.Calories}}<br>
-                            <strong> Cholesterol: </strong> {{item.Cholesterol}}<br>
-                            <strong> Protein: </strong> {{item.Protein}}<br>
-                            <strong> Tree_nuts: </strong> {{item.Tree_nuts}}<br>
-                            <strong> Calories from fat: </strong> {{item['Calories from fat']}}<br>
-                            <strong> Sodium: </strong> {{item.Sodium}}<br>
-                            <strong> Total Carbohydrate: </strong> {{item['Total Carbohydrate']}}<br>
-                            <strong> Veg: </strong> {{item.Veg}}<br>
-                            <strong> Soy: </strong> {{item.Soy}}<br>
-                            <strong> Wheat: </strong> {{item.Wheat}}
-                        </p>
-                    </md-content>
                 </md-toolbar>
+                <md-card-content>
+                    <p>
+                        <md-chips>
+                            <md-chip>{{item.DiningCourt}}</md-chip>
+                            <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
+                            <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
+                            <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
+                            <md-chip>{{item.Station}}</md-chip>
+                        </md-chips>
+                    </p>
+                    <p>
+                        <md-subheader class="md-primary">Allergens</md-subheader>
+                        <strong ng-repeat="allergy in menuAllergies" ng-if="isAllergy(item,allergy,true)">
+                            {{allergy}}
+                        </strong>
+
+                        <md-subheader class="md-primary">Details</md-subheader>
+                        <strong ng-repeat="detail in menuDetails">
+                            {{detail}}: {{item[detail]}} <br>
+                        </strong>
+                    </p>
+                </md-card-content>
             </md-card>
         </div>
         <div ng-show="!featureNotSupported" layout="column" flex="50">
-            <md-card flex="50" ng-repeat="item in searchResultRight|filter:calorieRange">
+            <md-card ng-repeat="item in searchResultRight|filter:calorieRange">
                 <md-toolbar class="theme-purdue">
                     <div class="md-toolbar-tools">
                         <h3>{{item.FoodName}}</h3>
@@ -224,45 +208,29 @@
                         <span ng-show="item.itemDetails"><md-icon size="64" class="material-icons clickable"
                                                                   ng-click="item.itemDetails = false">expand_less</md-icon></span>
                     </div>
-                    <md-content layout-padding>
-                        <p>
-                            <md-chips>
-                                <md-chip>{{item.DiningCourt}}</md-chip>
-                                <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
-                                <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
-                                <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
-                                <md-chip>{{item.Station}}</md-chip>
-                            </md-chips>
-                        </p>
-                        <p ng-show="item.itemDetails">
-                            <strong> Calcium: </strong> {{item.Calcium}} <br>
-                            <strong> Shellfish: </strong> {{item.Shellfish}}<br>
-                            <strong> Iron: </strong> {{item.Iron}}<br>
-                            <strong> Eggs: </strong> {{item.Eggs}}<br>
-                            <strong> Vitamin A: </strong> {{item['Vitamin A']}}<br>
-                            <strong> Vitamin C: </strong> {{item['Vitamin C']}}<br>
-                            <strong> Dietary Fiber: </strong> {{item['Dietary Fiber']}}<br>
-                            <strong> Fish: </strong> {{item.Fish}}<br>
-                            <strong> Serving Size: </strong> {{item['Serving Size']}}<br>
-                            <strong> Gluten: </strong> {{item.Gluten}}<br>
-                            <strong> Sugar: </strong> {{item.Sugar}}<br>
-                            <strong> Milk: </strong> {{item.Milk}}<br>
-                            <strong> Peanuts: </strong> {{item.Peanuts}}<br>
-                            <strong> Saturated fat: </strong> {{item['Saturated fat']}}<br>
-                            <strong> Total fat: </strong> {{item['Total fat']}}<br>
-                            <strong> Calories: </strong> {{item.Calories}}<br>
-                            <strong> Cholesterol: </strong> {{item.Cholesterol}}<br>
-                            <strong> Protein: </strong> {{item.Protein}}<br>
-                            <strong> Tree_nuts: </strong> {{item.Tree_nuts}}<br>
-                            <strong> Calories from fat: </strong> {{item['Calories from fat']}}<br>
-                            <strong> Sodium: </strong> {{item.Sodium}}<br>
-                            <strong> Total Carbohydrate: </strong> {{item['Total Carbohydrate']}}<br>
-                            <strong> Veg: </strong> {{item.Veg}}<br>
-                            <strong> Soy: </strong> {{item.Soy}}<br>
-                            <strong> Wheat: </strong> {{item.Wheat}}
-                        </p>
-                    </md-content>
                 </md-toolbar>
+                <md-card-content>
+                    <p>
+                        <md-chips>
+                            <md-chip>{{item.DiningCourt}}</md-chip>
+                            <md-chip ng-show="item.Breakfast == 1">Breakfast</md-chip>
+                            <md-chip ng-show="item.Lunch == 1">Lunch</md-chip>
+                            <md-chip ng-show="item.Dinner == 1">Dinner</md-chip>
+                            <md-chip>{{item.Station}}</md-chip>
+                        </md-chips>
+                    </p>
+                    <p>
+                        <md-subheader class="md-primary">Allergens</md-subheader>
+                        <strong ng-repeat="allergy in menuAllergies" ng-if="isAllergy(item,allergy,true)">
+                            {{allergy}}
+                        </strong>
+
+                        <md-subheader class="md-primary">Details</md-subheader>
+                        <strong ng-repeat="detail in menuDetails">
+                            {{detail}}: {{item[detail]}} <br>
+                        </strong>
+                    </p>
+                </md-card-content>
             </md-card>
         </div>
     </div>

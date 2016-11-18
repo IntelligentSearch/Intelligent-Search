@@ -304,7 +304,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                 });
             }
         });
-
+ ''
         $scope.calorieRange = function (item) {
             if ($scope.calorie == $scope.slider.maxCalorie) {
                 return true;
@@ -314,6 +314,19 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                 return false;
             }
         };
+
+        $scope.isAllergy = function (item, allergy, name) {
+            var value = item[String(allergy)];
+            if (Boolean(value) == true) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+
+        $scope.menuAllergies = ['Shellfish', 'Eggs','Peanuts', 'Fish', 'Milk','Gluten', 'Tree_nuts', 'Veg', 'Soy', 'Wheat'];
+        $scope.menuDetails = ['Calcium','Iron', 'Vitamin A', 'Vitamin C', 'Dietary Fiber', 'Serving Size', 'Sugar', 'Saturated fat', 'Total fat', 'Calories', 'Cholesterol', 'Protein', 'Calories from fat', 'Sodium', 'Total Carbohydrate']
 
         $scope.toggleFavorite = function (item) {
             var userID = $scope.getUserObj().user.UserID;

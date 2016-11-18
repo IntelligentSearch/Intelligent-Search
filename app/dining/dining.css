@@ -23,7 +23,16 @@
     /* IE 10+ */
     user-select: none;
     /* Likely future */ }
+.allergy-option {
+    /*float: left;*/
+    /*width: 20%;*/
+    /*box-sizing: border-box;*/
+    /*padding: 0 8px;*/
+}
 
+.allergy-option h3 {
+    text-color: #cea645;
+}
 
 .my-card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
