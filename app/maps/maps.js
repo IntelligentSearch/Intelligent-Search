@@ -2,13 +2,27 @@
 
 var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 
-.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
+.config(['$routeProvider', '$httpProvider', '$mdThemingProvider', function ($routeProvider, $httpProvider, $mdThemingProvider) {
   $httpProvider.defaults.useXDomain = true;
   delete $httpProvider.defaults.headers.common["X-Requested-With"];
   $httpProvider.defaults.headers.common["Accept"] = 'application/x-www    -form-urlencoded';
   $httpProvider.defaults.headers.common["Content-Type"] = 'application    /x-www-form-urlencoded';
   //$httpProvider.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-  $routeProvider.when('/maps', {
+
+  $mdThemingProvider.theme('default')
+      .primaryPalette('blue', {
+          'default': 'A700', // by default use shade 400 from the pink palette for primary intentions
+          'hue-1': 'A700', // use shade 100 for the <code>md-hue-1</code> class
+          'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class
+          'hue-3': 'A700' // use shade A100 for the <code>md-hue-3</code> class
+      })
+      .accentPalette('blue-grey', {
+          'default': 'A700', // by default use shade 400 from the pink palette for primary intentions
+          'hue-1': 'A700', // use shade 100 for the <code>md-hue-1</code> class
+          'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class
+          'hue-3': 'A700' // use shade A100 for the <code>md-hue-3</code> class
+      });
+    $routeProvider.when('/maps', {
     templateUrl: 'app/maps/maps.html',
     controller: 'MapsCtrl',
     css: 'app/maps/maps.css'

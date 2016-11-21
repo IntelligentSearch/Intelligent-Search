@@ -1,20 +1,11 @@
 <body>
 
-<md-toolbar>
+<md-toolbar class="md-primary">
     <div class="md-toolbar-tools">
         <h2>
-            <span>Toolbar with Standard Buttons</span>
+            <span>Toolbar for Menu options</span>
         </h2>
         <span flex></span>
-        <md-button ng-click="gold=!gold" class="md-raised md-primary" aria-label="Gold Loop">
-            Gold
-        </md-button>
-        <md-button ng-click="hideSilver()" class="md-raised md-primary" aria-label="Silver">
-            Silver
-        </md-button>
-        <md-button ng-click="hide()" class="md-raised md-primary" aria-label="Hide">
-            Hide
-        </md-button>
     </div>
 </md-toolbar>
 <div layout="row" style="position: absolute; height: 100%; width: 100%">
@@ -75,8 +66,39 @@
             -->
         </ng-map>
     </div>
-    <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute; background-color: #0e90d2">
-
+    <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute;">
+        <md-content class="md-padding" layout="column">
+            <md-card>
+                <md-card-title-text>
+                    <span class="md-headline md-primary">Gold Loop</span>
+                </md-card-title-text>
+                <md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-click="gold = !gold">Gold Loop</md-button>
+                    </md-card-actions>
+                </md-card-content>
+            </md-card>
+            <md-card class="md-accent">
+                <md-card-title-text>
+                    <span class="md-headline">Silver Loop</span>
+                </md-card-title-text>
+                <md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-click="hideSilver()">Silver Loop</md-button>
+                    </md-card-actions>
+                </md-card-content>
+            </md-card>
+            <md-card class="md-accent">
+                <md-card-title-text>
+                    <span class="md-headline">Hide</span>
+                </md-card-title-text>
+                <md-card-content>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button ng-click="hide()">Hide</md-button>
+                    </md-card-actions>
+                </md-card-content>
+            </md-card>
+        </md-content>
     </div>
 </div>
 </body>
