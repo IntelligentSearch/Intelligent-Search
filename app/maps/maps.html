@@ -1,61 +1,82 @@
 <body>
-  <div>
-    <span>
-      <button ng-click="hideSilver()">Silver</button>
-      <button ng-click="gold=!gold">Gold</button>
-      <button ng-click="hide()">Hide</button>
-      <input places-auto-complete size=80 
-	on-place-changed="searched()" 
- 	component-restrictions="{country:'us'}"/>
+
+<md-toolbar>
+    <div class="md-toolbar-tools">
+        <h2>
+            <span>Toolbar with Standard Buttons</span>
+        </h2>
+        <span flex></span>
+        <md-button ng-click="gold=!gold" class="md-raised md-primary" aria-label="Gold Loop">
+            Gold
+        </md-button>
+        <md-button ng-click="hideSilver()" class="md-raised md-primary" aria-label="Silver">
+            Silver
+        </md-button>
+        <md-button ng-click="hide()" class="md-raised md-primary" aria-label="Hide">
+            Hide
+        </md-button>
+    </div>
+</md-toolbar>
+<div layout="row" style="position: absolute; height: 100%; width: 100%">
+    <div style="height: 90%; width: 80%; position: absolute">
+      <span>
+      <input places-auto-complete size=80
+             on-place-changed="searched()"
+             component-restrictions="{country:'us'}"/>
       <br>
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
     </span>
-  <ng-map style="width: 100%; float:left; height: 100%;" center="[40.4237, -86.9212]">
-    <shape name="polyline" id="silver"
-	   path={{path}}
-    	   stroke-color="#696969"
-	   stroke-opacity="1.0"
-    	   stroke-weight="4">
-    </shape>
-    <marker position={{userStopLoc}}></marker>
-    <marker ng-repeat="p in silStops track by $index"
-	id="custom-stop-{{$index}}"
-  	on-click="getTimes(this)"
-	position="{{p.location}}"
- 	icon="{
+        <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
+            <shape name="polyline" id="silver"
+                   path={{path}}
+                   stroke-color="#696969"
+                   stroke-opacity="1.0"
+                   stroke-weight="4">
+            </shape>
+            <marker position={{userStopLoc}}></marker>
+            <marker ng-repeat="p in silStops track by $index"
+                    id="custom-stop-{{$index}}"
+                    on-click="getTimes(this)"
+                    position="{{p.location}}"
+                    icon="{
   	  path:'CIRCLE',
           scale:7
 	  }">
-    </marker>
-    <marker ng-repeat="b in silBuses track by $index"
-	id="custom-bus-{{$index}}"
- 	position="{{b.location}}"
-  	icon={{busIcon}}>
-    </marker>
+            </marker>
+            <marker ng-repeat="b in silBuses track by $index"
+                    id="custom-bus-{{$index}}"
+                    position="{{b.location}}"
+                    icon={{busIcon}}>
+            </marker>
 
-<!--    <info-window id="infow">
-      <div ng-non-bindable="">hi</div>
-    </info-window>	
---> 		
-<!--    <directions
-	  draggable="true"
-   panel="directions-panel"
-   travel-mode="DRIVING"
-   waypoints="{{array}}"
-   origin={{origin}}
-   destination={{dest}}>
-    </directions>
--->
-    <!-- <custom-marker id="start" position={{location.start}}>
-      <div>
-	<img src="app/maps/bus-start.png">
-      </div>
-    </custom-marker>
-    <custom-marker id="end" position={{location.end}}>
-      <div>
-	<img src="app/maps/flag-end.png">
-      </div>
-    </custom-marker>
-    -->
-  </ng-map>
+            <!--    <info-window id="infow">
+                  <div ng-non-bindable="">hi</div>
+                </info-window>
+            -->
+            <!--    <directions
+                  draggable="true"
+               panel="directions-panel"
+               travel-mode="DRIVING"
+               waypoints="{{array}}"
+               origin={{origin}}
+               destination={{dest}}>
+                </directions>
+            -->
+            <!-- <custom-marker id="start" position={{location.start}}>
+              <div>
+            <img src="app/maps/bus-start.png">
+              </div>
+            </custom-marker>
+            <custom-marker id="end" position={{location.end}}>
+              <div>
+            <img src="app/maps/flag-end.png">
+              </div>
+            </custom-marker>
+            -->
+        </ng-map>
+    </div>
+    <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute; background-color: #0e90d2">
+
+    </div>
+</div>
 </body>

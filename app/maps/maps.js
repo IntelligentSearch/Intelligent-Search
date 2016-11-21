@@ -2,7 +2,7 @@
 
 var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 
-.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) { 
+.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
   $httpProvider.defaults.useXDomain = true;
   delete $httpProvider.defaults.headers.common["X-Requested-With"];
   $httpProvider.defaults.headers.common["Accept"] = 'application/x-www    -form-urlencoded';
@@ -120,9 +120,9 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
       }
     }).error(function(data, status, headers, config) {
       console.log("ERROR");
-    }); 
+    });
   };
-  $scope.user = 'hello'; 
+  $scope.user = 'hello';
   $scope.createPath = function(event) {
     $scope.path.push([event.latLng.lat(), event.latLng.lng()]);
   }
@@ -178,7 +178,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	  var latitude = data[i].stops[j].stop_lat;
 	  var longitude = data[i].stops[j].stop_long;
 	  var stopCode = data[i].stops[j].stop_code;
-	  var location = []; 
+	  var location = [];
 	  location.push(Number(latitude))
 	  location.push( Number(longitude))
 	  var stop_object = {};
