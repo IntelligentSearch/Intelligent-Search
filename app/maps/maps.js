@@ -132,13 +132,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     start : "40.431103, -86.914727",
     end   : "40.423703, -86.910800"
   };
-  $scope.gold = true;
-  $scope.black = true;
-  // $scope.silver = true;
-  $scope.tower = true;
-  $scope.bronze = true;
-  $scope.rossade = true;
-  $scope.avtech = true;
+
   $scope.path = [
     [40.431382,-86.914017],
     [40.42671184010864,-86.90904378890991],
@@ -161,11 +155,13 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   ];
   $scope.origpath1 = null;
   $scope.origpath2 = null;
-  $scope.hideSilver = function() {
+  $scope.hideRoute = function(route, $index) {
     console.log($scope.map.shapes);
+    var name = route.short_name + "";
+    //TODO: dynamically change shape id with ng-repeat in map so it's not just silver for every route
     $scope.map.shapes.silver.setMap(null);
-    console.log($scope.map.shapes);
-    if($scope.routes[7].show == true) {
+    console.log(name + " " + $scope.map.shapes);
+    if(route.show == true) {
       $scope.map.shapes.silver.setMap($scope.map);
       // $scope.silver = false;
     }
@@ -190,6 +186,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
                 }
                 $scope.loadLive();
                 $scope.loadRoutes();
+                $scope.loadStops();
                 console.log("Routes Set! ", $scope.routes);
             } else {
                 console.log("No routes!")
@@ -199,35 +196,49 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         });
     }
     $scope.getRoutes()
-  $http({
-    url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
-    method: "GET"
-  }).success(function (data, status, headers, config) {
-    if(data != null) {
-      var stops = [];
-      for(var i = 0; i < data.length; i++) { //change 2 to length tomorrow
-	for(var j = 0; j < data[i].stops.length; j++) {
-	  var latitude = data[i].stops[j].stop_lat;
-	  var longitude = data[i].stops[j].stop_long;
-	  var stopCode = data[i].stops[j].stop_code;
-	  var location = [];
-	  location.push(Number(latitude))
-	  location.push( Number(longitude))
-	  var stop_object = {};
-	  stop_object['location'] = location;
-	  stop_object['id'] = stopCode;
-	  if(i == 7) { //change to 7 tomorrow
-	    stops.push(stop_object);
-	  }
-	}
-	$scope.silStops = angular.copy(stops);
-	//PUSH IN BIG ARRAY
-	//$scope.array.push(location_object);
-      }
+    $scope.loadStops = function() {
+        $http({
+            url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
+            method: "GET"
+        }).success(function (data, status, headers, config) {
+            if (data != null) {
+                var stops = [];
+                console.log("All Stops", data)
+                for (var i = 0; i < data.length; i++) { //change 2 to length tomorrow
+                    // console.log("----"+data[i].routes.long_name)
+                    var show = false;
+                    for (var r = 0; r < $scope.routes.length; r++) {
+                        if ($scope.routes[r].show == true) {
+                            console.log($scope.routes[r].long_name + " " + data[i].routes.long_name)
+                        }
+                        if ($scope.routes[r].show == true && ($scope.routes[r].long_name === data[i].routes.long_name)) {
+                            show = true;
+                        }
+                    }
+                    for (var j = 0; j < data[i].stops.length; j++) {
+                        var latitude = data[i].stops[j].stop_lat;
+                        var longitude = data[i].stops[j].stop_long;
+                        var stopCode = data[i].stops[j].stop_code;
+                        var location = [];
+                        location.push(Number(latitude))
+                        location.push(Number(longitude))
+                        var stop_object = {};
+                        stop_object['location'] = location;
+                        stop_object['id'] = stopCode;
+                        if (show == true) { //change to 7 tomorrow
+                            console.log("Push stop")
+                            stops.push(stop_object);
+                        }
+                    }
+                    $scope.silStops = angular.copy(stops);
+                    //PUSH IN BIG ARRAY
+                    //$scope.array.push(location_object);
+                }
+            }
+        }).error(function (data, status, headers, config) {
+            console.log("ERROR");
+        });
     }
-  }).error(function(data, status, headers, config) {
-    console.log("ERROR");
-  });
 
   $scope.useCurr = function() {
     $scope.location.start = "40.428103, -86.913727";
