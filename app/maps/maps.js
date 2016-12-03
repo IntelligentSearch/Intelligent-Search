@@ -24,7 +24,8 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   NgMap.getMap().then(function(map) {
     $scope.map = map;
   });
-  $scope.userStopLoc = [];
+  $scope.routes;
+    $scope.userStopLoc = [];
   $scope.stops;
   $scope.buses;
   $scope.hide = function() {
@@ -110,7 +111,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     });
     setTimeout($scope.loadLive, 10000);
   }
-  $scope.loadLive();
+  // $scope.loadLive();
   $scope.loadRoutes = function() {
     $http({
       url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
@@ -132,7 +133,12 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     end   : "40.423703, -86.910800"
   };
   $scope.gold = true;
-  $scope.silver = true;
+  $scope.black = true;
+  // $scope.silver = true;
+  $scope.tower = true;
+  $scope.bronze = true;
+  $scope.rossade = true;
+  $scope.avtech = true;
   $scope.path = [
     [40.431382,-86.914017],
     [40.42671184010864,-86.90904378890991],
@@ -155,19 +161,44 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   ];
   $scope.origpath1 = null;
   $scope.origpath2 = null;
-  $scope.silver = false;
-
   $scope.hideSilver = function() {
     console.log($scope.map.shapes);
     $scope.map.shapes.silver.setMap(null);
     console.log($scope.map.shapes);
-    if($scope.silver) {
+    if($scope.routes[7].show == true) {
       $scope.map.shapes.silver.setMap($scope.map);
-      $scope.silver = false;
-    } else
-      $scope.silver = true;
+      // $scope.silver = false;
+    }
+      // $scope.silver = true;
   }
-  $scope.loadRoutes();
+    $scope.getRoutes = function() {
+        //Get all the routes for the switches in maps
+        $http({
+            url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes",
+            method: "GET"
+        }).success(function (data, status, headers, config) {
+            if (data != null) {
+                $scope.routes = data;
+                //Set all switches defaulted to false then do custom route based on search or switched routes
+                for (var i = 0; i < $scope.routes.length; i++) {
+                    if ($scope.routes[i].short_name == 13) {
+                        $scope.routes[i].show = true;
+                    } else {
+                        $scope.routes[i].show = false;
+
+                    }
+                }
+                $scope.loadLive();
+                $scope.loadRoutes();
+                console.log("Routes Set! ", $scope.routes);
+            } else {
+                console.log("No routes!")
+            }
+        }).error(function (data, status, headers, config) {
+            console.log("ERROR");
+        });
+    }
+    $scope.getRoutes()
   $http({
     url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
     method: "GET"
