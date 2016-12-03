@@ -68,16 +68,9 @@
     </div>
     <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute;">
         <md-content class="md-padding" layout="column">
-            <md-switch ng-repeat="route in routes" aria-label="route.long_name" ng-model="route.show"
-                       ng-style="{'color':'#'+route.color}" ng-change="hideRoute(route, $index)">{{route.short_name}} {{route.long_name}}
+            <md-switch ng-repeat="stop in stops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
+                       ng-style="{'color':'#'+stop.routes.color}" ng-change="hideRoute(stop.routes, $index)">{{stop.routes.short_name}} {{stop.routes.long_name}}
             </md-switch>
-            <!--<md-switch aria-label="Gold Loop" ng-model="silver" ng-change="hideSilver()">13 Silver Loop</md-switch>-->
-            <!--<md-switch aria-label="Black Loop" ng-model="black">14 Black Loop</md-switch>-->
-            <!--<md-switch aria-label="Tower Acres" ng-model="tower">15 Tower Acres</md-switch>-->
-            <!--<md-switch aria-label="Bronze Loop" ng-model="bronze">16 Bronze Loop</md-switch>-->
-            <!--<md-switch aria-label="Ross Ade" ng-model="rossade">17 Ross Ade</md-switch>-->
-            <!--<md-switch aria-label="Avtech" ng-model="avtech">20 Avtech</md-switch>-->
-            <!--<md-switch aria-label="Gold Loop" ng-model="gold">28 Gold Loop</md-switch>-->
             <!--<md-card class="map-cards">-->
                 <!--<md-card-title-text>-->
                     <!--<span class="md-headline md-primary">Gold Loop</span>-->
