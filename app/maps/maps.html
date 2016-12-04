@@ -68,36 +68,39 @@
     </div>
     <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute;">
         <md-content class="md-padding" layout="column">
-            <md-card class="map-cards">
-                <md-card-title-text>
-                    <span class="md-headline md-primary">Gold Loop</span>
-                </md-card-title-text>
-                <md-card-content>
-                    <md-card-actions layout="row" layout-align="center center">
-                        <md-button class="md-raised md-accent" ng-click="gold = !gold">Gold Loop</md-button>
-                    </md-card-actions>
-                </md-card-content>
-            </md-card>
-            <md-card class="map-cards">
-                <md-card-title-text>
-                    <span class="md-headline">Silver Loop</span>
-                </md-card-title-text>
-                <md-card-content>
-                    <md-card-actions layout="row" layout-align="center center">
-                        <md-button class="md-raised md-accent" ng-click="hideSilver()">Silver Loop</md-button>
-                    </md-card-actions>
-                </md-card-content>
-            </md-card>
-            <md-card class="map-cards">
-                <md-card-title-text>
-                    <span class="md-headline">Hide</span>
-                </md-card-title-text>
-                <md-card-content>
-                    <md-card-actions layout="row" layout-align="center center">
-                        <md-button class="md-raised md-accent" ng-click="hide()">Hide</md-button>
-                    </md-card-actions>
-                </md-card-content>
-            </md-card>
+            <md-switch ng-repeat="stop in stops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
+                       ng-style="{'color':'#'+stop.routes.color}" ng-change="hideRoute(stop.routes, $index)">{{stop.routes.short_name}} {{stop.routes.long_name}}
+            </md-switch>
+            <!--<md-card class="map-cards">-->
+                <!--<md-card-title-text>-->
+                    <!--<span class="md-headline md-primary">Gold Loop</span>-->
+                <!--</md-card-title-text>-->
+                <!--<md-card-content>-->
+                    <!--<md-card-actions layout="row" layout-align="center center">-->
+                        <!--<md-button class="md-raised md-accent" ng-click="gold = !gold">Gold Loop</md-button>-->
+                    <!--</md-card-actions>-->
+                <!--</md-card-content>-->
+            <!--</md-card>-->
+            <!--<md-card class="map-cards">-->
+                <!--<md-card-title-text>-->
+                    <!--<span class="md-headline">Silver Loop</span>-->
+                <!--</md-card-title-text>-->
+                <!--<md-card-content>-->
+                    <!--<md-card-actions layout="row" layout-align="center center">-->
+                        <!--<md-button class="md-raised md-accent" ng-click="hideSilver()">Silver Loop</md-button>-->
+                    <!--</md-card-actions>-->
+                <!--</md-card-content>-->
+            <!--</md-card>-->
+            <!--<md-card class="map-cards">-->
+                <!--<md-card-title-text>-->
+                    <!--<span class="md-headline">Hide</span>-->
+                <!--</md-card-title-text>-->
+                <!--<md-card-content>-->
+                    <!--<md-card-actions layout="row" layout-align="center center">-->
+                        <!--<md-button class="md-raised md-accent" ng-click="hide()">Hide</md-button>-->
+                    <!--</md-card-actions>-->
+                <!--</md-card-content>-->
+            <!--</md-card>-->
         </md-content>
     </div>
 </div>

@@ -24,7 +24,8 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   NgMap.getMap().then(function(map) {
     $scope.map = map;
   });
-  $scope.userStopLoc = [];
+  // $scope.routes;
+    $scope.userStopLoc = [];
   $scope.stops;
   $scope.buses;
   $scope.hide = function() {
@@ -57,6 +58,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
       }
   }
   $scope.silBuses = [];
+  $scope.allStops = [];
   $scope.searched = function(e, n) {
     $scope.times = [];
     var loc = this.getPlace().geometry.location;
@@ -110,7 +112,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     });
     setTimeout($scope.loadLive, 10000);
   }
-  $scope.loadLive();
+  // $scope.loadLive();
   $scope.loadRoutes = function() {
     $http({
       url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
@@ -131,8 +133,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     start : "40.431103, -86.914727",
     end   : "40.423703, -86.910800"
   };
-  $scope.gold = true;
-  $scope.silver = true;
+
   $scope.path = [
     [40.431382,-86.914017],
     [40.42671184010864,-86.90904378890991],
@@ -155,48 +156,109 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
   ];
   $scope.origpath1 = null;
   $scope.origpath2 = null;
-  $scope.silver = false;
-
-  $scope.hideSilver = function() {
-    console.log($scope.map.shapes);
-    $scope.map.shapes.silver.setMap(null);
-    console.log($scope.map.shapes);
-    if($scope.silver) {
-      $scope.map.shapes.silver.setMap($scope.map);
-      $scope.silver = false;
-    } else
-      $scope.silver = true;
-  }
-  $scope.loadRoutes();
-  $http({
-    url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
-    method: "GET"
-  }).success(function (data, status, headers, config) {
-    if(data != null) {
-      var stops = [];
-      for(var i = 0; i < data.length; i++) { //change 2 to length tomorrow
-	for(var j = 0; j < data[i].stops.length; j++) {
-	  var latitude = data[i].stops[j].stop_lat;
-	  var longitude = data[i].stops[j].stop_long;
-	  var stopCode = data[i].stops[j].stop_code;
-	  var location = [];
-	  location.push(Number(latitude))
-	  location.push( Number(longitude))
-	  var stop_object = {};
-	  stop_object['location'] = location;
-	  stop_object['id'] = stopCode;
-	  if(i == 7) { //change to 7 tomorrow
-	    stops.push(stop_object);
-	  }
-	}
-	$scope.silStops = angular.copy(stops);
-	//PUSH IN BIG ARRAY
-	//$scope.array.push(location_object);
-      }
+    $scope.hideRoute = function (route, index) {
+        // console.log("Hiding: " + index + $scope.routes[index].long_name)
+        // $scope.routes[index].show = !$scope.routes[index].show;
+        console.log($scope.map.shapes);
+        console.log("Routes " + $scope.allStops[index].routes.show,route)
+        $scope.allStops[index].routes.show = route.show;
+        var name = route.short_name + "";
+        //TODO: dynamically change shape id with ng-repeat in map so it's not just silver for every route
+        $scope.map.shapes.silver.setMap(null);
+        console.log(name + " " + $scope.map.shapes);
+        if (route.show == true) {
+            console.log("Showing stop")
+            $scope.map.shapes.silver.setMap($scope.map);
+            // $scope.silver = false;
+        }
+        $scope.filterMarkers();
+        // $scope.silver = true;
     }
-  }).error(function(data, status, headers, config) {
-    console.log("ERROR");
-  });
+    // $scope.getRoutes = function() {
+    //     //Get all the routes for the switches in maps
+    //     $http({
+    //         url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes",
+    //         method: "GET"
+    //     }).success(function (data, status, headers, config) {
+    //         if (data != null) {
+    //             $scope.routes = data;
+    //             //Set all switches defaulted to false then do custom route based on search or switched routes
+    //             for (var i = 0; i < $scope.routes.length; i++) {
+    //                 if ($scope.routes[i].short_name == 13 || $scope.routes[i].short_name == 17) {
+    //                     // $scope.routes[i].show = true;
+    //                 } else {
+    //                     // $scope.routes[i].show = false;
+    //
+    //                 }
+    //             }
+    //             $scope.loadLive();
+    //             $scope.loadRoutes();
+    //             $scope.loadStops();
+    //             console.log("Routes Set! ", $scope.routes);
+    //         } else {
+    //             console.log("No routes!")
+    //         }
+    //     }).error(function (data, status, headers, config) {
+    //         console.log("ERROR");
+    //     });
+    // }
+    // $scope.getRoutes()
+    $scope.silStops= {}
+    $scope.loadStops = function() {
+        $http({
+            url: "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-all-routes-stops/",
+            method: "GET"
+        }).success(function (data, status, headers, config) {
+            if (data != null) {
+                console.log("All Stops", data)
+                for (var i = 0; i < data.length; i++) { //change 2 to length tomorrow
+                    // console.log("----"+data[i].routes.long_name)
+                    // for (var r = 0; r < $scope.routes.length; r++) {
+                    //     console.log($scope.routes[r].long_name + " " + $scope.routes[r].show)
+                    //     if ($scope.routes[r].show == true) {
+                    //         // console.log(($scope.routes[r].long_name + " " + data[i].routes.long_name))
+                    //         // console.log($scope.routes[r].show == true && ($scope.routes[r].long_name === data[i].routes.long_name))
+                    //     }
+                    //     if ($scope.routes[r].show == true && ($scope.routes[r].long_name === data[i].routes.long_name)) {
+                    //         show = true;
+                    //     }
+                    // }
+                    data[i].routes.show = false;
+                    //PUSH IN BIG ARRAY
+                    //$scope.array.push(location_object);
+                    $scope.loadLive();
+                    $scope.loadRoutes();
+                }
+                $scope.allStops=data;
+            }
+        }).error(function (data, status, headers, config) {
+            console.log("ERROR");
+        });
+    }
+    $scope.filterMarkers = function () {
+        var stops = [];
+        for (var i = 0; i < $scope.allStops.length; i++) { //loops over all the bus stops
+            if ($scope.allStops[i].routes.show == true) { //checks if the markers need to be displayed on the front end
+                console.log("Push stop")
+                for (var j = 0; j < $scope.allStops[i].stops.length; j++) {
+                    var latitude = $scope.allStops[i].stops[j].stop_lat;
+                    var longitude = $scope.allStops[i].stops[j].stop_long;
+                    var stopCode = $scope.allStops[i].stops[j].stop_code;
+                    var location = [];
+                    location.push(Number(latitude))
+                    location.push(Number(longitude))
+                    var stop_object = {};
+                    stop_object['location'] = location;
+                    stop_object['id'] = stopCode;
+                    stops.push(stop_object);
+                }
+            }
+        }
+        console.log("Stops", stops);
+
+        $scope.silStops = angular.copy(stops);
+    }
+    $scope.loadStops();
 
   $scope.useCurr = function() {
     $scope.location.start = "40.428103, -86.913727";
