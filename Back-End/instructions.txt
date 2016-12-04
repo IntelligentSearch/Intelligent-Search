@@ -1,0 +1,26 @@
+Java files can be found in the /src/main/java/com/rest/ directory
+Take a look at the JSON.java and SQL.java to see examples of how the code would look. You can also take a look at Hello.java to see how different url paths are handled.
+
+The @Path defines what url path is accepted for what functions.
+
+I made the services class where we can place all the "general" calls that would be made. The search function would pass the search text to the tokenizer and then call the appropriate function. I'd recommend installing the Postman extension for Chrome to speed things up to test POST.
+
+*IMPORTANT*
+1. Make sure every function has it's own path and GET/POST requirements.
+2. Once you have changed the java files, you need to recompile the project. Go to the base directory (here) and run the command 'mvn clean package'
+3. A .war file will be created in the target directory. It will be named Back-End.war. You will need to deploy the .war file to the server. You cannot redeploy the file - you have to remove the applet and deploy it again each time. To do this:
+	a.) Go to http://cs307.cs.purdue.edu:8080/manager/html/
+		i.) Login credentials: admin, cz002
+	b.) Find the app under Applications (REST Jersey Java) and Undeploy
+	c.) In the Deploy section, fill in the following
+		i.) Context Path: /home/cs307/Intelligent-Search/Back-End/target/Back-End
+		ii.) War Directory: /home/cs307/Intelligent-Search/Back-End/target/Back-End.war
+		iii.) Deploy
+4. You can access the base page at http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest
+
+*TODO*
+- Add functions for various mysql calls. See SQL.java and in ../Scripts/DiningScript.java for examples.
+- - You can hardcode certain "keywords" for the search that trigger the functions to make sure the mysql calls work
+- Figure out how to do POST functions. I've started but I'm missing something :/ (Use POSTMAN extension for this)
+
+- Eventually we can move the .war file to a better url like http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/rest after we have figured everything out.
