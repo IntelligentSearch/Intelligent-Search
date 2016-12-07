@@ -5,6 +5,10 @@
         <h2>
             <span>Toolbar for Menu options</span>
         </h2>
+        <md-button ng-click="deletePoint()" aria-label="clear" class="md-raised md-accent">
+            <md-tooltip md-direction="bottom">Clear Routes</md-tooltip>
+            Clear Route Point
+        </md-button>
         <span flex></span>
     </div>
 </md-toolbar>
@@ -17,7 +21,7 @@
       <br>
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
     </span>
-        <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
+        <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]" on-click="savePoint()">
             <shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline" id="route.route_name"
                    path={{route.path}}
                    stroke-color="#696969"
@@ -27,7 +31,7 @@
             <marker position={{userStopLoc}}></marker>
             <marker ng-repeat="p in silStops track by $index"
                     id="custom-stop-{{$index}}"
-                    on-click="getTimes(this)"
+                    on-click="getTimes(this,p.location)"
                     position="{{p.location}}"
                     icon="{
   	  path:'CIRCLE',

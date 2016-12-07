@@ -16,6 +16,17 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         });
     }])
     .controller('MapsCtrl', function (NgMap, $scope, $location, $http) {
+        $scope.points = [];
+        $scope.savePoint = function (event) {
+            console.log(event)
+            var location = []
+            $scope.points.push(event.latLng.lat() + "," + event.latLng.lng())
+            console.log("routes",$scope.points)
+        }
+        $scope.deletePoint = function () {
+            $scope.points.pop();
+            console.log($scope.points)
+        }
         var busImage = "app/maps/bus-icon.png"
         $scope.busIcon = {
             url: busImage,
@@ -32,11 +43,13 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         $scope.hide = function () {
             $scope.times = [];
             $scope.userStopLoc = [];
-            console.log($scope.userStopLoc);
+            // console.log($scope.userStopLoc);
         }
         $scope.times = [];
-        $scope.getTimes = function (e, sid) {
+        $scope.getTimes = function (e, sid, location) {
             $scope.hide();
+            $scope.points.push(location[0] + "," + location[1])
+            console.log("routes",$scope.points)
             var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/live-stops/" + sid.p.id;
             $http({
                 url: url,
