@@ -18,8 +18,8 @@
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
     </span>
         <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
-            <shape name="polyline" id="silver"
-                   path={{path}}
+            <shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline" id="route.route_name"
+                   path={{route.path}}
                    stroke-color="#696969"
                    stroke-opacity="1.0"
                    stroke-weight="4">
