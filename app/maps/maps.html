@@ -68,7 +68,7 @@
     </div>
     <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute;">
         <md-content class="md-padding" layout="column">
-            <md-switch ng-repeat="stop in stops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
+            <md-switch ng-repeat="stop in allStops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
                        ng-style="{'color':'#'+stop.routes.color}" ng-change="hideRoute(stop.routes, $index)">{{stop.routes.short_name}} {{stop.routes.long_name}}
             </md-switch>
             <!--<md-card class="map-cards">-->
