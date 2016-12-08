@@ -35,6 +35,7 @@ var app = angular.module('myApp.register', ['ngRoute'])
       }).then(function successCallback(response) {
         var userID = response.data.UserID;
         if (userID != -1) {
+            response.data['user'] ={'UserID': userID};
           $cookies.putObject('user', response.data);
           $cookies.put('user_name',$scope.account.name);
           $location.path("/dining");

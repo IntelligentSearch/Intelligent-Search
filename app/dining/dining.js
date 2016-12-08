@@ -212,7 +212,6 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
             $scope.userID = "0";
             if ($scope.getUserObj() != undefined) {
-                console.log($scope.getUserObj())
                 $scope.userID = $scope.getUserObj();
             }
 
@@ -342,7 +341,6 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
             if(itemId == undefined || itemId == null || itemId == "") {
                 itemId = item.FOOD_ID;
             }
-
             $scope.favorites = $cookies.getObject('user_' + userID + '_favorites');
             if($scope.favorites == undefined || $scope.favorites == null) {
                 $scope.favorites = [];
