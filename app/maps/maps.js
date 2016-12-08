@@ -58,6 +58,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
                 url: url,
                 method: "GET"
             }).success(function (data, status, headers, config) {
+	        console.log(data);
                 $scope.times = [];
                 $scope.setTimes(data.stops);
             }).error(function (data, status, headers, config) {
@@ -65,13 +66,15 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
             });
         };
         $scope.setTimes = function (data) {
+	    
             for (var i = 0; i < data.length; i++) {
                 var str = String(data[i].TimeTilArrival);
                 str = str.replace(" min", "");
                 var x = Number(str) < 20;
-                var routeName = $scope.selectedRoute.short_name + " " + $scope.selectedRoute.long_name;
-                if (data[i].RouteName == routeName && x) {
-                //if(x) {
+                if ($scope.currentRoutes.indexOf(data[i].RouteName) > -1  && x) {
+		    var rName = data[i].RouteName;
+		    toPush = [];
+		    toPush['RouteName'] = rName;
                     $scope.times.push(data[i]);
                 }
             }
@@ -190,14 +193,14 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
                     $scope.silBuses = [];
                     for (var i = 0; i < $scope.buses.length; i++) {
                         var bus = $scope.buses[i];
-                        if (bus['Route_Name'].includes("13 Silver Loop")) {
                             var loc = [];
                             loc.push(bus.Lat);
                             loc.push(bus.Long);
+			    
                             var toAdd = {};
                             toAdd['location'] = loc;
-                            $scope.silBuses.push(toAdd);
-                        }
+                            toAdd['name'] = bus.Route_Name;
+			    $scope.silBuses.push(toAdd);
                     }
                 } else {
                     console.log("hello?");
@@ -288,9 +291,17 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         ];
         $scope.origpath1 = null;
         $scope.origpath2 = null;
+	$scope.currentRoutes = [];
         $scope.hideRoute = function (route, index) {
             var name = route.short_name + " " + route.long_name;
-            console.log(name,$scope.routes[name])
+	    var spot = $scope.currentRoutes.indexOf(name);
+	    console.log(name,spot);
+	    if(spot > -1) {
+	      $scope.currentRoutes.splice(spot,1);
+	   } else {
+	      $scope.currentRoutes.push(name);
+	    }
+	    console.log($scope.currentRoutes);
             for (var i = 0; i < $scope.routes.length; i++) {
                 var tempRoute = $scope.routes[i];
                 if (tempRoute['route_name'].includes(name)) {
@@ -361,7 +372,9 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
             $scope.location.start = "40.428103, -86.913727";
             console.log($scope);
         }
-
+	$scope.filterBuses = function(value, index, array) {
+	      return $scope.currentRoutes.indexOf(value.name) > -1;	
+	}
     });
 
 
