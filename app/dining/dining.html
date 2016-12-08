@@ -165,6 +165,11 @@
                     <div class="md-toolbar-tools">
                         <h3>{{item.FoodName}}</h3>
                         <span flex="" class="flex"></span>
+                        <md-button ng-hide="userID == '0'" class="md-icon-button"
+                                   ng-click="toggleFavorite(item);">
+                            <md-icon aria-label="Favorites" class="material-icons"
+                                     ng-class="{'red':item.isFavorite}">favorites</md-icon>
+                        </md-button>
                         {{item.Date_format}}
                         <span ng-show="!item.itemDetails"><md-icon size="64" class="material-icons clickable"
                                                                    ng-click="item.itemDetails = true">expand_more</md-icon></span>
@@ -202,6 +207,13 @@
                     <div class="md-toolbar-tools">
                         <h3>{{item.FoodName}}</h3>
                         <span flex="" class="flex"></span>
+                        <md-button ng-hide="userID == '0'" class="md-icon-button"
+                                   ng-click="toggleFavorite(item);">
+                            <md-icon aria-label="Favorites" class="material-icons"
+                                     ng-class="{'red':item.isFavorite}">favorites</md-icon>
+                        </md-button>
+                        &nbsp;
+                        &nbsp;
                         {{item.Date_format}}
                         <span ng-show="!item.itemDetails"><md-icon size="64" class="material-icons clickable"
                                                                    ng-click="item.itemDetails = true">expand_more</md-icon></span>

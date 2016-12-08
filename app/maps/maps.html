@@ -11,10 +11,12 @@
 <div layout="row" style="position: absolute; height: 100%; width: 100%">
     <div style="height: 90%; width: 80%; position: absolute">
       <span>
-      <input places-auto-complete size=80
-             on-place-changed="searched()"
-             component-restrictions="{country:'us'}"/>
-      <br>
+          <md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
+              <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
+          </md-select>
+          <input places-auto-complete size=80
+               on-place-changed="searched()"
+               component-restrictions="{country:'us'}"/>
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
     </span>
         <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
