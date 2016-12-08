@@ -11,10 +11,14 @@
 <div layout="row" style="position: absolute; height: 100%; width: 100%">
     <div style="height: 90%; width: 80%; position: absolute">
       <span>
-      <input places-auto-complete size=80
+      <input ng-model="searchEntry" class="inputs" placeholder="Enter your location" places-auto-complete size=50
              on-place-changed="searched()"
              component-restrictions="{country:'us'}"/>
+      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination" places-auto-complete on-place-changed="routed()"ng-show="!dirClicked" size=50  />
       <br>
+      <p ng-show="showRoute">
+      	<span>Arrival Time: {{fRoute.time}}</span>
+	<span>Route: {{fRoute.route}}</span>
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.TimeTilArrival}}</br></p>
     </span>
         <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
@@ -24,7 +28,8 @@
                    stroke-opacity="1.0"
                    stroke-weight="4">
             </shape>
-            <marker position={{userStopLoc}}></marker>
+            <!--<marker position={{userStopLoc}}></marker>
+	    <marker position={{userStopDest}}></marker>-->
             <marker ng-repeat="p in silStops track by $index"
                     id="custom-stop-{{$index}}"
                     on-click="getTimes(this)"

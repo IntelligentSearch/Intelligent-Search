@@ -14,3 +14,15 @@
 .map-cards {
   color: #FF9800;
 }
+
+.inputs {
+  width: 48%;
+  border:none;
+  border-bottom: 5px solid lightgray;
+}
+
+#dest {
+  border-left: 2px solid lightgray;
+  padding-left: 15px;
+}
+

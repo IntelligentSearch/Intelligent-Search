@@ -17,6 +17,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
     }])
     .controller('MapsCtrl', function (NgMap, $scope, $location, $http) {
         var busImage = "app/maps/bus-icon.png"
+	$scope.showRoute = false;
         $scope.busIcon = {
             url: busImage,
             size: [32, 32]
@@ -24,11 +25,23 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         NgMap.getMap().then(function (map) {
             $scope.map = map;
         });
+	//user location
+	
+	$scope.currLat;
+	$scope.currLong;
+	$scope.destLat;
+	$scope.destLong;
+	//show directions form
+	$scope.dirClicked = false;
+	$scope.dirClick = function() {
+	  $scope.dirClicked = !$scope.dirClicked;
+	}
         // $scope.routes;
         $scope.userStopLoc = [];
         // $scope.stops;
         $scope.routes = [];
         $scope.buses;
+	$scope.fRoute = [];
         $scope.hide = function () {
             $scope.times = [];
             $scope.userStopLoc = [];
@@ -60,13 +73,56 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         }
         $scope.silBuses = [];
         $scope.allStops = [];
+	$scope.routed = function(e, n) {
+	  $scope.showRoute=true;
+	  var loc = this.getPlace().geometry.location;
+	  $scope.destLat = loc.lat();
+	  $scope.destLong = loc.lng();
+	  if($scope.searchEntry != null) {
+	    $scope.getDirections();
+	  }
+	}
+	$scope.getDirections = function() {
+	  var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/routing/" + $scope.currLat + "/" + $scope.currLong + "/" + $scope.destLat + "/" + $scope.destLong + "/";
+	  $http({
+	    url: url,
+	    method: "GET"
+	  }).success(function(data, status, headers, config) {
+	    console.log(data);
+	    var fastest = 1000;
+	    var num;
+	    angular.forEach(data, function(value,key) {
+		if(key.includes("Arvial Time")) {
+		  if(Number(value) > 0 && Number(value) < fastest) {
+		    fastest = Number(value);
+		    num = String(key).charAt(key.length-1);
+		  }
+		}
+	    });
+	    if(Number(fastest) == 1000) {
+	      fastest = "> 15 minutes";
+	      num = 1;
+	    }
+	    var timeToPush={};
+	    var name = "Route " + num;
+	    timeToPush['time'] = fastest + " minutes";
+	    timeToPush['route'] = data[name];
+	    $scope.fRoute = timeToPush;
+	  }).error(function(data, status, headers, config) {
+	    console.log("error routing");
+	  });
+	  
+	}
         $scope.searched = function (e, n) {
             $scope.times = [];
             var loc = this.getPlace().geometry.location;
             var lat = loc.lat();
             var lng = loc.lng();
-            console.log(lat);
-            console.log(lng);
+            $scope.currLat=lat;
+            $scope.currLong=lng;
+	    if($scope.destinationEntry != null) {
+	      $scope.getDirections();
+	    }
             var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-close-stop-by-route/617e32b0-900c-4a4c-a049-4c82422ccdf2/" + lng + "/" + lat + "/";
             $http({
                 url: url,
@@ -268,5 +324,6 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         }
 
     });
+
 
 
