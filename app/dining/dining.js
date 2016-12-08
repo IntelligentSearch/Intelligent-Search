@@ -212,7 +212,6 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
 
             $scope.userID = "0";
             if ($scope.getUserObj() != undefined) {
-                console.log($scope.getUserObj())
                 $scope.userID = $scope.getUserObj();
             }
 
@@ -328,7 +327,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
         $scope.menuDetails = ['Calcium','Iron', 'Vitamin A', 'Vitamin C', 'Dietary Fiber', 'Serving Size', 'Sugar', 'Saturated fat', 'Total fat', 'Calories', 'Cholesterol', 'Protein', 'Calories from fat', 'Sodium', 'Total Carbohydrate']
 
         $scope.toggleFavorite = function (item) {
-            var userID = $scope.getUserObj().user.UserID;
+            var userID = $scope.getUserObj();
             $scope.favorites = $cookies.getObject('user_' + userID + '_favorites');
 
             if (item.isFavorite === undefined || !item.isFavorite) {
@@ -337,7 +336,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                     method: "POST",
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     data: $.param({
-                        userID: $scope.getUserObj().user.UserID,
+                        userID: $scope.getUserObj(),
                         itemID: item.ID
                     })
                 }).success(function (data, status, headers, config) {
@@ -366,7 +365,7 @@ var app = angular.module('myApp.dining', ['ngRoute', 'ngCookies'])
                     method: "POST",
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                     data: $.param({
-                        userID: $scope.getUserObj().user.UserID,
+                        userID: $scope.getUserObj(),
                         itemID: item.ID
                     })
                 }).success(function (data, status, headers, config) {
