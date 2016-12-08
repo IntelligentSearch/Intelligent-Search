@@ -157,6 +157,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
                             console.log("Locations",locations)
                             $scope.routes.push({
                                 show: false,
+                                color: stop.routes.color,
                                 route_name: name,
                                 path: locations
                             });
