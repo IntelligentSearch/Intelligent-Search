@@ -14,18 +14,28 @@
       <input ng-model="searchEntry" class="inputs" placeholder="Enter your location" places-auto-complete size=50
              on-place-changed="searched()"
              component-restrictions="{country:'us'}"/>
-      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination" places-auto-complete on-place-changed="routed()" size=50  />
+      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination"
+             places-auto-complete on-place-changed="routed()" size=50/>
       <br>
-      <p ng-show="showRoute">
+      <md-card ng-show="showRoute">
+                          <md-card-content>
       	<span>Arrival Time: {{fRoute.time}}</span>
 	<span>Route: {{fRoute.route}}</span>
-          <!--<md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
-              <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
-	      </md-select>-->
+                              <!--<md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
+                                  <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
+                              </md-select>-->
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.Times}}</br></p>
+                              </md-card-content>
+          <md-card-actions layout="row" layout-align="end center">
+                        <md-button class="md-icon-button" aria-label="collapse" ng-click="showRoute = false">
+                 <md-icon md-svg-icon="app/maps/ic_expand_less_black.svg" class="material-icons"></md-icon>
+                        </md-button>
+          </md-card-actions>
+      </md-card>
     </span>
         <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
-            <shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline" id="route.route_name"
+            <shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline"
+                   id="route.route_name"
                    path={{route.path}}
                    stroke-color="#{{route.color}}"
                    stroke-opacity="1.0"
