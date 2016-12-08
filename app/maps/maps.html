@@ -1,96 +1,103 @@
 <body>
 
-<md-toolbar class="md-primary">
+  <md-toolbar class="md-primary">
     <div class="md-toolbar-tools">
-        <h2>
-            <span>Toolbar for Menu options</span>
-        </h2>
-        <span flex></span>
+      <h2>
+	<span>Toolbar for Menu options</span>
+      </h2>
+      <span flex></span>
     </div>
-</md-toolbar>
-<div layout="row" style="position: absolute; height: 100%; width: 100%">
+  </md-toolbar>
+  <div layout="row" style="position: absolute; height: 100%; width: 100%">
     <div style="height: 90%; width: 80%; position: absolute">
       <span>
-      <input ng-model="searchEntry" class="inputs" placeholder="Enter your location" places-auto-complete size=50
-             on-place-changed="searched()"
-             component-restrictions="{country:'us'}"/>
-      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination"
-             places-auto-complete on-place-changed="routed()" size=50/>
-      <br>
+	<md-select ng-show="!dirClicked" ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
+	  <md-option>All Routes</md-option>
+	  <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
+	</md-select>
+	<input ng-model="searchEntry" class="inputs" placeholder="Enter your location" 
+					      places-auto-complete size=50
+					      on-place-changed="searched()"
+	   component-restrictions="{country:'us'}"/>
+	<input ng-show="dirClicked" ng-model="destinationEntry" class="inputs" id="dest"
+									placeholder="Enter your destination"
+	 places-auto-complete on-place-changed="routed()" size=50/>
+	<button ng-show="!dirClicked" ng-click="dirClicked = !dirClicked">Directions</button>
+	<button ng-show="dirClicked" ng-click="dirClicked = !dirClicked">Closest Stop</button>
+	<br>
+	<p ng-repeat="c in times">{{c.RouteName}}: {{c.Times}}</br></p>
+      </span>
       <md-card ng-show="showRoute">
-                          <md-card-content>
-      	<span>Arrival Time: {{fRoute.time}}</span>
-	<span>Route: {{fRoute.route}}</span>
-                              <!--<md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
-                                  <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
-                              </md-select>-->
-      <p ng-repeat="c in times">{{c.RouteName}}: {{c.Times}}</br></p>
-                              </md-card-content>
-          <md-card-actions layout="row" layout-align="end center">
-                        <md-button class="md-icon-button" aria-label="collapse" ng-click="showRoute = false">
-                 <md-icon md-svg-icon="app/maps/ic_expand_less_black.svg" class="material-icons"></md-icon>
-                        </md-button>
-          </md-card-actions>
+	<md-card-content>
+	  <span>Arrival Time: {{fRoute.time}}</span>
+	  <span>Route: {{fRoute.route}}</span>
+	  <!--<md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
+     <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
+     </md-select>-->
+	</md-card-content>
+	<md-card-actions layout="row" layout-align="end center">
+	  <md-button class="md-icon-button" aria-label="collapse" ng-click="showRoute = false">
+	    <md-icon md-svg-icon="app/maps/ic_expand_less_black.svg" class="material-icons"></md-icon>
+	  </md-button>
+	</md-card-actions>
       </md-card>
-    </span>
-        <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
-            <shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline"
-                   id="route.route_name"
-                   path={{route.path}}
-                   stroke-color="#{{route.color}}"
-                   stroke-opacity="1.0"
-                   stroke-weight="4">
-            </shape>
-            <!--<marker position={{userStopLoc}}></marker>
-	    <marker position={{userStopDest}}></marker>-->
-            <marker ng-repeat="p in silStops track by $index"
-                    id="custom-stop-{{$index}}"
-                    on-click="getTimes(this)"
-                    position="{{p.location}}"
-                    icon="{
-  	  path:'CIRCLE',
-          scale:7
-	  }">
-            </marker>
-            <marker ng-repeat="b in silBuses|filter:filterBuses track by $index"
-                    id="custom-bus-{{$index}}"
-                    position="{{b.location}}"
-                    icon={{busIcon}}>
-            </marker>
+      <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
+	<shape ng-repeat="route in routes track by $index" ng-if="route.show == true" name="polyline"
+									       id="route.route_name"
+		path={{route.path}}
+		stroke-color="#{{route.color}}"
+  stroke-opacity="1.0"
+  stroke-weight="4">
+	</shape>
+	<marker position={{userStopLoc}}></marker>
+	<marker ng-repeat="p in silStops track by $index"
+	 id="custom-stop-{{$index}}"
+  on-click="getTimes(this)"
+  position="{{p.location}}"
+  icon="{
+  path:'CIRCLE',
+  scale:7
+  }">
+	</marker>
+	<marker ng-repeat="b in silBuses|filter:filterBuses track by $index"
+	 id="custom-bus-{{$index}}"
+  position="{{b.location}}"
+  icon={{busIcon}}>
+	</marker>
 
-            <!--    <info-window id="infow">
-                  <div ng-non-bindable="">hi</div>
-                </info-window>
-            -->
-            <!--    <directions
-                  draggable="true"
-               panel="directions-panel"
-               travel-mode="DRIVING"
-               waypoints="{{array}}"
-               origin={{origin}}
-               destination={{dest}}>
-                </directions>
-            -->
-            <!-- <custom-marker id="start" position={{location.start}}>
-              <div>
-            <img src="app/maps/bus-start.png">
-              </div>
-            </custom-marker>
-            <custom-marker id="end" position={{location.end}}>
-              <div>
-            <img src="app/maps/flag-end.png">
-              </div>
-            </custom-marker>
-            -->
-        </ng-map>
+	<!--    <info-window id="infow">
+   <div ng-non-bindable="">hi</div>
+   </info-window>
+	-->
+	<!--    <directions
+   draggable="true"
+   panel="directions-panel"
+   travel-mode="DRIVING"
+   waypoints="{{array}}"
+   origin={{origin}}
+   destination={{dest}}>
+   </directions>
+	-->
+	<!-- <custom-marker id="start" position={{location.start}}>
+   <div>
+   <img src="app/maps/bus-start.png">
+   </div>
+   </custom-marker>
+   <custom-marker id="end" position={{location.end}}>
+   <div>
+   <img src="app/maps/flag-end.png">
+   </div>
+   </custom-marker>
+	-->
+      </ng-map>
     </div>
     <div layout="column" style="left:80%; height:100%; width: 20%; position: absolute;">
-        <md-content class="md-padding" layout="column">
-            <md-switch ng-repeat="stop in allStops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
-                       ng-style="{'color':'#'+stop.routes.color}" ng-change="hideRoute(stop.routes, $index)">
-                {{stop.routes.short_name}} {{stop.routes.long_name}}
-            </md-switch>
-        </md-content>
+      <md-content class="md-padding" layout="column">
+	<md-switch ng-repeat="stop in allStops" aria-label="stop.routes.long_name" ng-model="stop.routes.show"
+									    ng-style="{'color':'#'+stop.routes.color}" ng-change="hideRoute(stop.routes, $index)">
+	  {{stop.routes.short_name}} {{stop.routes.long_name}}
+	</md-switch>
+      </md-content>
     </div>
-</div>
+  </div>
 </body>

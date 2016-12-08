@@ -36,9 +36,6 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	$scope.destLong;
 	//show directions form
 	$scope.dirClicked = false;
-	$scope.dirClick = function() {
-	  $scope.dirClicked = !$scope.dirClicked;
-	}
         // $scope.routes;
         $scope.userStopLoc = [];
         // $scope.stops;
@@ -67,6 +64,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
             });
         };
         $scope.setTimes = function (data) {
+	  console.log(data);
 	    var arrivals = []; 
 	    $scope.fRoute = [];
 	    $scope.showRoute = false;
@@ -108,6 +106,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	  }
 	}
 	$scope.getDirections = function() {
+	  $scope.hide();
 	  var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/routing/" + $scope.currLat + "/" + $scope.currLong + "/" + $scope.destLat + "/" + $scope.destLong + "/";
 	  $http({
 	    url: url,
@@ -139,15 +138,13 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	  
 	}
         $scope.searched = function (e, n) {
+	  $scope.userStopLoc=[];
 	  console.log(n);
 	  console.log(this);
             var place = this.getPlace;
             if(place != undefined && place != null) {
                 $scope.searchedPlace = this.getPlace();
             }
-
-
-
             $scope.times = [];
 
             var loc = this.getPlace().geometry.location;
@@ -155,6 +152,29 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
             var lng = loc.lng();
             $scope.currLat=lat;
             $scope.currLong=lng;
+	    //create marker to closest stop
+	    if(!$scope.dirClicked)  {
+	      console.log($scope.selectedRoute);
+	      var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-close-stop";
+	      if(true) {
+		url+="-by-route/" + $scope.selectedRoute.id + "/" + lng + "/" + lat + "/";
+	      } else {
+		url+="/" + lng + "/" + lat + "/";
+	      }
+	      $http({
+		url: url,
+		method: "GET"
+	      }).success(function (data,status, headers, config) {
+		var i = [];
+		i.p = [];
+		i.p.id = data.stop_id;
+		$scope.getTimes(null,i);
+		$scope.userStopLoc.push(data.stop_lat);
+		$scope.userStopLoc.push(data.stop_lon);
+	      }).error(function (data, status, headers, config) {
+		console.log("error closest stop");
+	      });
+	    }
 	    if($scope.destinationEntry != null) {
 	      $scope.getDirections();
 	    }
