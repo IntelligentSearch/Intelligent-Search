@@ -52,6 +52,7 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
         };
         $scope.times = [];
         $scope.getTimes = function (e, sid) {
+	    $scope.fRoute = [];
             $scope.hide();
             var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/live-stops/" + sid.p.id;
             $http({
@@ -66,24 +67,34 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
             });
         };
         $scope.setTimes = function (data) {
-	    
+	    var arrivals = []; 
+	    $scope.fRoute = [];
+	    $scope.showRoute = false;
             for (var i = 0; i < data.length; i++) {
                 var str = String(data[i].TimeTilArrival);
                 str = str.replace(" min", "");
                 var x = Number(str) < 20;
                 if ($scope.currentRoutes.indexOf(data[i].RouteName) > -1  && x) {
 		    var rName = data[i].RouteName;
-		    toPush = [];
+		    var toPush = [];
+		    var spot = arrivals.indexOf(rName);
+		    if(spot > -1) {
+		      $scope.times[spot].Times += ", " + data[i].TimeTilArrival;
+		    } else {
+		      
+		    arrivals.push(rName);
 		    toPush['RouteName'] = rName;
-                    $scope.times.push(data[i]);
+		    toPush['Times'] = data[i].TimeTilArrival;
+                    $scope.times.push(toPush);
+		    }
                 }
             }
         };
 
-        $scope.$watch('selectedRoute', function (current, old) {
-            var emptyObject;
-            $scope.searched(emptyObject, emptyObject);
-        });
+        //$scope.$watch('selectedRoute', function (current, old) {
+        //    var emptyObject;
+        //    $scope.searched(emptyObject, emptyObject);
+        //});
 
         $scope.silBuses = [];
         $scope.allStops = [];
@@ -128,33 +139,18 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	  
 	}
         $scope.searched = function (e, n) {
-
+	  console.log(n);
+	  console.log(this);
             var place = this.getPlace;
             if(place != undefined && place != null) {
                 $scope.searchedPlace = this.getPlace();
             }
 
-            if($scope.selectedRoute == undefined || $scope.selectedRoute == null || $scope.selectedRoute.id == "") {
-                //if(!$scope.firstLoad) {
-                //    alert("Please select a route first");
-                    return;
-                //} else {
-                //    $scope.firstLoad = false;
-                //}
-            }
 
-            if($scope.searchedPlace == undefined || $scope.searchedPlace == null || $scope.searchedPlace == "") {
-                //if(!$scope.firstLoad) {
-                    //alert("Please enter a valid place");
-                    return;
-                //} else {
-                //    $scope.firstLoad = false;
-                //}
-            }
 
             $scope.times = [];
 
-            var loc = $scope.searchedPlace.geometry.location;
+            var loc = this.getPlace().geometry.location;
             var lat = loc.lat();
             var lng = loc.lng();
             $scope.currLat=lat;
@@ -162,25 +158,6 @@ var app = angular.module('myApp.maps', ['ngRoute', 'ngMap'])
 	    if($scope.destinationEntry != null) {
 	      $scope.getDirections();
 	    }
-            var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-close-stop-by-route/617e32b0-900c-4a4c-a049-4c82422ccdf2/" + lng + "/" + lat + "/";
-            console.log(lat);
-            console.log(lng);
-            var url = "http://cs307.cs.purdue.edu:8080/home/cs307/Intelligent-Search/Back-End/target/Back-End/rest/get-close-stop-by-route/" + $scope.selectedRoute.id + "/" + lng + "/" + lat + "/";
-            $http({
-                url: url,
-                method: "GET"
-            }).success(function (data, status, headers, config) {
-                var userStop = data;
-                $scope.userStopLoc = [];
-                $scope.userStopLoc.push(data.stop_lat);
-                $scope.userStopLoc.push(data.stop_lon);
-                console.log($scope.userStopLoc);
-                console.log(userStop.stop_name);
-                $scope.setTimes(data.stop_times.stops);
-            }).error(function (data, status, headers, config) {
-                console.log("search error");
-            });
-
 
         };
         $scope.loadLive = function () {

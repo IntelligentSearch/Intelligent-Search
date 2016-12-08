@@ -14,7 +14,7 @@
       <input ng-model="searchEntry" class="inputs" placeholder="Enter your location" places-auto-complete size=50
              on-place-changed="searched()"
              component-restrictions="{country:'us'}"/>
-      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination" places-auto-complete on-place-changed="routed()"ng-show="!dirClicked" size=50  />
+      <input ng-model="destinationEntry" class="inputs" id="dest" placeholder="Enter your destination" places-auto-complete on-place-changed="routed()" size=50  />
       <br>
       <p ng-show="showRoute">
       	<span>Arrival Time: {{fRoute.time}}</span>
@@ -22,9 +22,6 @@
           <!--<md-select ng-model="selectedRoute" placeholder="Select Route" class="md-no-underline">
               <md-option ng-repeat="stop in allStops" ng-value="stop.routes">{{stop.routes.short_name}}&nbsp;{{stop.routes.long_name}}</md-option>
 	      </md-select>-->
-          <input places-auto-complete size=80
-               on-place-changed="searched()"
-               component-restrictions="{country:'us'}"/>
       <p ng-repeat="c in times">{{c.RouteName}}: {{c.Times}}</br></p>
     </span>
         <ng-map default-style="false" style="display:block; width:100%; height:100%;" center="[40.4237, -86.9212]">
